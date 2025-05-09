@@ -36,8 +36,8 @@ public class DebugMode : MonoBehaviour
     [SerializeField] private TextMeshProUGUI groundSlopeText;
 
 
-    [Header("デバッグプレハブ")]
-    [SerializeField] private GameObject debugPrefab;
+    //[Header("デバッグプレハブ")]
+    //[SerializeField] private GameObject debugPrefab;
 
     [Header("レイキャスト")]
     [SerializeField, Tooltip("レイの長さ")] private float rayLength = 2.0f;
