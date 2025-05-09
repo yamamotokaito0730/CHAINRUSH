@@ -6,7 +6,6 @@
 Playerの挙動を管理するスクリプト
 
 ＞注意事項
-スコアのデバッグ用プログラムを消すこと
 
 
 ＞更新履歴
@@ -19,6 +18,7 @@ ___22:移動の仕様変更:yamamoto
 ___27:プレイヤーの移動をADキーのみに変更:mori
 _M05
 ___01:速度にあわせて重力を増加する処理を追加:tooyama
+___09:不必要な引数、変数宣言を削除:yamamoto
 
 =====*/
 
@@ -29,7 +29,8 @@ public class Player : MonoBehaviour
     // 変数宣言
     [Header("ステータス")]
     [SerializeField, Tooltip("移動速度")] private float m_fSpeed;
-    [SerializeField, Tooltip("加速")] private float m_fBoost;
+    [SerializeField, Tooltip("加速量")] private float m_fBoost;
+
     [Header("デバッグ")]
     [SerializeField, Tooltip("デバッグ表示")] private bool m_bDebugView = false;
     [SerializeField, Tooltip("デバッグプレハブ取得")] private GameObject debugPrefab;
@@ -42,7 +43,6 @@ public class Player : MonoBehaviour
     private float extraGravity;
 
     private Rigidbody rb;
-    private ScoreManager scoreManager;
     private DebugMode debugModeInstance;
     private Vector3 moveDir = Vector3.forward; // 現在の進行方向を保持
     private int nEnemyKillCount = 0; // 倒した敵の数
@@ -59,7 +59,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();  // Rigidbodyの取得
-        scoreManager = FindAnyObjectByType<ScoreManager>();
+
         // 初期状態でデバッグ表示ONなら、UIを生成しておく
         if (m_bDebugView && debugModeInstance == null)
         {
@@ -101,9 +101,11 @@ public class Player : MonoBehaviour
     {
         //////////////////////////////////////////////////////////
         //デバッグ用
-        if (Input.GetKeyDown(KeyCode.Q)) scoreManager.AddScore(100, 1); // スコア加算用　*必要か分からん
-        if (Input.GetKeyDown(KeyCode.E)) m_fSpeed += m_fBoost; // 加速デバッグ用
-
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            m_fSpeed += m_fBoost; // 加速デバッグ用
+            AddGravity();
+        }
         // デバッグUI表示
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
@@ -111,7 +113,7 @@ public class Player : MonoBehaviour
             if (m_bDebugView && debugModeInstance == null)
             {
                 // プレハブからインスタンスを生成し、DebugModeを取得
-                GameObject obj = Instantiate(debugPrefab, Vector3.zero, Quaternion.identity); // 座標・回転はプレハブ側で設定
+                GameObject obj = Instantiate(debugPrefab, Vector3.zero, Quaternion.identity); // 座標・回転はプレハブ側で設定d
                 debugModeInstance = obj.GetComponent<DebugMode>();
             }
             else if (!m_bDebugView && debugModeInstance != null)
@@ -138,17 +140,17 @@ public class Player : MonoBehaviour
     */
     private void rotation()
     {
-        float rotateSpeed = 100f; // 回転速度
+        float rotateSpeed = 100.0f; // 回転速度
 
-        float turn = 0f;
+        float turn = 0.0f;
 
-        if (Input.GetKey(KeyCode.A)) turn = -1f; // 左回転
-        if (Input.GetKey(KeyCode.D)) turn = 1f;  // 右回転
+        if (Input.GetKey(KeyCode.A)) turn = -1.0f; // 左回転
+        if (Input.GetKey(KeyCode.D)) turn = 1.0f;  // 右回転
 
-        if (turn != 0f)
+        if (turn != 0.0f)
         {
             // Y軸を中心に回転させる
-            transform.Rotate(0f, turn * rotateSpeed * Time.deltaTime, 0f);
+            transform.Rotate(0.0f, turn * rotateSpeed * Time.deltaTime, 0.0f);
         }
     }
 
@@ -161,14 +163,14 @@ public class Player : MonoBehaviour
             {
                 enemy.Die();
                 AddBoost(m_fBoost);
-                AddGravity(m_fBoost);
+                AddGravity();
                 nEnemyKillCount++; // キルカウントの増加
             }
         }
     }
 
     /*＞加速度増加関数
-   引数：なし
+   引数：float _boost:増加する値
    ｘ
    戻値：なし
    ｘ
@@ -186,7 +188,7 @@ public class Player : MonoBehaviour
     ｘ
     概要:加速度増加に合わせて重力を増加させる
     */
-    public void AddGravity(float _boost)
+    void AddGravity()
     {
         extraGravity += gravityGainPerKill;
         extraGravity = Mathf.Min(extraGravity, 40f); // 上限で制限
