@@ -43,6 +43,7 @@ public class DebugMode : MonoBehaviour
     [SerializeField, Tooltip("レイの長さ")] private float rayLength = 2.0f;
     [SerializeField, Tooltip("レイの色")] private Color normalColor = Color.red;
 
+    public float slopeAngle = 0.0f; // 坂の角度
     /*＞デバッグ更新関数
     引数1：_PlayerTransform
     引数2：_Speed
@@ -66,7 +67,7 @@ public class DebugMode : MonoBehaviour
         {
             Debug.DrawRay(hit.point, hit.normal, normalColor);// 地面の法線ベクトル(赤い線)を可視化
 
-            float slopeAngle = Vector3.Angle(hit.normal, Vector3.up);// 傾斜角度を計算
+            slopeAngle = Vector3.Angle(hit.normal, Vector3.up);// 傾斜角度を計算
 
             groundSlopeText.text = $"Slope{slopeAngle:F1}°";// 計算した傾斜を丸めて表示
 

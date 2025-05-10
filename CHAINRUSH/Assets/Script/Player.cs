@@ -1,24 +1,26 @@
+// å‡¦ç†1
 /*=====
 <Player.cs>
-„¤ì¬ÒFyamamoto
+â””ä½œæˆè€…ï¼šyamamoto
 
-„“à—e
-Player‚Ì‹““®‚ğŠÇ—‚·‚éƒXƒNƒŠƒvƒg
+ï¼å†…å®¹
+Playerã®æŒ™å‹•ã‚’ç®¡ç†ã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
 
-„’ˆÓ–€
+ï¼æ³¨æ„äº‹é …
 
 
-„XV—š—ğ
+ï¼æ›´æ–°å±¥æ­´
 Y25   
 _M04    
 __D     
-___11:ƒvƒƒOƒ‰ƒ€ì¬:yamamoto   
-___12:ƒXƒRƒAƒfƒoƒbƒN—p‚ÌƒvƒƒOƒ‰ƒ€‚ğ’Ç‰Á:yamamoto
-___22:ˆÚ“®‚Ìd—l•ÏX:yamamoto
-___27:ƒvƒŒƒCƒ„[‚ÌˆÚ“®‚ğADƒL[‚Ì‚İ‚É•ÏX:mori
+___11:ãƒ—ãƒ­ã‚°ãƒ©ãƒ ä½œæˆ:yamamoto   
+___12:ã‚¹ã‚³ã‚¢ãƒ‡ãƒãƒƒã‚¯ç”¨ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’è¿½åŠ :yamamoto
+___22:ç§»å‹•ã®ä»•æ§˜å¤‰æ›´:yamamoto
+___27:ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç§»å‹•ã‚’ADã‚­ãƒ¼ã®ã¿ã«å¤‰æ›´:mori
 _M05
-___01:‘¬“x‚É‚ ‚í‚¹‚Äd—Í‚ğ‘‰Á‚·‚éˆ—‚ğ’Ç‰Á:tooyama
-___09:•s•K—v‚Èˆø”A•Ï”éŒ¾‚ğíœ:yamamoto
+___01:é€Ÿåº¦ã«ã‚ã‚ã›ã¦é‡åŠ›ã‚’å¢—åŠ ã™ã‚‹å‡¦ç†ã‚’è¿½åŠ :tooyama
+___09:ä¸å¿…è¦ãªå¼•æ•°ã€å¤‰æ•°å®£è¨€ã‚’å‰Šé™¤:yamamoto
+___10:ãƒã‚¦ãƒ³ãƒ‰é˜²æ­¢å‡¦ç†ã‚’è¿½åŠ :tooyama
 
 =====*/
 
@@ -26,41 +28,46 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    // •Ï”éŒ¾
-    [Header("ƒXƒe[ƒ^ƒX")]
-    [SerializeField, Tooltip("ˆÚ“®‘¬“x")] private float m_fSpeed;
-    [SerializeField, Tooltip("‰Á‘¬—Ê")] private float m_fBoost;
+    // å¤‰æ•°å®£è¨€
+    [Header("ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹")]
+    [SerializeField, Tooltip("ç§»å‹•é€Ÿåº¦")] private float m_fSpeed;
+    [SerializeField, Tooltip("åŠ é€Ÿé‡")] private float m_fBoost;
 
-    [Header("ƒfƒoƒbƒO")]
-    [SerializeField, Tooltip("ƒfƒoƒbƒO•\¦")] private bool m_bDebugView = false;
-    [SerializeField, Tooltip("ƒfƒoƒbƒOƒvƒŒƒnƒuæ“¾")] private GameObject debugPrefab;
+    [Header("ãƒ‡ãƒãƒƒã‚°")]
+    [SerializeField, Tooltip("ãƒ‡ãƒãƒƒã‚°è¡¨ç¤º")] private bool m_bDebugView = false;
+    [SerializeField, Tooltip("ãƒ‡ãƒãƒƒã‚°ãƒ—ãƒ¬ãƒãƒ–å–å¾—")] private GameObject debugPrefab;
 
-    [Header("d—ÍŠÖŒW")]
-    [SerializeField, Tooltip("ƒx[ƒX‚Ìd—Í")]private float baseGravity = 9.81f;
+    [Header("é‡åŠ›é–¢ä¿‚")]
+    [SerializeField, Tooltip("ãƒ™ãƒ¼ã‚¹ã®é‡åŠ›")] private float baseGravity = 9.81f;
 
-    [SerializeField, Tooltip("d—Í‚Ì‘‰Á—Ê")] private float gravityGainPerKill = 3.0f;
+    [SerializeField, Tooltip("é‡åŠ›ã®å¢—åŠ é‡")] private float gravityGainPerKill = 3.0f;
 
     private float extraGravity;
 
     private Rigidbody rb;
     private DebugMode debugModeInstance;
-    private Vector3 moveDir = Vector3.forward; // Œ»İ‚Ìis•ûŒü‚ğ•Û
-    private int nEnemyKillCount = 0; // “|‚µ‚½“G‚Ì”
+    private Vector3 moveDir = Vector3.forward; // ç¾åœ¨ã®é€²è¡Œæ–¹å‘ã‚’ä¿æŒ
+    private int nEnemyKillCount = 0; // å€’ã—ãŸæ•µã®æ•°
+
+
+    private bool wasInAir = false; // æµ®ã„ã¦ã„ã‚‹ã‹ã©ã†ã‹
+    private float groundCheckDistance = 1.1f; // ãƒ¬ã‚¤ã§åœ°é¢ã‚’æ¤œçŸ¥ã™ã‚‹è·é›¢
 
 
 
-    /*„StartŠÖ”
-    ˆø”F‚È‚µ
-    ‚˜
-    –ß’lF‚È‚µ
-    ‚˜
-    ŠT—v:‰Šú‰»
+
+    /*ï¼Starté–¢æ•°
+    å¼•æ•°ï¼šãªã—
+    ï½˜
+    æˆ»å€¤ï¼šãªã—
+    ï½˜
+    æ¦‚è¦:åˆæœŸåŒ–
     */
     void Start()
     {
-        rb = GetComponent<Rigidbody>();  // Rigidbody‚Ìæ“¾
+        rb = GetComponent<Rigidbody>();  // Rigidbodyã®å–å¾—
 
-        // ‰Šúó‘Ô‚ÅƒfƒoƒbƒO•\¦ON‚È‚çAUI‚ğ¶¬‚µ‚Ä‚¨‚­
+        // åˆæœŸçŠ¶æ…‹ã§ãƒ‡ãƒãƒƒã‚°è¡¨ç¤ºONãªã‚‰ã€UIã‚’ç”Ÿæˆã—ã¦ãŠã
         if (m_bDebugView && debugModeInstance == null)
         {
             GameObject obj = Instantiate(debugPrefab, Vector3.zero, Quaternion.identity);
@@ -70,86 +77,167 @@ public class Player : MonoBehaviour
         extraGravity = baseGravity;
     }
 
-    /*„FixedUpdateŠÖ”
-    ˆø”F‚È‚µ
-    ‚˜
-    –ß’lF‚È‚µ
-    ‚˜
-    ŠT—v:ˆê’èŠÔŠu‚ÅXV
+    /*ï¼FixedUpdateé–¢æ•°
+    å¼•æ•°ï¼šãªã—
+    ï½˜
+    æˆ»å€¤ï¼šãªã—
+    ï½˜
+    æ¦‚è¦:ä¸€å®šé–“éš”ã§æ›´æ–°
     */
     void FixedUpdate()
     {
-        // Œü‚¢‚Ä‚¢‚é•ûŒü‚Éi‚İ‘±‚¯‚é
+        // å‘ã„ã¦ã„ã‚‹æ–¹å‘ã«é€²ã¿ç¶šã‘ã‚‹
         rb.linearVelocity = new Vector3(
             transform.forward.x * m_fSpeed,
-            rb.linearVelocity.y,         
+            rb.linearVelocity.y,
             transform.forward.z * m_fSpeed
             );
         //rb.linearVelocity = transform.forward * m_fSpeed;
+
+        //è·³ã­ã‚‹ç¬é–“ã ã‘ã‚’ãƒ”ãƒ³ãƒã‚¤ãƒ³ãƒˆã§æŠ‘åˆ¶ã™ã‚‹ãƒ‘ã‚¿ãƒ¼ãƒ³
+        // æ¥åœ°çŠ¶æ…‹ã‚’åˆ¤å®š
+        bool grounded = IsGrounded();
+
+        // ç©ºä¸­ â†’ åœ°é¢ ã«åˆ‡ã‚Šæ›¿ã‚ã£ãŸç¬é–“
+        if (grounded && wasInAir)
+        {
+            if (rb.linearVelocity.y > 0f)
+            {
+                Vector3 v = rb.linearVelocity;
+                v.y = 0f;
+                rb.linearVelocity = v;
+
+                Debug.Log("ãƒã‚¦ãƒ³ãƒ‰ã‚¬ãƒ¼ãƒ‰");
+            }
+
+            wasInAir = false; // ãƒ•ãƒ©ã‚°ã‚’ãƒªã‚»ãƒƒãƒˆ
+        }
+        // åœ°é¢ã‹ã‚‰é›¢ã‚ŒãŸç¬é–“ã«ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
+        else if (!grounded && !wasInAir)
+        {
+            wasInAir = true;
+        }
+
+
+        // é‡åŠ›ã®è¿½åŠ 
         rb.AddForce(Vector3.down * extraGravity, ForceMode.Acceleration);
+
+
+        //// å¸¸æ™‚yã«åˆ¶é™ã‚’æ›ã‘ã‚‹ãƒ‘ã‚¿ãƒ¼ãƒ³
+        //if (IsGrounded())
+        //{
+        //    // 1. Yæ–¹å‘ã®è·³ã­ã‚’æŠ‘åˆ¶
+        //    if (rb.linearVelocity.y > 0.05f)
+        //    {
+        //        Vector3 v = rb.linearVelocity;
+        //        v.y = 0f;
+        //        rb.linearVelocity = v;
+        //    }
+
+        //    // 2. åœ°å½¢ã®æ³•ç·šã«åˆã‚ã›ã¦å‰æ–¹ç§»å‹•ï¼ˆé€™ã†ã‚ˆã†ã«ï¼‰
+        //    RaycastHit hit;
+        //    if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out hit, 1.0f))
+        //    {
+        //        Vector3 normal = hit.normal;
+
+        //        Vector3 forward = transform.forward;
+        //        Vector3 slopeAdjusted = Vector3.ProjectOnPlane(forward, normal).normalized;
+
+        //        // è£œæ­£ã®å‰²åˆï¼ˆ0 = è£œæ­£ãªã—ã€1 = å®Œå…¨ã«æ³•ç·šã«æ²¿ã†ï¼‰
+        //        float blend = 0.0f;
+
+        //        Vector3 moveDir = Vector3.Lerp(forward, slopeAdjusted, blend).normalized;
+        //        rb.MovePosition(transform.position + moveDir * m_fSpeed * Time.fixedDeltaTime);
+        //    }
+
+        //    // 3. æ¥åœ°ä¸­ â†’ é«˜ã•è¨˜éŒ²
+        //    lastGroundY = transform.position.y;
+        //    preventYUp = false;
+        //}
+        //else if (WasGroundedRecently())
+        //{
+        //    // 4. ç©ºä¸­ã§YãŒä¸ŠãŒã‚Šã™ããŸã‚‰æŠ‘åˆ¶
+        //    if (transform.position.y > lastGroundY)
+        //    {
+        //        Vector3 clamped = transform.position;
+        //        clamped.y = lastGroundY;
+        //        transform.position = clamped;
+
+        //        Vector3 v = rb.linearVelocity;
+        //        if (v.y > 0) v.y = 0f;
+        //        rb.linearVelocity = v;
+
+        //        preventYUp = true;
+        //    }
+
+        //    // 5. é‡åŠ›è¿½åŠ ï¼ˆç©ºä¸­æ™‚ã®ã¿ï¼‰
+        //    rb.AddForce(Vector3.down * extraGravity, ForceMode.Acceleration);
+        //}
     }
 
-    /*„UpdateŠÖ”
-    ˆø”F‚È‚µ
-    ‚˜
-    –ß’lF‚È‚µ
-    ‚˜
-    ŠT—v:XVŠÖ”
+    /*ï¼Updateé–¢æ•°
+    å¼•æ•°ï¼šãªã—
+    ï½˜
+    æˆ»å€¤ï¼šãªã—
+    ï½˜
+    æ¦‚è¦:æ›´æ–°é–¢æ•°
     */
 
     private void Update()
     {
         //////////////////////////////////////////////////////////
-        //ƒfƒoƒbƒO—p
+        //ãƒ‡ãƒãƒƒã‚°ç”¨
         if (Input.GetKeyDown(KeyCode.E))
         {
-            m_fSpeed += m_fBoost; // ‰Á‘¬ƒfƒoƒbƒO—p
+            m_fSpeed += m_fBoost; // åŠ é€Ÿãƒ‡ãƒãƒƒã‚°ç”¨
             AddGravity();
         }
-        // ƒfƒoƒbƒOUI•\¦
+        // ãƒ‡ãƒãƒƒã‚°UIè¡¨ç¤º
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
-            m_bDebugView = !m_bDebugView; // UI‚Ì•\¦”ñ•\¦Ø‚è‘Ö‚¦
+            m_bDebugView = !m_bDebugView; // UIã®è¡¨ç¤ºéè¡¨ç¤ºåˆ‡ã‚Šæ›¿ãˆ
             if (m_bDebugView && debugModeInstance == null)
             {
-                // ƒvƒŒƒnƒu‚©‚çƒCƒ“ƒXƒ^ƒ“ƒX‚ğ¶¬‚µADebugMode‚ğæ“¾
-                GameObject obj = Instantiate(debugPrefab, Vector3.zero, Quaternion.identity); // À•WE‰ñ“]‚ÍƒvƒŒƒnƒu‘¤‚Åİ’èd
+                // ãƒ—ãƒ¬ãƒãƒ–ã‹ã‚‰ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆã—ã€DebugModeã‚’å–å¾—
+                GameObject obj = Instantiate(debugPrefab, Vector3.zero, Quaternion.identity); // åº§æ¨™ãƒ»å›è»¢ã¯ãƒ—ãƒ¬ãƒãƒ–å´ã§è¨­å®šd
                 debugModeInstance = obj.GetComponent<DebugMode>();
             }
             else if (!m_bDebugView && debugModeInstance != null)
             {
-                Destroy(debugModeInstance.gameObject); // UI‚ğ”ñ•\¦(íœ)‚·‚é
+                Destroy(debugModeInstance.gameObject); // UIã‚’éè¡¨ç¤º(å‰Šé™¤)ã™ã‚‹
                 debugModeInstance = null;
             }
         }
 
         if (debugModeInstance != null)
-            debugModeInstance.UpdateDebugUI(transform, m_fSpeed, nEnemyKillCount); // ƒfƒoƒbƒOUI‚ÌXV
+            debugModeInstance.UpdateDebugUI(transform, m_fSpeed, nEnemyKillCount); // ãƒ‡ãƒãƒƒã‚°UIã®æ›´æ–°
 
         ////////////////////////////////////////////////////
 
         rotation();
+
+        //   SlopeSpeedChange(debugModeInstance.slopeAngle);
     }
 
-    /*„‰ñ“]ŠÖ”
-    ˆø”F‚È‚µ
-    ‚˜
-    –ß’lF‚È‚µ
-    ‚˜
-    ŠT—v:ƒvƒŒƒCƒ„[‚ÌŒü‚«‚ğ‰ñ“]‚³‚¹‚é
+    /*ï¼å›è»¢é–¢æ•°
+    å¼•æ•°ï¼šãªã—
+    ï½˜
+    æˆ»å€¤ï¼šãªã—
+    ï½˜
+    æ¦‚è¦:ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‘ãã‚’å›è»¢ã•ã›ã‚‹
     */
     private void rotation()
     {
-        float rotateSpeed = 100.0f; // ‰ñ“]‘¬“x
+        float rotateSpeed = 100.0f; // å›è»¢é€Ÿåº¦
 
         float turn = 0.0f;
 
-        if (Input.GetKey(KeyCode.A)) turn = -1.0f; // ¶‰ñ“]
-        if (Input.GetKey(KeyCode.D)) turn = 1.0f;  // ‰E‰ñ“]
+        if (Input.GetKey(KeyCode.A)) turn = -1.0f; // å·¦å›è»¢
+        if (Input.GetKey(KeyCode.D)) turn = 1.0f;  // å³å›è»¢
 
         if (turn != 0.0f)
         {
-            // Y²‚ğ’†S‚É‰ñ“]‚³‚¹‚é
+            // Yè»¸ã‚’ä¸­å¿ƒã«å›è»¢ã•ã›ã‚‹
             transform.Rotate(0.0f, turn * rotateSpeed * Time.deltaTime, 0.0f);
         }
     }
@@ -164,33 +252,93 @@ public class Player : MonoBehaviour
                 enemy.Die();
                 AddBoost(m_fBoost);
                 AddGravity();
-                nEnemyKillCount++; // ƒLƒ‹ƒJƒEƒ“ƒg‚Ì‘‰Á
+                nEnemyKillCount++; // ã‚­ãƒ«ã‚«ã‚¦ãƒ³ãƒˆã®å¢—åŠ 
             }
         }
     }
 
-    /*„‰Á‘¬“x‘‰ÁŠÖ”
-   ˆø”Ffloat _boost:‘‰Á‚·‚é’l
-   ‚˜
-   –ß’lF‚È‚µ
-   ‚˜
-   ŠT—v:ƒvƒŒƒCƒ„[‚Ì‘¬“x‚ğ‚ ‚°‚é
+    /*ï¼åŠ é€Ÿåº¦å¢—åŠ é–¢æ•°
+   å¼•æ•°ï¼šfloat _boost:å¢—åŠ ã™ã‚‹å€¤
+   ï½˜
+   æˆ»å€¤ï¼šãªã—
+   ï½˜
+   æ¦‚è¦:ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®é€Ÿåº¦ã‚’ã‚ã’ã‚‹
    */
     public void AddBoost(float _boost)
     {
         m_fSpeed += _boost;
     }
 
-    /*„d—Í‘‰ÁŠÖ”
-    ˆø”F‚È‚µ
-    ‚˜
-    –ß’lF‚È‚µ
-    ‚˜
-    ŠT—v:‰Á‘¬“x‘‰Á‚É‡‚í‚¹‚Äd—Í‚ğ‘‰Á‚³‚¹‚é
+    /*ï¼é‡åŠ›å¢—åŠ é–¢æ•°
+    å¼•æ•°ï¼šãªã—
+    ï½˜
+    æˆ»å€¤ï¼šãªã—
+    ï½˜
+    æ¦‚è¦:åŠ é€Ÿåº¦å¢—åŠ ã«åˆã‚ã›ã¦é‡åŠ›ã‚’å¢—åŠ ã•ã›ã‚‹
     */
-    void AddGravity()
+    private void AddGravity()
     {
         extraGravity += gravityGainPerKill;
-        extraGravity = Mathf.Min(extraGravity, 40f); // ãŒÀ‚Å§ŒÀ
+        extraGravity = Mathf.Min(extraGravity, 40f); // ä¸Šé™ã§åˆ¶é™
     }
+
+    /*ï¼é€Ÿåº¦å¤‰åŒ–é–¢æ•°
+    å¼•æ•°ï¼šãªã—
+    ï½˜
+    æˆ»å€¤ï¼šãªã—
+    ï½˜
+    æ¦‚è¦:å‚ã®è§’åº¦ã«ã‚ˆã£ã¦ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼é€Ÿåº¦ã‚’å¢—æ¸›ã•ã›ã‚‹
+    */
+    //private void SlopeSpeedChange(float _Slope)
+    //{
+    //    if(Slope)
+    //}
+
+    /*ï¼æ¥åœ°åˆ¤å®šé–¢æ•°
+å¼•æ•°ï¼šãªã—
+æˆ»å€¤ï¼šboolï¼šåœ°é¢ã«æ¥ã—ã¦ã„ã‚‹ã‹ã©ã†ã‹
+æ¦‚è¦: Raycastã‚’ç”¨ã„ã¦è¶³å…ƒã®åœ°é¢ã‚’æ¤œå‡º
+*/
+    private bool IsGrounded()
+    {
+        float offset = 0.1f;
+        Vector3 origin = transform.position + Vector3.up * offset;
+        return Physics.Raycast(origin, Vector3.down, groundCheckDistance + offset); // ãƒ¬ã‚¤ã‚­ãƒ£ã‚¹ãƒˆã‚’ä½¿ã£ã¦åˆ¤å®šã‚’è¡Œã†
+    }
+
+    /*ï¼ç›´å‰ã¾ã§åœ°é¢ã«ã„ãŸã‹åˆ¤å®šã™ã‚‹é–¢æ•°
+    å¼•æ•°ï¼šãªã—
+    æˆ»å€¤ï¼šboolï¼šç©ºä¸­ â†’ æ¥åœ°ã«å…¥ã‚‹ã‹ã®åˆ¤å®šè£œåŠ©
+    æ¦‚è¦: å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®çŠ¶æ…‹ã‚’è¨˜éŒ²ã—ã¦ãŠãã“ã¨ã§ã€ç›´å‰ã¾ã§åœ°é¢ã«ã„ãŸã‹ã‚’åˆ¤æ–­
+    */
+    private bool WasGroundedRecently()
+    {
+        return wasInAir && !IsGrounded(); // ç©ºä¸­ã«ã„ã‚‹&&åœ°é¢ã«ã¤ã„ã¦ã„ãªã„
+    }
+
+    //    /*ï¼æ¥åœ°åˆ¤å®šé–¢æ•°
+    //å¼•æ•°ï¼šãªã—
+    //æˆ»å€¤ï¼šboolï¼šåœ°é¢ã«æ¥ã—ã¦ã„ã‚‹ã‹ã©ã†ã‹
+    //æ¦‚è¦: Raycastã‚’ç”¨ã„ã¦è¶³å…ƒã®åœ°é¢ã‚’æ¤œå‡º
+    //*/
+    //    private bool IsGrounded()
+    //    {
+    //        float radius = 0.3f;
+    //        float distance = 0.6f;
+    //        Vector3 origin = transform.position + Vector3.up * 0.1f;
+    //        return Physics.SphereCast(origin, radius, Vector3.down, out _, distance);
+    //    }
+
+    //    /*ï¼ç›´å‰ã¾ã§åœ°é¢ã«ã„ãŸã‹åˆ¤å®šã™ã‚‹é–¢æ•°
+    //    å¼•æ•°ï¼šãªã—
+    //    æˆ»å€¤ï¼šboolï¼šç©ºä¸­ â†’ æ¥åœ°ã«å…¥ã‚‹ã‹ã®åˆ¤å®šè£œåŠ©
+    //    æ¦‚è¦: å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®çŠ¶æ…‹ã‚’è¨˜éŒ²ã—ã¦ãŠãã“ã¨ã§ã€ç›´å‰ã¾ã§åœ°é¢ã«ã„ãŸã‹ã‚’åˆ¤æ–­
+    //    */
+    //    private bool WasGroundedRecently()
+    //    {
+    //      //  return wasInAir && !IsGrounded();
+    //          return !IsGrounded(); // ã‚ˆã‚Šå³å¯†ã«ã—ãŸã„å ´åˆã¯æ¥åœ°ãƒ•ãƒ©ã‚°ã®å±¥æ­´ã‚’æŒãŸã›ã¦ã‚‚OK 3ç”¨
+    //    }
+
+
 }
