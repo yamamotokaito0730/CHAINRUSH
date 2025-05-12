@@ -1,3 +1,4 @@
+// 処理1
 /*=====
 <Player.cs>
 └作成者：yamamoto
@@ -19,9 +20,12 @@ ___27:プレイヤーの移動をADキーのみに変更:mori
 _M05
 ___01:速度にあわせて重力を増加する処理を追加:tooyama
 ___09:不必要な引数、変数宣言を削除:yamamoto
+___11:バウンド防止処理を追加:tooyama
 
 =====*/
 
+using System.Collections.Generic;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -36,16 +40,25 @@ public class Player : MonoBehaviour
     [SerializeField, Tooltip("デバッグプレハブ取得")] private GameObject debugPrefab;
 
     [Header("重力関係")]
-    [SerializeField, Tooltip("ベースの重力")]private float baseGravity = 9.81f;
+    [SerializeField, Tooltip("ベースの重力")] private float m_fBaseGravity = 9.81f;
 
-    [SerializeField, Tooltip("重力の増加量")] private float gravityGainPerKill = 3.0f;
+    [SerializeField, Tooltip("重力の増加量")] private float m_fAddGravity = 3.0f;
 
-    private float extraGravity;
-
-    private Rigidbody rb;
-    private DebugMode debugModeInstance;
-    private Vector3 moveDir = Vector3.forward; // 現在の進行方向を保持
+    private Rigidbody rb; // プレイヤーの物理挙動を制御するためのRigidbody
+    private DebugMode debugModeInstance; // デバッグUI（速度・傾斜など）の表示管理用インスタンス
     private int nEnemyKillCount = 0; // 倒した敵の数
+
+    //===============================
+    ///坂の角度による加減速用処理
+    //private Vector3 moveDir = Vector3.forward; // 現在の進行方向を保持する為の変数
+    //
+    //// 傾斜角による速度変化
+    //private Dictionary<int, float> slopeSpeedTable = new Dictionary<int, float>()
+    //{
+    //    {-30, 2.0f}, {-20, 1.5f}, {-10, 1.0f}, {0, 0.0f}, {10, -1.0f}, {20, -1.5f}, {30, -2.0f}
+    //};
+    //private int lastSlopeKey = int.MinValue;
+    //===============================
 
 
 
@@ -63,11 +76,9 @@ public class Player : MonoBehaviour
         // 初期状態でデバッグ表示ONなら、UIを生成しておく
         if (m_bDebugView && debugModeInstance == null)
         {
-            GameObject obj = Instantiate(debugPrefab, Vector3.zero, Quaternion.identity);
-            debugModeInstance = obj.GetComponent<DebugMode>();
+            GameObject obj = Instantiate(debugPrefab, Vector3.zero, Quaternion.identity); // デバッグUIの生成
+            debugModeInstance = obj.GetComponent<DebugMode>(); // DebugModeの取得
         }
-
-        extraGravity = baseGravity;
     }
 
     /*＞FixedUpdate関数
@@ -82,11 +93,15 @@ public class Player : MonoBehaviour
         // 向いている方向に進み続ける
         rb.linearVelocity = new Vector3(
             transform.forward.x * m_fSpeed,
-            rb.linearVelocity.y,         
+            rb.linearVelocity.y,
             transform.forward.z * m_fSpeed
             );
-        //rb.linearVelocity = transform.forward * m_fSpeed;
-        rb.AddForce(Vector3.down * extraGravity, ForceMode.Acceleration);
+        // Y座標に制限を掛ける
+        ClampPlayerHeight();
+        // 重力の追加
+        rb.AddForce(Vector3.down * m_fBaseGravity, ForceMode.Acceleration);
+
+        //        UpdateSlopeSpeed();
     }
 
     /*＞Update関数
@@ -188,9 +203,99 @@ public class Player : MonoBehaviour
     ｘ
     概要:加速度増加に合わせて重力を増加させる
     */
-    void AddGravity()
+    private void AddGravity()
     {
-        extraGravity += gravityGainPerKill;
-        extraGravity = Mathf.Min(extraGravity, 40f); // 上限で制限
+        m_fBaseGravity += m_fAddGravity; // 重力の増加
+        m_fBaseGravity = Mathf.Min(m_fBaseGravity, 40.0f); // 上限(40.0f)を超えないように設定
     }
+
+    /*＞高度制限関数
+    引数：なし
+    ｘ
+    戻値：なし
+    ｘ
+    概要: プレイヤーがでこぼこした地形で跳ねるように見えてしまう問題を防ぐため、
+          プレイヤーのY座標（高さ）に上限を設けて、地面にすいつくように移動させる
+    */
+    private void ClampPlayerHeight()
+    {
+        float rayStartOffsetY = 0.1f; // 地面とのめり込みを防ぐため、Raycastの始点を少し上にずらす
+        Vector3 rayOrigin = transform.position + Vector3.up * rayStartOffsetY; // 少し上からRayを発射
+        RaycastHit hit; // 地面との当たり判定用
+
+        // 地面に立っていた(足元の地面にRayがヒットした)場合のみ処理を行う
+        if (Physics.Raycast(rayOrigin, Vector3.down, out hit, 2.0f))
+        {
+            float groundY = hit.point.y; //地面の高さ
+            float maxHeight = groundY + 1.1f;   // 許容する最大の高さ（浮き防止）
+
+            // プレイヤーが指定した高さより浮いている場合は制限をかける
+            if (transform.position.y > maxHeight)
+            {
+                // Y座標に制限を掛けて高さを矯正する
+                Vector3 correctedPos = transform.position;
+                correctedPos.y = maxHeight;
+                transform.position = correctedPos;
+
+                // 上昇中のY速度も0に抑える
+                Vector3 velocity = rb.linearVelocity;
+                velocity.y = 0.0f;
+                rb.linearVelocity = velocity;
+            }
+        }
+
+    }
+
+    ////////////////////////////
+    //速度変化
+    /////*＞角度取得関数
+    ////引数：なし
+    ////ｘ
+    ////戻値：坂の角度
+    ////ｘ
+    ////概要:プレイヤーが立っている坂の角度を取得する
+    ////*/
+    //private float GetGroundSlope()
+    //{
+    //    float rayLength = 2.0f;
+    //    Vector3 origin = transform.position;
+
+    //    RaycastHit hit;
+    //    if (Physics.Raycast(origin, Vector3.down, out hit, rayLength))
+    //    {
+    //        // 登り or 下りの向きを考慮して傾斜角に符号を付ける
+    //        Vector3 moveDir = rb.linearVelocity.normalized;
+    //        Vector3 slopeDir = Vector3.Cross(Vector3.Cross(hit.normal, Vector3.up), hit.normal).normalized;
+    //        float dot = Vector3.Dot(moveDir, slopeDir);
+    //        float angle = Vector3.Angle(hit.normal, Vector3.up);
+    //        return dot >= 0 ? angle : -angle;
+    //    }
+    //    else
+    //    {
+    //        return -1f; // 地面が見つからなかった
+    //    }
+    //}
+
+    ///*＞速度変化関数
+    //引数：なし
+    //ｘ
+    //戻値：なし
+    //ｘ
+    //概要:坂の角度によってプレイヤー速度を増減させる
+    //*/
+    //private void UpdateSlopeSpeed()
+    //{
+    //    float slope = GetGroundSlope();
+    //    if (slope == -1.0f || slope < -30 || slope > 30) return;
+
+    //    int rounded = Mathf.RoundToInt(slope / 10.0f) * 10;
+    //    if (rounded != lastSlopeKey && slopeSpeedTable.ContainsKey(rounded))
+    //    {
+    //        float boost = slopeSpeedTable[rounded];
+    //        m_fSpeed += boost;
+    //        lastSlopeKey = rounded;
+    //        Debug.Log($"傾斜: {rounded}° → 速度変化 {boost}（現在速度: {m_fSpeed}）");
+    //    }
+    //}
+    /////////////////////////////////
 }
