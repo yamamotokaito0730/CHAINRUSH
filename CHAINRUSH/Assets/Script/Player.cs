@@ -55,7 +55,7 @@ public class Player : MonoBehaviour
     //// åXéŒäpÇ…ÇÊÇÈë¨ìxïœâª
     //private Dictionary<int, float> slopeSpeedTable = new Dictionary<int, float>()
     //{
-    //    {-30, 2f}, {-20, 1.5f}, {-10, 1f}, {0, 0f}, {10, -1f}, {20, -1.5f}, {30, -2f}
+    //    {-30, 2.0f}, {-20, 1.5f}, {-10, 1.0f}, {0, 0.0f}, {10, -1.0f}, {20, -1.5f}, {30, -2.0f}
     //};
     //private int lastSlopeKey = int.MinValue;
     //===============================
@@ -206,7 +206,7 @@ public class Player : MonoBehaviour
     private void AddGravity()
     {
         m_fBaseGravity += m_fAddGravity; // èdóÕÇÃëùâ¡
-        m_fBaseGravity = Mathf.Min(m_fBaseGravity, 40f); // è„å¿(40.0f)Çí¥Ç¶Ç»Ç¢ÇÊÇ§Ç…ê›íË
+        m_fBaseGravity = Mathf.Min(m_fBaseGravity, 40.0f); // è„å¿(40.0f)Çí¥Ç¶Ç»Ç¢ÇÊÇ§Ç…ê›íË
     }
 
     /*ÅÑçÇìxêßå¿ä÷êî
@@ -239,7 +239,7 @@ public class Player : MonoBehaviour
 
                 // è„è∏íÜÇÃYë¨ìxÇ‡0Ç…ó}Ç¶ÇÈ
                 Vector3 velocity = rb.linearVelocity;
-                velocity.y = 0f;
+                velocity.y = 0.0f;
                 rb.linearVelocity = velocity;
             }
         }
@@ -286,9 +286,9 @@ public class Player : MonoBehaviour
     //private void UpdateSlopeSpeed()
     //{
     //    float slope = GetGroundSlope();
-    //    if (slope == -1f || slope < -30 || slope > 30) return;
+    //    if (slope == -1.0f || slope < -30 || slope > 30) return;
 
-    //    int rounded = Mathf.RoundToInt(slope / 10f) * 10;
+    //    int rounded = Mathf.RoundToInt(slope / 10.0f) * 10;
     //    if (rounded != lastSlopeKey && slopeSpeedTable.ContainsKey(rounded))
     //    {
     //        float boost = slopeSpeedTable[rounded];
