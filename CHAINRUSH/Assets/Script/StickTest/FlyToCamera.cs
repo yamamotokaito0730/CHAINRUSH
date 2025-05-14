@@ -1,133 +1,87 @@
-// 処理1
 /*=====
 <FlyToCamera.cs>
 └作成者：mori
 
 ＞内容
-カメラに向かってEffectCubeを飛ばす
-一定距離近づいたら張り付かせる
+カメラに向かって飛んできて、一定距離になったら張り付く
 
 ＞注意事項
 
 
 ＞更新履歴
-Y25   
+Y25         
 _M05
+__D  
 ___14:プログラム作成:mori
 
 =====*/
-
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 public class FlyToCamera : MonoBehaviour
 {
     private UnityEngine.Camera mainCamera;
-    private Transform cameraTransform;
-    private bool hasReachedTarget = false; // 対象位置に到達したかどうかのフラグ（張り付き処理の切り替えに使用）
-    private Vector3 localOffset;           // カメラに対するローカルなオフセット位置
 
-    [Header("カメラ手前の距離")]
-    [SerializeField] private float stopDistanceFromCamera = 2f;
-
-    [Header("飛んでくる最大スピード")]
-    [SerializeField] private float maxFlySpeed = 40f;
-
-    [Header("加速時間")]
-    [SerializeField] private float accelerationTime = 0.3f;
-
-    [Header("停止する判定距離")]
-    [SerializeField] private float stopThreshold = 0.1f;
-
-    [Header("張り付くときの位置ランダム半径")]
-    [SerializeField] private float attachRandomRadius = 0.5f;
-
-    void Start()
+    /*＞StartFly関数
+    引数：UnityEngine.Camera camera:メインのカメラ
+    ｘ
+    戻値：なし
+    ｘ
+    概要:外部から呼び出してカメラを設定し、処理を開始
+    */
+    public void StartFly(UnityEngine.Camera camera)
     {
-        mainCamera = UnityEngine.Camera.main;
+        mainCamera = camera;
 
-        if (mainCamera == null)
+        if (mainCamera != null)
         {
-            Debug.LogError("Main Camera not found!");
-            return;
+            // カメラに向かって飛ぶ＆張り付き処理開始
+            StartCoroutine(FlyAndStick(camera));
         }
-
-        cameraTransform = mainCamera.transform;
-
-        // 張り付き位置に対するランダムなローカルオフセットを作る
-        Vector2 randomCircle = Random.insideUnitCircle * attachRandomRadius;
-        localOffset = cameraTransform.forward * stopDistanceFromCamera
-                    + cameraTransform.right * randomCircle.x
-                    + cameraTransform.up * randomCircle.y;
-
-        // カメラへ向かう動きを開始
-        StartCoroutine(FlyToTargetCoroutine());
+        else
+        {
+            Debug.LogError("カメラが設定されていません");
+        }
     }
 
-
-    /*＞カメラに向かって飛ばす関数
-   引数：なし
-   ｘ
-   戻値：なし
-   ｘ
-   概要:カメラに向かって徐々に加速しながら接近するコルーチン。
-        一定距離まで接近したら停止し、カメラ手前で張り付く。
-   */
-    private IEnumerator FlyToTargetCoroutine()
+    /*＞FlyAndStick関数
+    引数：UnityEngine.Camera camera:メインのカメラ
+    ｘ
+    戻値：なし
+    ｘ
+    概要:カメラに向かって飛ぶ＆張り付き処理
+    */
+    private IEnumerator FlyAndStick(UnityEngine.Camera camera)
     {
-        float elapsedTime = 0f;
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb == null) yield break;
 
-        while (true)
+        // 物理停止＆親子付け
+        rb.isKinematic = true;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        transform.SetParent(camera.transform);
+
+        Vector3 startLocalPos = camera.transform.InverseTransformPoint(transform.position);
+
+        // ランダムなポジション設定
+        int randX = Random.Range(0, 2) * 2 - 1;
+        int randY = Random.Range(0, 2) * 2 - 1;
+        Vector3 targetLocalPos = new Vector3(randX, randY, 2); // カメラ前方のローカル位置
+
+        float duration = 0.3f;
+        float t = 0.0f;
+
+        while (t < 1.0f)
         {
-            if (mainCamera == null) yield break;
-
-            // 張り付き目標のワールド座標
-            Vector3 worldTarget = cameraTransform.position + localOffset;
-
-            // 現在位置から目標位置への方向と距離を計算
-            Vector3 direction = worldTarget - transform.position;
-            float distance = direction.magnitude;
-
-            // 停止する距離に入ったら停止
-            if (distance <= stopThreshold)
-                break;
-
-            direction.Normalize();
-
-            // 時間経過に応じて速度を加速
-            elapsedTime += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsedTime / accelerationTime);
-            float currentSpeed = Mathf.Lerp(0f, maxFlySpeed, t);
-
-            // カメラに向かって進む
-            transform.position += direction * currentSpeed * Time.deltaTime;
-
+            t += Time.deltaTime / duration;
+            transform.localPosition = Vector3.Lerp(startLocalPos, targetLocalPos, t);
             yield return null;
         }
 
-        // 張り付き状態に移行
-        hasReachedTarget = true;
-        transform.rotation = cameraTransform.rotation;
-        transform.position = cameraTransform.position + localOffset;
+        // 張り付いたまま1秒表示
+        yield return new WaitForSeconds(1.0f);
 
-        // Rigidbody があれば isKinematic を true にして物理挙動を停止
-        if (TryGetComponent(out Rigidbody rb))
-        {
-            rb.isKinematic = true;
-        }
-
-        // 少し表示を続けてからオブジェクトを削除
-        Destroy(gameObject, 0.5f);
-    }
-
-    void Update()
-    {
-        if (hasReachedTarget && mainCamera != null)
-        {
-            // 張り付いた状態を維持（カメラの前に固定表示）
-            // カメラに対するローカル位置を維持する（見た目はピタ止まり）
-            transform.position = cameraTransform.position + localOffset;
-            transform.rotation = cameraTransform.rotation;
-        }
+        Destroy(gameObject);
     }
 }

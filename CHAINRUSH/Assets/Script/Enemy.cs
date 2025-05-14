@@ -12,6 +12,8 @@ Y25
 _M04    
 __D     
 ___23:プログラム作成:yamamoto
+_M05
+___14:Die関数の仕様変更
 
 =====*/
 
@@ -21,9 +23,8 @@ public class Enemy : MonoBehaviour
 {
 
     [Header("エフェクト")]
-    [SerializeField, Tooltip("プレハブ")] private GameObject m_EffectCube;       // エフェクトキューブプレハブ
-    [SerializeField, Tooltip("生成数")] private int m_nEffectNum;              // エフェクトキューブ生成数
-    [SerializeField,Tooltip("範囲")] private float m_fPosRandRange;  // エフェクトキューブを生成するポジションをランダムに生成するための範囲
+    [SerializeField, Tooltip("パーツ（0:頭, 1:胴体, 2:手, 3:足）")] private GameObject[] m_Parts;  // 頭・胴体・手・足を配列で管理
+    [SerializeField, Tooltip("生成数")] private int m_nPartsNum;    // オブジェクトの生成
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -38,26 +39,29 @@ public class Enemy : MonoBehaviour
     }
 
     /*＞消滅関数
-    引数：なし
+    引数：UnityEngine.Camera camera:メインのカメラ
     ｘ
     戻値：なし
     ｘ
-    概要:この敵を消滅させる
+    概要:この敵を消滅させる、カメラに向かって飛ばす＆張り付け処理
     */
-    public void Die()
+    public void Die(UnityEngine.Camera camera)
     {
-        float x, y, z = 0.0f;
+        bool die = true; // 初回ループ時のみEnemyオブジェクト削除
 
-        // エフェクトキューブ生成
-        for (int i = 0; i < m_nEffectNum; i++)
+        for (int i = 0; i < m_nPartsNum; i++)
         {
-            x = Random.Range(-m_fPosRandRange, m_fPosRandRange);
-            y = Random.Range(-m_fPosRandRange, m_fPosRandRange);
-            z = Random.Range(-m_fPosRandRange, m_fPosRandRange);
 
-            Instantiate(m_EffectCube, new Vector3(transform.position.x + x, transform.position.y + y, transform.position.z + z), Quaternion.identity);
+            GameObject obj = Instantiate(m_Parts[i], transform.position, Quaternion.identity);
+            FlyToCamera fly = obj.GetComponent<FlyToCamera>();
+            fly.StartFly(camera); // カメラに向かって飛ぶ＆張り付き処理開始
+
+            // 初回ループ時のみEnemyオブジェクト削除
+            if (die)
+            {
+                die = false;
+                Destroy(gameObject);
+            }
         }
-
-        Destroy(gameObject);
     }
 }

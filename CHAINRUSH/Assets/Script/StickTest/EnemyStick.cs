@@ -14,21 +14,16 @@ __D
 ___23:プログラム作成:yamamoto
 
 =====*/
-
+using System.Collections;
 using UnityEngine;
 
 public class EnemyStick : MonoBehaviour
 {
 
     [Header("エフェクト")]
-    [Header("エフェクトCubeのプレハブ")]
-    [SerializeField] private GameObject cubePrefab;
-
-    [Header("生成するCubeの数")]
-    [SerializeField] private int cubeCount;
-
-    [Header("Cubeの出現範囲")]
-    [SerializeField] private float spawnRadius;
+    [SerializeField, Tooltip("パーツ（0:頭, 1:胴体, 2:手, 3:足）")]
+    private GameObject[] m_Parts;  // 頭・胴体・手・足を配列で管理
+    [SerializeField, Tooltip("生成数")] private int m_nPartsNum;    // オブジェクトの生成数
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -42,38 +37,29 @@ public class EnemyStick : MonoBehaviour
 
     }
 
-    private void OnCollisionEnter(Collision collision)
+    /*＞消滅関数
+    引数：なし
+    ｘ
+    戻値：なし
+    ｘ
+    概要:この敵を消滅させる
+    */
+    public void Die(UnityEngine.Camera camera)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        bool die = true; // 初回ループ時のみEnemyオブジェクト削除
+
+        for (int i = 0; i < m_nPartsNum; i++)
         {
-            GenerateEffectCubes();
-            Destroy(gameObject); // 敵自身を破壊
-            Debug.Log("プレイヤーに当たった！");
-        }
-    }
 
-    /*＞エフェクト用Cube生成関数
-   引数：なし
-   ｘ
-   戻値：なし
-   ｘ
-   概要:指定した半径内のランダムな位置にエフェクト用のキューブを複数生成する
-   */
-    public void GenerateEffectCubes()
-    {
-        for (int i = 0; i < cubeCount; i++)
-        {
-            // 指定された半径内のランダムな位置を算出
-            Vector3 randomOffset = Random.insideUnitSphere * spawnRadius;
-            Vector3 spawnPos = transform.position + randomOffset;
+            GameObject obj = Instantiate(m_Parts[i], transform.position, Quaternion.identity);
+            FlyToCamera fly = obj.GetComponent<FlyToCamera>();
+            fly.StartFly(camera); // カメラに向かって飛ぶ＆張り付き処理開始
 
-            // キューブを生成
-            GameObject cube = Instantiate(cubePrefab, spawnPos, Quaternion.identity);
-
-            // Rigidbody が付いていない場合は追加（念のため）
-            if (!cube.TryGetComponent(out Rigidbody rb))
+            // 初回ループ時のみEnemyオブジェクト削除
+            if (die)
             {
-                rb = cube.AddComponent<Rigidbody>();
+                die = false;
+                Destroy(gameObject);
             }
         }
     }

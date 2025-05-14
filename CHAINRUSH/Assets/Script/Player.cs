@@ -21,6 +21,7 @@ _M05
 ___01:速度にあわせて重力を増加する処理を追加:tooyama
 ___09:不必要な引数、変数宣言を削除:yamamoto
 ___11:バウンド防止処理を追加:tooyama
+___14:エネミー分割処理呼び出しを追加:mori
 
 =====*/
 
@@ -44,6 +45,7 @@ public class Player : MonoBehaviour
 
     [SerializeField, Tooltip("重力の増加量")] private float m_fAddGravity = 3.0f;
 
+    private UnityEngine.Camera mainCamera;
     private Rigidbody rb; // プレイヤーの物理挙動を制御するためのRigidbody
     private DebugMode debugModeInstance; // デバッグUI（速度・傾斜など）の表示管理用インスタンス
     private int nEnemyKillCount = 0; // 倒した敵の数
@@ -71,6 +73,7 @@ public class Player : MonoBehaviour
     */
     void Start()
     {
+        mainCamera = UnityEngine.Camera.main;
         rb = GetComponent<Rigidbody>();  // Rigidbodyの取得
 
         // 初期状態でデバッグ表示ONなら、UIを生成しておく
@@ -176,7 +179,7 @@ public class Player : MonoBehaviour
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
             if (enemy != null)
             {
-                enemy.Die();
+                enemy.Die(mainCamera); // エネミー分割処理
                 AddBoost(m_fBoost);
                 AddGravity();
                 nEnemyKillCount++; // キルカウントの増加

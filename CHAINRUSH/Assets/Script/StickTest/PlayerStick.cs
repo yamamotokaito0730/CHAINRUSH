@@ -25,6 +25,7 @@ ___11:バウンド防止処理を追加:tooyama
 =====*/
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
@@ -44,6 +45,8 @@ public class PlayerStick : MonoBehaviour
 
     [SerializeField, Tooltip("重力の増加量")] private float m_fAddGravity = 3.0f;
 
+
+    private UnityEngine.Camera mainCamera;
     private Rigidbody rb; // プレイヤーの物理挙動を制御するためのRigidbody
     private DebugMode debugModeInstance; // デバッグUI（速度・傾斜など）の表示管理用インスタンス
     private int nEnemyKillCount = 0; // 倒した敵の数
@@ -71,6 +74,8 @@ public class PlayerStick : MonoBehaviour
     */
     void Start()
     {
+
+        mainCamera = UnityEngine.Camera.main;
         rb = GetComponent<Rigidbody>();  // Rigidbodyの取得
 
         // 初期状態でデバッグ表示ONなら、UIを生成しておく
@@ -176,12 +181,11 @@ public class PlayerStick : MonoBehaviour
             EnemyStick enemy = collision.gameObject.GetComponent<EnemyStick>();
             if (enemy != null)
             {
-                // Playerの変更箇所はここだけ//////////////////
-                enemy.GenerateEffectCubes();  // エフェクト生成
-                ///////////////////////////////////////////////
+                enemy.Die(mainCamera); // エネミー分割処理
                 AddBoost(m_fBoost);
                 AddGravity();
                 nEnemyKillCount++; // キルカウントの増加
+                UnityEngine.Debug.Log("atari");
             }
         }
     }

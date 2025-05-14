@@ -121,6 +121,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e48ecba06015c74a8344535f4402c81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectCube: {fileID: 1182177032737272389, guid: ddbd1475926a1ab43ae53e4bd5fdac1b, type: 3}
-  m_nEffectNum: 10
-  m_fPosRandRange: 0.01
+  m_Parts: []
+  m_nPartsNum: 0
