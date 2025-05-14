@@ -63,9 +63,18 @@ public class FlyToCamera : MonoBehaviour
         Vector3 startLocalPos = camera.transform.InverseTransformPoint(transform.position);
 
         // ランダムなポジション設定
-        int randX = Random.Range(0, 2) * 2 - 1;
-        int randY = Random.Range(0, 2) * 2 - 1;
+        //int randX = Random.Range(0, 2) * 2 - 1;
+        //int randY = Random.Range(0, 2) * 2 - 1;
+        float randX;
+        float randY;
+        do
+        {
+            randX = Random.Range(-1f, 1f);
+            randY = Random.Range(-1f, 1f);
+        } while (Mathf.Abs(randX) < 0.5f || Mathf.Abs(randY) < 0.5f); // 中心に近すぎる場合はやり直し
+
         Vector3 targetLocalPos = new Vector3(randX, randY, 2); // カメラ前方のローカル位置
+        //Vector3 targetLocalPos = new Vector3(1, 1, 2); // カメラ前方のローカル位置
 
         float duration = 0.3f;
         float t = 0.0f;
@@ -78,7 +87,7 @@ public class FlyToCamera : MonoBehaviour
         }
         FindObjectOfType<Camera>().ShakeCamera(0.1f, 0.3f); // 0.5秒間、強さ0.3で揺らす
         // 張り付いたまま1秒表示
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
 
         Destroy(gameObject);
     }
