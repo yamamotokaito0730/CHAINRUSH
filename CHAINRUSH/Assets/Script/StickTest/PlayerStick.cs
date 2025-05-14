@@ -21,15 +21,15 @@ _M05
 ___01:速度にあわせて重力を増加する処理を追加:tooyama
 ___09:不必要な引数、変数宣言を削除:yamamoto
 ___11:バウンド防止処理を追加:tooyama
-___14:エネミー分割処理呼び出しを追加:mori
 
 =====*/
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class PlayerStick : MonoBehaviour
 {
     // 変数宣言
     [Header("ステータス")]
@@ -44,6 +44,7 @@ public class Player : MonoBehaviour
     [SerializeField, Tooltip("ベースの重力")] private float m_fBaseGravity = 9.81f;
 
     [SerializeField, Tooltip("重力の増加量")] private float m_fAddGravity = 3.0f;
+
 
     private UnityEngine.Camera mainCamera;
     private Rigidbody rb; // プレイヤーの物理挙動を制御するためのRigidbody
@@ -73,6 +74,7 @@ public class Player : MonoBehaviour
     */
     void Start()
     {
+
         mainCamera = UnityEngine.Camera.main;
         rb = GetComponent<Rigidbody>();  // Rigidbodyの取得
 
@@ -82,7 +84,6 @@ public class Player : MonoBehaviour
             GameObject obj = Instantiate(debugPrefab, Vector3.zero, Quaternion.identity); // デバッグUIの生成
             debugModeInstance = obj.GetComponent<DebugMode>(); // DebugModeの取得
         }
-
     }
 
     /*＞FixedUpdate関数
@@ -177,13 +178,14 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+            EnemyStick enemy = collision.gameObject.GetComponent<EnemyStick>();
             if (enemy != null)
             {
                 enemy.Die(mainCamera); // エネミー分割処理
                 AddBoost(m_fBoost);
                 AddGravity();
                 nEnemyKillCount++; // キルカウントの増加
+                UnityEngine.Debug.Log("atari");
             }
         }
     }
@@ -249,17 +251,6 @@ public class Player : MonoBehaviour
         }
 
     }
-
-    /*＞高度制限関数
-    引数：なし
-    ｘ
-    戻値：なし
-    ｘ
-    概要: プレイヤーがでこぼこした地形で跳ねるように見えてしまう問題を防ぐため、
-          プレイヤーのY座標（高さ）に上限を設けて、地面にすいつくように移動させる
-    */
-
-
 
     ////////////////////////////
     //速度変化

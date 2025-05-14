@@ -12,38 +12,37 @@ Y25
 _M04    
 __D     
 ___23:プログラム作成:yamamoto
-_M05
-___14:Die関数の仕様変更
 
 =====*/
-
+using System.Collections;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class EnemyStick : MonoBehaviour
 {
 
     [Header("エフェクト")]
-    [SerializeField, Tooltip("パーツ（0:頭, 1:胴体, 2:手, 3:足）")] private GameObject[] m_Parts;  // 頭・胴体・手・足を配列で管理
-    [SerializeField, Tooltip("生成数")] private int m_nPartsNum;    // オブジェクトの生成
+    [SerializeField, Tooltip("パーツ（0:頭, 1:胴体, 2:手, 3:足）")]
+    private GameObject[] m_Parts;  // 頭・胴体・手・足を配列で管理
+    [SerializeField, Tooltip("生成数")] private int m_nPartsNum;    // オブジェクトの生成数
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     /*＞消滅関数
-    引数：UnityEngine.Camera camera:メインのカメラ
+    引数：なし
     ｘ
     戻値：なし
     ｘ
-    概要:この敵を消滅させる、カメラに向かって飛ばす＆張り付け処理
+    概要:この敵を消滅させる
     */
     public void Die(UnityEngine.Camera camera)
     {
