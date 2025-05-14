@@ -76,7 +76,7 @@ public class FlyToCamera : MonoBehaviour
             transform.localPosition = Vector3.Lerp(startLocalPos, targetLocalPos, t);
             yield return null;
         }
-
+        FindObjectOfType<Camera>().ShakeCamera(0.1f, 0.3f); // 0.5ïbä‘ÅAã≠Ç≥0.3Ç≈óhÇÁÇ∑
         // í£ÇËïtÇ¢ÇΩÇ‹Ç‹1ïbï\é¶
         yield return new WaitForSeconds(1.0f);
 
