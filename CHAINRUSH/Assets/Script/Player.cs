@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
     private DebugMode debugModeInstance;
     private Vector3 moveDir = Vector3.forward; // 現在の進行方向を保持
     private int nEnemyKillCount = 0; // 倒した敵の数
-
+    [SerializeField] Animator anim;     // プレイヤーアニメーション
 
 
     /*＞Start関数
@@ -66,7 +66,7 @@ public class Player : MonoBehaviour
             GameObject obj = Instantiate(debugPrefab, Vector3.zero, Quaternion.identity);
             debugModeInstance = obj.GetComponent<DebugMode>();
         }
-
+        anim = GetComponent<Animator>();
         extraGravity = baseGravity;
     }
 
@@ -123,6 +123,8 @@ public class Player : MonoBehaviour
 
         if (debugModeInstance != null)
             debugModeInstance.UpdateDebugUI(transform, m_fSpeed, nEnemyKillCount); // デバッグUIの更新
+
+        ChangeAnimation();
 
         ////////////////////////////////////////////////////
 
@@ -191,4 +193,23 @@ public class Player : MonoBehaviour
         extraGravity += gravityGainPerKill;
         extraGravity = Mathf.Min(extraGravity, 40f); // 上限で制限
     }
+
+    public void ChangeAnimation()
+    {
+
+        if (!anim.GetBool("Run") && !anim.GetBool("RunFast"))
+        {
+            anim.SetBool("Run", true);
+        }
+        
+        if (Input.GetKeyDown("f"))
+        {
+            anim.SetBool("RunFast", true);
+            anim.SetBool("Run", false);
+        }
+
+
+
+    }
+    
 }
