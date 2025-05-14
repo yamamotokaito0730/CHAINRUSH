@@ -79,6 +79,7 @@ public class Player : MonoBehaviour
             GameObject obj = Instantiate(debugPrefab, Vector3.zero, Quaternion.identity); // デバッグUIの生成
             debugModeInstance = obj.GetComponent<DebugMode>(); // DebugModeの取得
         }
+
     }
 
     /*＞FixedUpdate関数
@@ -245,6 +246,17 @@ public class Player : MonoBehaviour
         }
 
     }
+
+    /*＞高度制限関数
+    引数：なし
+    ｘ
+    戻値：なし
+    ｘ
+    概要: プレイヤーがでこぼこした地形で跳ねるように見えてしまう問題を防ぐため、
+          プレイヤーのY座標（高さ）に上限を設けて、地面にすいつくように移動させる
+    */
+
+
 
     ////////////////////////////
     //速度変化
