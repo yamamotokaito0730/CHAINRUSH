@@ -32,11 +32,11 @@ public class Player : MonoBehaviour
     [Header("ステータス")]
     [SerializeField, Tooltip("移動速度")] private float m_fSpeed;
     [SerializeField, Tooltip("加速量")] private float m_fBoost;
-
+/*
     [Header("デバッグ")]
     [SerializeField, Tooltip("デバッグ表示")] private bool m_bDebugView = false;
     [SerializeField, Tooltip("デバッグプレハブ取得")] private GameObject debugPrefab;
-
+*/
     [Header("重力関係")]
     [SerializeField, Tooltip("ベースの重力")] private float m_fBaseGravity = 9.81f;
 
@@ -44,7 +44,6 @@ public class Player : MonoBehaviour
 
     private UnityEngine.Camera mainCamera;
     private Rigidbody rb; // プレイヤーの物理挙動を制御するためのRigidbody
-    private DebugMode debugModeInstance; // デバッグUI（速度・傾斜など）の表示管理用インスタンス
     private int nEnemyKillCount = 0; // 倒した敵の数
 
     //===============================
@@ -72,14 +71,7 @@ public class Player : MonoBehaviour
     {
         mainCamera = UnityEngine.Camera.main;
         rb = GetComponent<Rigidbody>();  // Rigidbodyの取得
-
-        // 初期状態でデバッグ表示ONなら、UIを生成しておく
-        if (m_bDebugView && debugModeInstance == null)
-        {
-            GameObject obj = Instantiate(debugPrefab, Vector3.zero, Quaternion.identity); // デバッグUIの生成
-            debugModeInstance = obj.GetComponent<DebugMode>(); // DebugModeの取得
-        }
-
+        
     }
 
     /*＞FixedUpdate関数
@@ -97,12 +89,14 @@ public class Player : MonoBehaviour
             rb.linearVelocity.y,
             transform.forward.z * m_fSpeed
             );
+
         // Y座標に制限を掛ける
         ClampPlayerHeight();
+
         // 重力の追加
         rb.AddForce(Vector3.down * m_fBaseGravity, ForceMode.Acceleration);
 
-        //        UpdateSlopeSpeed();
+        //UpdateSlopeSpeed();
     }
 
     /*＞Update関数
@@ -122,26 +116,6 @@ public class Player : MonoBehaviour
             m_fSpeed += m_fBoost; // 加速デバッグ用
             AddGravity();
         }
-        // デバッグUI表示
-        if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            m_bDebugView = !m_bDebugView; // UIの表示非表示切り替え
-            if (m_bDebugView && debugModeInstance == null)
-            {
-                // プレハブからインスタンスを生成し、DebugModeを取得
-                GameObject obj = Instantiate(debugPrefab, Vector3.zero, Quaternion.identity); // 座標・回転はプレハブ側で設定d
-                debugModeInstance = obj.GetComponent<DebugMode>();
-            }
-            else if (!m_bDebugView && debugModeInstance != null)
-            {
-                Destroy(debugModeInstance.gameObject); // UIを非表示(削除)する
-                debugModeInstance = null;
-            }
-        }
-
-        if (debugModeInstance != null)
-            debugModeInstance.UpdateDebugUI(transform, m_fSpeed, nEnemyKillCount); // デバッグUIの更新
-
         ////////////////////////////////////////////////////
 
         rotation();
@@ -242,13 +216,18 @@ public class Player : MonoBehaviour
 
                 // 上昇中のY速度も0に抑える
                 Vector3 velocity = rb.linearVelocity;
-                velocity.y =3.0f;
+                velocity.y =-3.0f;
                 rb.linearVelocity = velocity;
             }
         }
 
     }
 
+    public void DebugMode(DebugMode _debug)
+    {
+        _debug.UpdateDebugUI(transform, m_fSpeed, nEnemyKillCount); // デバッグUIの更新
+    }
+  
     /*＞高度制限関数
     引数：なし
     ｘ
