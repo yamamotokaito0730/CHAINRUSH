@@ -13,6 +13,7 @@ Y25
 _M05
 __D  
 ___14:プログラム作成:mori
+___15:カメラの振動呼び出し＆張り付き場所変更:yamamoto
 
 =====*/
 using System.Collections;
@@ -20,7 +21,8 @@ using UnityEngine;
 
 public class FlyToCamera : MonoBehaviour
 {
-    private UnityEngine.Camera mainCamera;
+   // private UnityEngine.Camera mainCamera;
+    private Camera mainCamera;
 
     /*＞StartFly関数
     引数：UnityEngine.Camera camera:メインのカメラ
@@ -29,14 +31,15 @@ public class FlyToCamera : MonoBehaviour
     ｘ
     概要:外部から呼び出してカメラを設定し、処理を開始
     */
-    public void StartFly(UnityEngine.Camera camera)
+    public void StartFly(UnityEngine.Camera _camera)
     {
-        mainCamera = camera;
 
+        mainCamera = _camera.GetComponent<Camera>();
+        
         if (mainCamera != null)
         {
             // カメラに向かって飛ぶ＆張り付き処理開始
-            StartCoroutine(FlyAndStick(camera));
+            StartCoroutine(FlyAndStick(_camera));
         }
         else
         {
@@ -69,12 +72,11 @@ public class FlyToCamera : MonoBehaviour
         float randY;
         do
         {
-            randX = Random.Range(-1f, 1f);
-            randY = Random.Range(-1f, 1f);
+            randX = Random.Range(-1.0f, 1.0f);
+            randY = Random.Range(-1.0f, 1.0f);
         } while (Mathf.Abs(randX) < 0.5f || Mathf.Abs(randY) < 0.5f); // 中心に近すぎる場合はやり直し
 
         Vector3 targetLocalPos = new Vector3(randX, randY, 2); // カメラ前方のローカル位置
-        //Vector3 targetLocalPos = new Vector3(1, 1, 2); // カメラ前方のローカル位置
 
         float duration = 0.3f;
         float t = 0.0f;
@@ -85,7 +87,7 @@ public class FlyToCamera : MonoBehaviour
             transform.localPosition = Vector3.Lerp(startLocalPos, targetLocalPos, t);
             yield return null;
         }
-        FindObjectOfType<Camera>().ShakeCamera(0.1f, 0.3f); // 0.5秒間、強さ0.3で揺らす
+       mainCamera.ShakeCamera(0.1f, 0.3f);
         // 張り付いたまま1秒表示
         yield return new WaitForSeconds(0.5f);
 
