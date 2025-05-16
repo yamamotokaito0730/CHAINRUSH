@@ -1,4 +1,3 @@
-// 処理1
 /*=====
 <Player.cs>
 └作成者：yamamoto
@@ -22,11 +21,9 @@ ___01:速度にあわせて重力を増加する処理を追加:tooyama
 ___09:不必要な引数、変数宣言を削除:yamamoto
 ___11:バウンド防止処理を追加:tooyama
 ___14:エネミー分割処理呼び出しを追加:mori
-
+___16:リファクタリング:yamamoto
 =====*/
 
-using System.Collections.Generic;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -228,14 +225,16 @@ public class Player : MonoBehaviour
         RaycastHit hit; // 地面との当たり判定用
 
         // 地面に立っていた(足元の地面にRayがヒットした)場合のみ処理を行う
-        if (Physics.Raycast(rayOrigin, Vector3.down, out hit, 2.0f))
+        if (Physics.Raycast(rayOrigin, Vector3.down, out hit, 10.0f))
         {
+            
             float groundY = hit.point.y; //地面の高さ
-            float maxHeight = groundY + 1.1f;   // 許容する最大の高さ（浮き防止）
+            float maxHeight = groundY + 1.0f;   // 許容する最大の高さ（浮き防止）
 
             // プレイヤーが指定した高さより浮いている場合は制限をかける
             if (transform.position.y > maxHeight)
             {
+                Debug.Log("制限");
                 // Y座標に制限を掛けて高さを矯正する
                 Vector3 correctedPos = transform.position;
                 correctedPos.y = maxHeight;
@@ -243,7 +242,7 @@ public class Player : MonoBehaviour
 
                 // 上昇中のY速度も0に抑える
                 Vector3 velocity = rb.linearVelocity;
-                velocity.y = 0.0f;
+                velocity.y =3.0f;
                 rb.linearVelocity = velocity;
             }
         }

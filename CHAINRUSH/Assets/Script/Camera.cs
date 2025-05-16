@@ -109,6 +109,13 @@ public class Camera : MonoBehaviour
         transform.LookAt(m_Target.position);
     }
 
+    /*＞ShakeCamera関数
+    引数：なし
+    ｘ
+    戻値：なし
+    ｘ
+    概要:カメラを振動させる関数
+    */
     /// <param name="duration">揺れる時間（秒）</param>
     /// <param name="magnitude">揺れる強さ</param>
     public void ShakeCamera(float duration, float magnitude)
