@@ -21,6 +21,9 @@ _M04
 __D     
 ___24:プログラム作成:tooyama
 ___28:坂の傾斜を計測＆表示出来る機能を追加
+_M05
+__D
+___16:リファクタリング:yamamoto
 
 =====*/
 using TMPro;
@@ -35,13 +38,10 @@ public class DebugMode : MonoBehaviour
     [SerializeField] private TextMeshProUGUI killCountText;
     [SerializeField] private TextMeshProUGUI groundSlopeText;
 
-
-    //[Header("デバッグプレハブ")]
-    //[SerializeField] private GameObject debugPrefab;
-
     [Header("レイキャスト")]
     [SerializeField, Tooltip("レイの長さ")] private float rayLength = 2.0f;
     [SerializeField, Tooltip("レイの色")] private Color normalColor = Color.red;
+
 
     /*＞デバッグ更新関数
     引数1：_PlayerTransform
