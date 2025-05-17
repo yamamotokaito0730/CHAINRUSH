@@ -22,6 +22,7 @@ ___09:不必要な引数、変数宣言を削除:yamamoto
 ___11:バウンド防止処理を追加:tooyama
 ___14:エネミー分割処理呼び出しを追加:mori
 ___16:リファクタリング:yamamoto
+___17:坂の角度に応じた加減速処理の追加:tooyama
 =====*/
 
 using UnityEngine;
@@ -45,20 +46,8 @@ public class Player : MonoBehaviour
     private UnityEngine.Camera mainCamera;
     private Rigidbody rb; // プレイヤーの物理挙動を制御するためのRigidbody
     private int nEnemyKillCount = 0; // 倒した敵の数
-
-    //===============================
-    ///坂の角度による加減速用処理
-    //private Vector3 moveDir = Vector3.forward; // 現在の進行方向を保持する為の変数
-    //
-    //// 傾斜角による速度変化
-    //private Dictionary<int, float> slopeSpeedTable = new Dictionary<int, float>()
-    //{
-    //    {-30, 2.0f}, {-20, 1.5f}, {-10, 1.0f}, {0, 0.0f}, {10, -1.0f}, {20, -1.5f}, {30, -2.0f}
-    //};
-    //private int lastSlopeKey = int.MinValue;
-    //===============================
-
-
+    private int m_nPrevSlopeAngleKey = int.MinValue; // 前フレームで適用された傾斜角（10度単位）
+    private float m_fRecordedBaseSpeed = 0.0f; // 傾斜に入った瞬間の速度記録用
 
     /*＞Start関数
     引数：なし
@@ -71,7 +60,9 @@ public class Player : MonoBehaviour
     {
         mainCamera = UnityEngine.Camera.main;
         rb = GetComponent<Rigidbody>();  // Rigidbodyの取得
-        
+                                         
+        m_fRecordedBaseSpeed = m_fSpeed; // 傾斜に入った瞬間の速度記録と初期速度を同期させる
+
     }
 
     /*＞FixedUpdate関数
@@ -96,7 +87,27 @@ public class Player : MonoBehaviour
         // 重力の追加
         rb.AddForce(Vector3.down * m_fBaseGravity, ForceMode.Acceleration);
 
-        //UpdateSlopeSpeed();
+        // 坂の角度の更新
+        float slope = GetGroundSlope();
+
+        // 角度を丸める(状態遷移の検出用)
+        int slopeKey = Mathf.RoundToInt(slope / 10.0f) * 10;
+
+        // 地面に立っており、傾斜に入った場合
+        if (slope != -1.0f && slopeKey != m_nPrevSlopeAngleKey)
+        {
+            // 初めて傾斜に入ったときだけ速度を記録
+            if (m_nPrevSlopeAngleKey == 0)
+                m_fRecordedBaseSpeed = m_fSpeed;
+
+            // 坂の角度から加減速値を決める
+            float boost = ApplySlopeSpeedBoost(slope);
+            // ApplySlopeSpeedBoost関数の戻り値を加減速に行う
+            AddBoost(boost);
+            //本フレームの傾斜角を保存し、２度目の加減速を防ぐ
+            m_nPrevSlopeAngleKey = slopeKey;
+        }
+
     }
 
     /*＞Update関数
@@ -114,6 +125,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             m_fSpeed += m_fBoost; // 加速デバッグ用
+            m_fRecordedBaseSpeed += m_fBoost;
             AddGravity();
         }
         ////////////////////////////////////////////////////
@@ -153,6 +165,7 @@ public class Player : MonoBehaviour
             {
                 enemy.Die(mainCamera); // エネミー分割処理
                 AddBoost(m_fBoost);
+                m_fRecordedBaseSpeed += m_fBoost;
                 AddGravity();
                 nEnemyKillCount++; // キルカウントの増加
             }
@@ -227,68 +240,83 @@ public class Player : MonoBehaviour
     {
         _debug.UpdateDebugUI(transform, m_fSpeed, nEnemyKillCount); // デバッグUIの更新
     }
-  
-    /*＞高度制限関数
+
+    /*＞角度取得関数
     引数：なし
     ｘ
-    戻値：なし
+    戻値：坂の角度
     ｘ
-    概要: プレイヤーがでこぼこした地形で跳ねるように見えてしまう問題を防ぐため、
-          プレイヤーのY座標（高さ）に上限を設けて、地面にすいつくように移動させる
+    概要: プレイヤーが立っている坂の角度を取得する
+          この符号付き角度は ApplySlopeSpeedBoost() で
+          10°単位に丸められ、速度補正テーブルに渡される
     */
+    private float GetGroundSlope()
+    {
+        float rayLength = 2.0f; // Raycast 距離（足元判定用）
+        Vector3 origin = transform.position; // Ray 生成位置
 
+        RaycastHit hit;
+        if (Physics.Raycast(origin, Vector3.down, out hit, rayLength))
+        {
+            // プレイヤー進行方向と斜面方向を求める
+            Vector3 moveDir = rb.linearVelocity.normalized; // 進行方向
+            Vector3 slopeDir = Vector3.Cross(Vector3.Cross(hit.normal, Vector3.up), hit.normal).normalized; // 斜面方向
 
+            //  傾斜角の絶対値を求める
+            float angleAbs = Vector3.Angle(hit.normal, Vector3.up);
 
-    ////////////////////////////
-    //速度変化
-    /////*＞角度取得関数
-    ////引数：なし
-    ////ｘ
-    ////戻値：坂の角度
-    ////ｘ
-    ////概要:プレイヤーが立っている坂の角度を取得する
-    ////*/
-    //private float GetGroundSlope()
-    //{
-    //    float rayLength = 2.0f;
-    //    Vector3 origin = transform.position;
+            // 登りか下りかを内積で判定し符号を付与
+            float dot = Vector3.Dot(moveDir, slopeDir);
+            float signedAngle = (dot >= 0) ? angleAbs  // moveDir と同じ向き → 下り
+                                           : -angleAbs; // 逆向き → 上り
 
-    //    RaycastHit hit;
-    //    if (Physics.Raycast(origin, Vector3.down, out hit, rayLength))
-    //    {
-    //        // 登り or 下りの向きを考慮して傾斜角に符号を付ける
-    //        Vector3 moveDir = rb.linearVelocity.normalized;
-    //        Vector3 slopeDir = Vector3.Cross(Vector3.Cross(hit.normal, Vector3.up), hit.normal).normalized;
-    //        float dot = Vector3.Dot(moveDir, slopeDir);
-    //        float angle = Vector3.Angle(hit.normal, Vector3.up);
-    //        return dot >= 0 ? angle : -angle;
-    //    }
-    //    else
-    //    {
-    //        return -1f; // 地面が見つからなかった
-    //    }
-    //}
+            return signedAngle; // ここで返した角度を ApplySlopeSpeedBoost関数で使用する
+        }
+        else
+        {
+            return -1.0f; // 空中に浮いており、地面が見つからない場合は-1を返し判定を行わない
+        }
+    }
 
-    ///*＞速度変化関数
-    //引数：なし
-    //ｘ
-    //戻値：なし
-    //ｘ
-    //概要:坂の角度によってプレイヤー速度を増減させる
-    //*/
-    //private void UpdateSlopeSpeed()
-    //{
-    //    float slope = GetGroundSlope();
-    //    if (slope == -1.0f || slope < -30 || slope > 30) return;
+    /*＞坂の傾斜角による加速・減速処理関数
+   引数：傾斜角
+   ｘ
+   戻値：加速度パラメータ
+   ｘ
+   概要:坂の傾斜角に応じてプレイヤー速度を増減させる
+   */
+    private float ApplySlopeSpeedBoost(float _slopeAngle)
+    {
+        // 地面が検出されなかった
+        if (_slopeAngle == -1.0f) return 0.0f;
 
-    //    int rounded = Mathf.RoundToInt(slope / 10.0f) * 10;
-    //    if (rounded != lastSlopeKey && slopeSpeedTable.ContainsKey(rounded))
-    //    {
-    //        float boost = slopeSpeedTable[rounded];
-    //        m_fSpeed += boost;
-    //        lastSlopeKey = rounded;
-    //        Debug.Log($"傾斜: {rounded}° → 速度変化 {boost}（現在速度: {m_fSpeed}）");
-    //    }
-    //}
-    /////////////////////////////////
+        // 角度を丸める(ロジック計算用)
+        int slopeKey = Mathf.RoundToInt(_slopeAngle / 10.0f) * 10;
+
+        // 30度を超えた傾斜角は30度とする
+        if (slopeKey < -30.0f) slopeKey = -30;
+        else if (slopeKey > 30.0f) slopeKey = 30;
+
+        // 傾斜角に応じて加速・減速する値を決める
+        switch (slopeKey)
+        {
+            case -30:
+                return 2.0f;
+            case -20:
+                return 1.5f;
+            case -10:
+                return 1.0f;
+            case 0:
+                return m_fRecordedBaseSpeed - m_fSpeed; // 平地に戻る際、元の速度に戻す
+            case 10:
+                return -1.0f;
+            case 20:
+                return -1.5f;
+            case 30:
+                return -2.0f;
+            default: return 0.0f;
+
+        }
+    }
+
 }
