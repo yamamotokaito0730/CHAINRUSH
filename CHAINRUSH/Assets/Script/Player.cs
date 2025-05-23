@@ -23,6 +23,7 @@ ___11:バウンド防止処理を追加:tooyama
 ___14:エネミー分割処理呼び出しを追加:mori
 ___16:リファクタリング:yamamoto
 ___17:坂の角度に応じた加減速処理の追加:tooyama
+___23:読み取り専用プロパティの追加:tooyama
 =====*/
 
 using UnityEngine;
@@ -48,6 +49,9 @@ public class Player : MonoBehaviour
     private int nEnemyKillCount = 0; // 倒した敵の数
     private int m_nPrevSlopeAngleKey = int.MinValue; // 前フレームで適用された傾斜角（10度単位）
     private float m_fRecordedBaseSpeed = 0.0f; // 傾斜に入った瞬間の速度記録用
+
+    // 読み取り専用プロパティを追加(ShotWebクラスで発射する糸の速度に乗算させる為)
+    public float PlayerSpeed => m_fSpeed;
 
     /*＞Start関数
     引数：なし
@@ -221,7 +225,6 @@ public class Player : MonoBehaviour
             // プレイヤーが指定した高さより浮いている場合は制限をかける
             if (transform.position.y > maxHeight)
             {
-                Debug.Log("制限");
                 // Y座標に制限を掛けて高さを矯正する
                 Vector3 correctedPos = transform.position;
                 correctedPos.y = maxHeight;
