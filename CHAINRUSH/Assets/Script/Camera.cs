@@ -22,7 +22,6 @@ ___16:カメラ移動をマウス操作に変更、Rキーで初期位置にリセット:mori
 
 =====*/
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class Camera : MonoBehaviour
 {
