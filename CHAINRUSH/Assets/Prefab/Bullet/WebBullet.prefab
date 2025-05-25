@@ -103,7 +103,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -121,5 +121,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c37a0c668ce61f42804dfb8aa48d737, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_fShotSpeed: 30
   m_fLifeTime: 5
