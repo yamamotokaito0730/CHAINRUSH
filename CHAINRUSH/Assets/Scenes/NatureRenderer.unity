@@ -836,6 +836,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6046117708251883333, guid: cc7447fb5bb65424eb98c429e9694e91, type: 3}
+      propertyPath: m_EnableTreeColliders
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8385940302516168928, guid: cc7447fb5bb65424eb98c429e9694e91, type: 3}
       propertyPath: m_Name
       value: Terrain
@@ -847,6 +851,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8385940302516168928, guid: cc7447fb5bb65424eb98c429e9694e91, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1321219314}
+    - targetCorrespondingSourceObject: {fileID: 8385940302516168928, guid: cc7447fb5bb65424eb98c429e9694e91, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1321219318}
   m_SourcePrefab: {fileID: 100100000, guid: cc7447fb5bb65424eb98c429e9694e91, type: 3}
 --- !u!1 &1321219313 stripped
 GameObject:
@@ -874,6 +881,28 @@ MonoBehaviour:
   _renderDetailsWithNatureRenderer: 1
   _optimizePatchSize: 1
   _format: 202200
+--- !u!218 &1321219316 stripped
+Terrain:
+  m_CorrespondingSourceObject: {fileID: 1069166097175971188, guid: cc7447fb5bb65424eb98c429e9694e91, type: 3}
+  m_PrefabInstance: {fileID: 1321219312}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1321219318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1321219313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8afaca36f240cb488a98bf02e3777f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_terrain: {fileID: 1321219316}
+  m_treePrefab:
+  - {fileID: 1620417488002718097, guid: cce4d8667f2436a479759f07084d8ff4, type: 3}
+  - {fileID: 1030678204986712962, guid: 398b156fac7c6f44db09e9ad046c24dd, type: 3}
+  m_player: {fileID: 672291518}
 --- !u!1001 &1347992347
 PrefabInstance:
   m_ObjectHideFlags: 0

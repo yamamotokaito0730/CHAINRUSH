@@ -154,3 +154,6 @@ MonoBehaviour:
   - {fileID: 1494436239441686450, guid: ce02af8c558b65c44b7e1f96f54d3b02, type: 3}
   - {fileID: 2241668035170208254, guid: 9d3221f1a22aea24da46f7b229d3ee53, type: 3}
   - {fileID: 207828222348514018, guid: 8a235f66237be7c4bb9c0329d2f3a9cb, type: 3}
+  m_shiftPosition: {x: 0, y: 5, z: 0}
+  m_upperDisconnectedPrefab: {fileID: 2957882097944700477, guid: 5b338e1a92b400843a3506bba63d61e3, type: 3}
+  m_bottomDisconnectedPrefab: {fileID: 6507582229949200936, guid: 541e0331a4294a943ac27a10db793f16, type: 3}
