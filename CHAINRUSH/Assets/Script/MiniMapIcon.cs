@@ -13,6 +13,8 @@ Y25
 _M05
 __D  
 ___23:プログラム作成:mori
+___27:プレイヤーに合わせてアイコンが回転する処理を追加:mori
+___27:ミニマップを円形に変更
 
 =====*/
 
@@ -36,23 +38,45 @@ public class MiniMapIcon : MonoBehaviour
 
     void Update()
     {
-        // Destroyされたオブジェクトにも対応したnullチェック
-        if (target == null || target.Equals(null) || player == null || player.Equals(null))
+        // プレイヤーアイコンの回転処理
+        if (iconImage.name == "PlayerIcon")
         {
-            iconImage.enabled = false; // 念のため非表示に
+            if (player != null && !player.Equals(null))
+            {
+                float playerYRotation = player.eulerAngles.y;
+                transform.localEulerAngles = new Vector3(0, 0, -playerYRotation);
+            }
             return;
         }
 
-        Vector3 offset = target.position - player.position;
+        // 敵アイコンの存在チェック
+        if (target == null || target.Equals(null) || player == null || player.Equals(null))
+        {
+            iconImage.enabled = false;
+            return;
+        }
 
+        // プレイヤーと敵のオフセットを計算
+        Vector3 offset = target.position - player.position;
         Vector2 offset2D = new Vector2(offset.x, offset.z);
         float distance = offset2D.magnitude;
 
+        // 表示距離内なら
         if (distance <= displayRange)
         {
-            iconImage.enabled = true;
             Vector2 minimapPos = offset2D * mapScale;
-            ((RectTransform)transform).anchoredPosition = minimapPos;
+
+            // ミニマップ円内に収まっているかチェック
+            float radius = minimapPanel.rect.width / 2f; // 円の半径（正方形前提）
+            if (minimapPos.magnitude <= radius)
+            {
+                iconImage.enabled = true;
+                ((RectTransform)transform).anchoredPosition = minimapPos;
+            }
+            else
+            {
+                iconImage.enabled = false;
+            }
         }
         else
         {
