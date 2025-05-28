@@ -1741,6 +1741,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: AlphaTerrain_1
       objectReference: {fileID: 0}
+    - target: {fileID: 7427517422407186767, guid: 982d1391261e566499ad97011c7083f0, type: 3}
+      propertyPath: m_TagString
+      value: MainTerrain
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2548,6 +2552,7 @@ MonoBehaviour:
   m_terrain: {fileID: 1524491827}
   m_treePrefab:
   - {fileID: 1620417488002718097, guid: cce4d8667f2436a479759f07084d8ff4, type: 3}
+  - {fileID: 1030678204986712962, guid: 398b156fac7c6f44db09e9ad046c24dd, type: 3}
   m_player: {fileID: 1691890328}
 --- !u!1 &1543988725 stripped
 GameObject:

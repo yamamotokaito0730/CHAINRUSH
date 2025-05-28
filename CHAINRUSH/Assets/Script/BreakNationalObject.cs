@@ -42,7 +42,8 @@ public class BreakNationalObject : MonoBehaviour
         else m_nModelkind = 1;
 
         // terrainに入っているスクリプトを参照
-        Terrain terrain = Terrain.activeTerrain;
+        GameObject terrainObject = GameObject.FindWithTag("MainTerrain");   // タグが付いたTerrainを取得
+        Terrain terrain = terrainObject.GetComponent<Terrain>();
         objectSpawner = terrain.GetComponent<ObjectSpawner>();
     }
 
