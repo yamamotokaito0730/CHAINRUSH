@@ -229,6 +229,7 @@ public class EnemyPattern : MonoBehaviour
             // 初期位置からの距離が15mを超えているか？
             if (Vector3.Distance(m_vStartPos, targetPos) > m_fSearchRange)
             {
+                yield return null;   // 必ずCPUを開放させる(フリーズ防止)
                 continue; // その場合移動計算をやり直す
             }
             // 移動する方向に向きを変える
