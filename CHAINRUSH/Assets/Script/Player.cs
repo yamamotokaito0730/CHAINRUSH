@@ -34,11 +34,7 @@ public class Player : MonoBehaviour
     [Header("ステータス")]
     [SerializeField, Tooltip("移動速度")] private float m_fSpeed;
     [SerializeField, Tooltip("加速量")] private float m_fBoost;
-/*
-    [Header("デバッグ")]
-    [SerializeField, Tooltip("デバッグ表示")] private bool m_bDebugView = false;
-    [SerializeField, Tooltip("デバッグプレハブ取得")] private GameObject debugPrefab;
-*/
+
     [Header("重力関係")]
     [SerializeField, Tooltip("ベースの重力")] private float m_fBaseGravity = 9.81f;
 
@@ -78,16 +74,20 @@ public class Player : MonoBehaviour
     */
     void FixedUpdate()
     {
+        
         // 向いている方向に進み続ける
         rb.linearVelocity = new Vector3(
             transform.forward.x * m_fSpeed,
             rb.linearVelocity.y,
             transform.forward.z * m_fSpeed
             );
+        
 
         // Y座標に制限を掛ける
         ClampPlayerHeight();
 
+
+        /*
         // 重力の追加
         rb.AddForce(Vector3.down * m_fBaseGravity, ForceMode.Acceleration);
 
@@ -111,7 +111,7 @@ public class Player : MonoBehaviour
             //本フレームの傾斜角を保存し、２度目の加減速を防ぐ
             m_nPrevSlopeAngleKey = slopeKey;
         }
-
+        */
     }
 
     /*＞Update関数
@@ -220,7 +220,7 @@ public class Player : MonoBehaviour
         {
             
             float groundY = hit.point.y; //地面の高さ
-            float maxHeight = groundY + 1.0f;   // 許容する最大の高さ（浮き防止）
+            float maxHeight = groundY + 0.5f;   // 許容する最大の高さ（浮き防止）
 
             // プレイヤーが指定した高さより浮いている場合は制限をかける
             if (transform.position.y > maxHeight)
