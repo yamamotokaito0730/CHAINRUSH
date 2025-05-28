@@ -74,38 +74,19 @@ public class Player : MonoBehaviour
     */
     void FixedUpdate()
     {
-        float speedMultiplier = 1f;
-
-        // 地面の傾斜を調べる
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.5f))
-        {
-            Vector3 slopeNormal = hit.normal;
-            float dot = Vector3.Dot(transform.forward, slopeNormal);
-
-            // dot < 0 → 上り坂、dot > 0 → 下り坂
-            speedMultiplier += -dot * 0.5f; // 値は調整可能（0.5fは加減速の強さ）
-        }
-
-        // 最終的な速度を補正
-        float adjustedSpeed = m_fSpeed * speedMultiplier;
-
-        // 向いている方向に進み続ける
-        rb.linearVelocity = new Vector3(
-            transform.forward.x * adjustedSpeed,
-            rb.linearVelocity.y,
-            transform.forward.z * adjustedSpeed
-        );
-        /*
+        
         // 向いている方向に進み続ける
         rb.linearVelocity = new Vector3(
             transform.forward.x * m_fSpeed,
             rb.linearVelocity.y,
             transform.forward.z * m_fSpeed
             );
-        */
+        
+
         // Y座標に制限を掛ける
         ClampPlayerHeight();
+
+
         /*
         // 重力の追加
         rb.AddForce(Vector3.down * m_fBaseGravity, ForceMode.Acceleration);
@@ -239,7 +220,7 @@ public class Player : MonoBehaviour
         {
             
             float groundY = hit.point.y; //地面の高さ
-            float maxHeight = groundY + 0.2f;   // 許容する最大の高さ（浮き防止）
+            float maxHeight = groundY + 0.5f;   // 許容する最大の高さ（浮き防止）
 
             // プレイヤーが指定した高さより浮いている場合は制限をかける
             if (transform.position.y > maxHeight)
