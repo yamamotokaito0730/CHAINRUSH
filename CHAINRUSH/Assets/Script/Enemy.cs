@@ -26,6 +26,8 @@ public class Enemy : MonoBehaviour
     [SerializeField, Tooltip("パーツ（0:頭, 1:胴体, 2:手, 3:足）")] private GameObject[] m_Parts;  // 頭・胴体・手・足を配列で管理
     [SerializeField, Tooltip("生成数")] private int m_nPartsNum;    // オブジェクトの生成
 
+    public GameManager gamemanager;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -60,6 +62,7 @@ public class Enemy : MonoBehaviour
             if (die)
             {
                 die = false;
+                gamemanager.OnEnemyKilled(gameObject);
                 Destroy(gameObject);
             }
         }
