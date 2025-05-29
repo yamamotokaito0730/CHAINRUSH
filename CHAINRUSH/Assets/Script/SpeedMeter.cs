@@ -40,7 +40,7 @@ public class SpeedMeter : MonoBehaviour
     void Update()
     {
         if (player == null) return; // null チェック
-        currentSpeed = player.m_fSpeed;
+        //currentSpeed = player.m_fSpeed;
         UpdateSpeedMeter(currentSpeed);
     }
 
