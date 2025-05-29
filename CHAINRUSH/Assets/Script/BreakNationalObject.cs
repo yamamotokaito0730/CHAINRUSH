@@ -31,15 +31,10 @@ public class BreakNationalObject : MonoBehaviour
 
     private GameObject m_breakModel;        // 壊されるモデル
     private ObjectSpawner objectSpawner;    // 参照したいスクリプト
-    private int m_nModelkind;               // モデルの種類(0：木、1：石)
 
     void Start()
     {
         m_breakModel = this.gameObject;
-
-        // オブジェクトの名前によって種類を分ける
-        if (m_breakModel.name.StartsWith("Conifer")) m_nModelkind = 0;
-        else m_nModelkind = 1;
 
         // terrainに入っているスクリプトを参照
         GameObject terrainObject = GameObject.FindWithTag("MainTerrain");   // タグが付いたTerrainを取得
@@ -67,7 +62,6 @@ public class BreakNationalObject : MonoBehaviour
                 Instantiate(m_bottomDisconnectedPrefab, modelPosition, Quaternion.identity);
             Destroy(prefab1, 3.0f);  // 3秒後に削除
             Destroy(prefab2, 3.0f);
-
 
             // 各パーティクルのPrefabを生成して再生
             foreach (GameObject prefab in m_particle)
