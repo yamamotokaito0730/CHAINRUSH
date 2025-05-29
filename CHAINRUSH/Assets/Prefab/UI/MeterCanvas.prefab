@@ -159,6 +159,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7978722142806386108}
+  - component: {fileID: 6907833656885600872}
   m_Layer: 5
   m_Name: Meter
   m_TagString: Untagged
@@ -190,6 +191,26 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6907833656885600872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6117660935340082566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e14cc53c3b8f0b4429e77d7186aafcf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bars:
+  - {fileID: 7882925652307749314}
+  - {fileID: 2164197181677030888}
+  - {fileID: 7758934080027219973}
+  - {fileID: 501009624654729081}
+  - {fileID: 7104152886826198510}
+  level: 2
+  currentSpeed: 0
 --- !u!1 &7104152886826198510
 GameObject:
   m_ObjectHideFlags: 0
