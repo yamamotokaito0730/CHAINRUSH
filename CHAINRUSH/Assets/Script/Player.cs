@@ -30,10 +30,22 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public enum E_State
+    {
+        Danger=1,
+        Normal,
+        TreeDestroy,
+        HomeDestroy,
+        Strongest
+    }
+
     // 変数宣言
     [Header("ステータス")]
     [SerializeField, Tooltip("移動速度")] private float m_fSpeed;
     [SerializeField, Tooltip("加速量")] private float m_fBoost;
+    [SerializeField, Tooltip("最高速度")] private float m_fMaxSpeed;
+    private E_State PlayerState;
+    private int[] thresholds = { 4, 17, 35, 44, 50 };
 
     [Header("重力関係")]
     [SerializeField, Tooltip("ベースの重力")] private float m_fBaseGravity = 9.81f;
@@ -62,6 +74,8 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody>();  // Rigidbodyの取得
                                          
         m_fRecordedBaseSpeed = m_fSpeed; // 傾斜に入った瞬間の速度記録と初期速度を同期させる
+
+        PlayerState=E_State.Normal;
 
     }
 
@@ -128,7 +142,7 @@ public class Player : MonoBehaviour
         //デバッグ用
         if (Input.GetKeyDown(KeyCode.E))
         {
-            m_fSpeed += m_fBoost; // 加速デバッグ用
+            AddBoost(m_fBoost); // 加速デバッグ用
             m_fRecordedBaseSpeed += m_fBoost;
             AddGravity();
         }
@@ -186,15 +200,55 @@ public class Player : MonoBehaviour
     public void AddBoost(float _boost)
     {
         m_fSpeed += _boost;
+        if (m_fSpeed > m_fMaxSpeed)
+        {
+            m_fSpeed = m_fMaxSpeed;
+            PlayerState = (E_State)5;
+        }
+        else
+        {
+            StateCheck();
+        }
     }
 
-    /*＞重力増加関数
+    /*＞減速関数
+   引数：float _down:減少する値
+   ｘ
+   戻値：なし
+   ｘ
+   概要:プレイヤーの速度を下げる
+   */
+    public void SubSpeed(float _down)
+    {
+        m_fSpeed += _down;
+        StateCheck();
+    }
+
+    /*＞状態変化関数
     引数：なし
     ｘ
     戻値：なし
     ｘ
-    概要:加速度増加に合わせて重力を増加させる
+    概要:プレイヤーの速度によって状態を変える
     */
+    private void StateCheck()
+    {
+        for (int i = 0; i<thresholds.Length; i++)
+        {
+            if (m_fSpeed <= thresholds[i])
+            {
+                PlayerState = (E_State)i + 1;
+                break;
+            }
+        }
+    }
+  /*＞重力増加関数
+  引数：なし
+  ｘ
+  戻値：なし
+  ｘ
+  概要:加速度増加に合わせて重力を増加させる
+  */
     private void AddGravity()
     {
         m_fBaseGravity += m_fAddGravity; // 重力の増加
@@ -322,4 +376,15 @@ public class Player : MonoBehaviour
         }
     }
 
+    /*＞状態を送る関数
+   引数：なし
+   ｘ
+   戻値：状態を表す数値
+   ｘ
+   概要:プレイヤーの状態を送る
+   */
+    public int GetState()
+    {
+        return (int)PlayerState;
+    }
 }
