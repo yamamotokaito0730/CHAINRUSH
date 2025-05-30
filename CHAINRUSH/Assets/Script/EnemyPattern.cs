@@ -14,6 +14,7 @@ __D
 ___23:プログラム作成:tooyama
 ___25:索敵・移動処理の追加 tooyama
 ___26:追跡処理の追加＆弾の速度を3→5に変更 tooyama
+___30:攻撃エフェクトを追加 mori
 
 =====*/
 using System.Collections;
@@ -45,9 +46,17 @@ public class EnemyPattern : MonoBehaviour
     private Vector3 m_vStartPos; // 初期位置を保存する変数
 
     // コルーチン
-    private Coroutine m_attackCoroutine; 
+    private Coroutine m_attackCoroutine;
     private Coroutine m_moveCoroutine;
     private Coroutine m_chaseCoroutine;
+
+    // 攻撃エフェクト
+    public GameObject effectPrefab;
+    public float distanceInFront = 2.0f;     // 出現位置（前方距離）
+    public float shootSpeed = 10.0f;          // 前方に飛ばす速度
+    public float upwardOffset = 1.0f; // 上方向に1m上げる
+
+    private Player player;
 
     /*＞Start関数
     引数：なし
@@ -82,7 +91,10 @@ public class EnemyPattern : MonoBehaviour
         if (other.gameObject.CompareTag("Player") && !m_bIsFinding)
         {
             // 侵入時の位置を記録
-            m_targetPlayer = other.transform; 
+            m_targetPlayer = other.transform;
+            // プレイヤーの速度を取得
+            player = other.GetComponent<Player>();
+            m_fShotSpeed = player.GetSpeed() + 5.0f;
             // 発見フラグをオンに
             m_bIsFinding = true;
 
@@ -105,13 +117,13 @@ public class EnemyPattern : MonoBehaviour
     {
         // プレイヤーが索敵範囲から離れた時
         if (other.CompareTag("Player") && m_attackCoroutine != null)
-        {           
+        {
             // ターゲットをリセット
             m_targetPlayer = null;
             // 発見フラグをオフに
             m_bIsFinding = false;
             // 状態変更に応じて切り替え
-            StateChange(); 
+            StateChange();
         }
     }
 
@@ -139,7 +151,7 @@ public class EnemyPattern : MonoBehaviour
    */
     private IEnumerator ChaseRoutine()
     {
-       
+
         while (m_targetPlayer != null)
         {
             // 拠点との距離チェック
@@ -158,7 +170,7 @@ public class EnemyPattern : MonoBehaviour
             float speed = m_fFindSpeed;
 
             // 向きをゆっくり変える
-            if(direction != Vector3.zero)
+            if (direction != Vector3.zero)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(direction);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5.0f);
@@ -167,7 +179,7 @@ public class EnemyPattern : MonoBehaviour
             transform.position += transform.forward * speed * Time.deltaTime;
 
             yield return null;
-        }      
+        }
     }
 
 
@@ -180,27 +192,47 @@ public class EnemyPattern : MonoBehaviour
     */
     private void Attack()
     {
-        // nullチェック
-        if (!m_targetPlayer || !m_BulletPrefab) return;
-        // 弾の生成位置を決める
-        Vector3 spawnPos = transform.position;
-        // 弾を飛ばす位置を決める
-        Vector3 direction = (m_targetPlayer.position - spawnPos).normalized;
+        if (!effectPrefab) return;
 
-        // プレイヤーの速度を取得
-        Player player = m_targetPlayer.GetComponent<Player>();
-        if (!player) return;
+        // 発射方向を敵の forward にする（プレイヤー方向じゃない）
+        Vector3 shootDir = transform.forward;
 
-        float f_PlayerSpeed = player.PlayerSpeed;
+        // 弾の生成位置
+        Vector3 spawnPos = transform.position + shootDir * distanceInFront + Vector3.up * upwardOffset;
 
-        GameObject ShotWeb = Instantiate(m_BulletPrefab, spawnPos, Quaternion.LookRotation(direction));
+        // 発射方向に回転を合わせる
+        Quaternion rotation = Quaternion.LookRotation(shootDir);
 
-        // ShotWebスクリプトを取得し、初期化
-        ShotWeb webScript = ShotWeb.GetComponent<ShotWeb>();
-        if (webScript)
-        {
-            webScript.Shot(direction, m_fShotSpeed, f_PlayerSpeed); // 弾を発射させる
-        }
+        GameObject bullet = Instantiate(effectPrefab, spawnPos, rotation);
+
+        Rigidbody rb = bullet.GetComponent<Rigidbody>();
+        if (rb == null) rb = bullet.AddComponent<Rigidbody>();
+
+        rb.useGravity = false;
+        rb.AddForce(shootDir * shootSpeed, ForceMode.VelocityChange);
+        //rb.velocity = shootDir * shootSpeed;
+
+        //// nullチェック
+        //if (!m_targetPlayer || !m_BulletPrefab) return;
+        //// 弾の生成位置を決める
+        //Vector3 spawnPos = transform.position;
+        //// 弾を飛ばす位置を決める
+        //Vector3 direction = (m_targetPlayer.position - spawnPos).normalized;
+
+        //// プレイヤーの速度を取得
+        //Player player = m_targetPlayer.GetComponent<Player>();
+        //if (!player) return;
+
+        //float f_PlayerSpeed = player.PlayerSpeed;
+
+        //GameObject ShotWeb = Instantiate(m_BulletPrefab, spawnPos, Quaternion.LookRotation(direction));
+
+        //// ShotWebスクリプトを取得し、初期化
+        //ShotWeb webScript = ShotWeb.GetComponent<ShotWeb>();
+        //if (webScript)
+        //{
+        //    webScript.Shot(direction, m_fShotSpeed, f_PlayerSpeed); // 弾を発射させる
+        //}
     }
 
     /*＞移動コルーチン
@@ -218,9 +250,9 @@ public class EnemyPattern : MonoBehaviour
             // 移動速度を非発見時の速度に変更
             m_fSpeed = m_fNormalSpeed;
 
-          // ランダムな方向に移動
+            // ランダムな方向に移動
             // 方向を決める
-            Vector3 randomDirection = new Vector3(Random.Range(-1.0f,1.0f),0.0f, Random.Range(-1.0f, 1.0f)).normalized;
+            Vector3 randomDirection = new Vector3(Random.Range(-1.0f, 1.0f), 0.0f, Random.Range(-1.0f, 1.0f)).normalized;
             // 移動距離を決める(0～5m)
             float distance = Random.Range(0.0f, 5.0f);
             // 移動計算
@@ -266,7 +298,7 @@ public class EnemyPattern : MonoBehaviour
                 transform.position = Vector3.MoveTowards(transform.position, targetPos, m_fSpeed * Time.deltaTime);
                 elapsed += Time.deltaTime;  // 経過時間を加算
                 yield return null; // 次のフレームまで待機
-            } 
+            }
             yield return new WaitForSeconds(m_fRetart); // 次の移動まで指定の時間(10秒)待機させる
 
         }
@@ -299,14 +331,14 @@ public class EnemyPattern : MonoBehaviour
     private void StateChange()
     {
         // プレイヤーを発見しているか
-        if(m_bIsFinding)
+        if (m_bIsFinding)
         {
             if (m_moveCoroutine != null)
             {
                 StopCoroutine(m_moveCoroutine); // 移動コルーチンの停止
                 m_moveCoroutine = null; // 移動コルーチンの破棄     
             }
-            if (m_chaseCoroutine == null) m_chaseCoroutine =  StartCoroutine(ChaseRoutine()); // 追跡コルーチンの開始
+            if (m_chaseCoroutine == null) m_chaseCoroutine = StartCoroutine(ChaseRoutine()); // 追跡コルーチンの開始
         }
         else
         {
@@ -315,9 +347,9 @@ public class EnemyPattern : MonoBehaviour
                 StopCoroutine(m_chaseCoroutine); // 追跡コルーチンの停止
                 m_chaseCoroutine = null; // 追跡コルーチンの破棄   
             }
-             if (m_moveCoroutine == null) m_moveCoroutine = StartCoroutine(MoveRoutine()); // 移動コルーチンの開始
+            if (m_moveCoroutine == null) m_moveCoroutine = StartCoroutine(MoveRoutine()); // 移動コルーチンの開始
         }
-        
+
     }
 
     /*＞OnDestroy関数
