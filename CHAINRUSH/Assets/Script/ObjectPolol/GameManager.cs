@@ -1,4 +1,21 @@
-// ゲームシーンでの制御・管理を行うスクリプト
+/*=====
+<GameManager.cs> 
+└作成者：banno
+
+＞内容
+ゲームシーンでの更新・管理を行うスクリプト
+
+＞注意事項   
+
+
+＞更新履歴
+Y25   
+_M05    
+__D       
+___25:プログラム作成:banno   
+___27:発生していたエラーの解決:banno
+=====*/
+
 using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
@@ -11,6 +28,8 @@ public class GameManager : MonoBehaviour
     public RectTransform minimapPanelPrefab;  // ミニマップのUIパネル
     public Transform player;
     public Image enemyIconPrefab;
+
+    [Header("敵生成システム")]
     public int totalkillGoal = 20;      // ステージクリアのための目標数
     public int initialMaxEnemies = 5;   // ステージの最初に湧く敵の数
     public int maxEnemiesLimit = 8;     // ステージに敵が湧く最大数
@@ -76,12 +95,8 @@ public class GameManager : MonoBehaviour
 
         Debug.Log($"敵撃破: {totalKilled}/{totalkillGoal} (最大出現数: {currentMaxEnemies})");
     }
-
-    public void DestroyEnemyIcon(Image enemyIcon)
-    {
-        activeEnemyIcones.Remove(enemyIcon);
-    }
-
+        
+    
     Vector3 GetRandomPositionOnTerrain()
     {
         TerrainData data = terrain.terrainData;

@@ -63,7 +63,7 @@ public class Enemy : MonoBehaviour
             {
                 die = false;
                 gamemanager.OnEnemyKilled(gameObject);
-                Destroy(gameObject);
+                gameObject.SetActive(false);
             }
         }
     }
