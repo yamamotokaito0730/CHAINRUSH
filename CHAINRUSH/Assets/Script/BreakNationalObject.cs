@@ -32,7 +32,6 @@ public class BreakNationalObject : MonoBehaviour
     private GameObject m_breakModel;        // 壊されるモデル
     private ObjectSpawner objectSpawner;    // オブジェクトスポナークラス
     private Player player;                  // プレイヤークラス
-
     void Start()
     {
         m_breakModel = this.gameObject;
