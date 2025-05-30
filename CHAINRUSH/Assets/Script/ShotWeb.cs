@@ -65,4 +65,21 @@ public class ShotWeb : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("当たった");
+            Destroy(gameObject);
+
+            Player player = collision.gameObject.GetComponent<Player>();
+            if (player != null)
+            {
+                Debug.Log("スピードダウン");
+                player.SubSpeed(-4.0f); // 速度を減らす（-1.0f は任意で調整してください）
+            }
+        }
+    }
 }
