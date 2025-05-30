@@ -157,3 +157,4 @@ MonoBehaviour:
   m_shiftPosition: {x: 0, y: 5, z: 0}
   m_upperDisconnectedPrefab: {fileID: 2957882097944700477, guid: 5b338e1a92b400843a3506bba63d61e3, type: 3}
   m_bottomDisconnectedPrefab: {fileID: 6507582229949200936, guid: 541e0331a4294a943ac27a10db793f16, type: 3}
+  Clip: {fileID: 8300000, guid: 84c307f1683e0954195fad17d0692358, type: 3}
