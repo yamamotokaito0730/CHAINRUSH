@@ -37,7 +37,7 @@ public class BreakHouse : MonoBehaviour
             Rigidbody rb = roof.GetComponent<Rigidbody>();
             rb.AddForce(0.0f, -10.0f, 0.0f, ForceMode.Impulse);
 
-            Destroy(m_breakModel, 3.0f);    // 3秒後に削除
+            Destroy(m_breakModel, 5.0f);    // 3秒後に削除
             m_bFell = true;     // フラグオン
         }
     }

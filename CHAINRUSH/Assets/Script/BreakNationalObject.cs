@@ -30,11 +30,16 @@ public class BreakNationalObject : MonoBehaviour
     [SerializeField, Tooltip("切断されたプレハブの下部")] public GameObject m_bottomDisconnectedPrefab;
 
     private GameObject m_breakModel;        // 壊されるモデル
-    private ObjectSpawner objectSpawner;    // 参照したいスクリプト
+    private ObjectSpawner objectSpawner;    // オブジェクトスポナークラス
+    private Player player;                  // プレイヤークラス
 
     void Start()
     {
         m_breakModel = this.gameObject;
+
+        // プレイヤーに入っているスクリプトを参照
+        GameObject playerObject = GameObject.FindWithTag("Player");
+        player = playerObject.GetComponent<Player>();
 
         // terrainに入っているスクリプトを参照
         GameObject terrainObject = GameObject.FindWithTag("MainTerrain");   // タグが付いたTerrainを取得
@@ -44,7 +49,7 @@ public class BreakNationalObject : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.name == "Player")
+        if (collision.gameObject.name == "Player" && player.GetState() >= 3)    // プレイヤーの速度が3以上なら
         {
             // モデルの情報を取得
             Vector3 modelPosition = m_breakModel.transform.position;    // 座標
