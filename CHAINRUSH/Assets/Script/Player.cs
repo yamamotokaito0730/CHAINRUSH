@@ -443,4 +443,15 @@ public class Player : MonoBehaviour
         return (int)PlayerState;
     }
 
+    /*＞状態を送る関数
+    引数：なし
+    ｘ
+    戻値：現在の速度を表す数値
+    ｘ
+    概要:プレイヤーの現在の速度を送る
+    */
+    public float GetSpeed()
+    {
+        return m_fSpeed;
+    }
 }
