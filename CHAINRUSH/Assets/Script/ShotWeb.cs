@@ -12,6 +12,7 @@ Y25
 _M05    
 __D     
 ___23:ƒvƒƒOƒ‰ƒ€ì¬:tooyama
+___30:Œ¸‘¬ˆ—‚Ì’Ç‰Á:nakashima
 
 =====*/
 using UnityEngine;
@@ -66,9 +67,8 @@ public class ShotWeb : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider collision)
     {
-
         if (collision.gameObject.CompareTag("Player"))
         {
             Debug.Log("“–‚½‚Á‚½");
