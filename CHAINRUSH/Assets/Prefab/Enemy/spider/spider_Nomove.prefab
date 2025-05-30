@@ -207,6 +207,7 @@ MonoBehaviour:
   - {fileID: 4013062997974373045, guid: dda1f887417dfc749a9198391c124765, type: 3}
   - {fileID: 2622109092815291365, guid: 35b79d44725390b4db5c1ec617bc64e5, type: 3}
   m_nPartsNum: 6
+  gamemanager: {fileID: 0}
 --- !u!65 &7413250693589298941
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -248,6 +249,10 @@ MonoBehaviour:
   m_BulletPrefab: {fileID: 7382276296219717103, guid: a0d5851d538cefd4398930b1e91bcf7b, type: 3}
   m_fShotInterval: 2
   m_fShotSpeed: 5
+  effectPrefab: {fileID: 3255156177815928084, guid: 3085671264812344a9ac27d714881dff, type: 3}
+  distanceInFront: 2
+  shootSpeed: 10
+  upwardOffset: 2
 --- !u!4 &7864428585329515833 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d3548093f2668274ab1ece4bef1c07b3, type: 3}

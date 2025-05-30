@@ -24,6 +24,7 @@ ___14:エネミー分割処理呼び出しを追加:mori
 ___16:リファクタリング:yamamoto
 ___17:坂の角度に応じた加減速処理の追加:tooyama
 ___23:読み取り専用プロパティの追加:tooyama
+___30:プレイヤーの速度を取得する関数を作成:mori
 =====*/
 
 using UnityEngine;
@@ -386,5 +387,17 @@ public class Player : MonoBehaviour
     public int GetState()
     {
         return (int)PlayerState;
+    }
+
+    /*＞状態を送る関数
+   引数：なし
+   ｘ
+   戻値：現在の速度を表す数値
+   ｘ
+   概要:プレイヤーの現在の速度を送る
+   */
+    public float GetSpeed()
+    {
+        return m_fSpeed;
     }
 }
