@@ -26,6 +26,7 @@ ___17:坂の角度に応じた加減速処理の追加:tooyama
 ___23:読み取り専用プロパティの追加:tooyama
 =====*/
 
+using System.Data;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -58,6 +59,8 @@ public class Player : MonoBehaviour
     private int m_nPrevSlopeAngleKey = int.MinValue; // 前フレームで適用された傾斜角（10度単位）
     private float m_fRecordedBaseSpeed = 0.0f; // 傾斜に入った瞬間の速度記録用
 
+    [SerializeField] private Animator Player_Animator;
+
     // 読み取り専用プロパティを追加(ShotWebクラスで発射する糸の速度に乗算させる為)
     public float PlayerSpeed => m_fSpeed;
 
@@ -76,6 +79,8 @@ public class Player : MonoBehaviour
         m_fRecordedBaseSpeed = m_fSpeed; // 傾斜に入った瞬間の速度記録と初期速度を同期させる
 
         PlayerState=E_State.Normal;
+
+        Player_Animator = GetComponent<Animator>();
 
     }
 
@@ -149,6 +154,7 @@ public class Player : MonoBehaviour
         ////////////////////////////////////////////////////
 
         rotation();
+        ChangeAnimation();
     }
 
     /*＞回転関数
@@ -376,6 +382,55 @@ public class Player : MonoBehaviour
         }
     }
 
+    /*＞アニメーションを切り替える関数
+    引数：なし
+    ｘ
+    戻値：なし
+    ｘ
+    概要:ダッシュの再生速度とアニメーションを変更
+    */
+    private void ChangeAnimation()
+    {
+        // --- アニメーション再生速度 ---
+        if (m_fSpeed > 8.0f)    // 加算
+        {
+            float nSpeed = m_fSpeed - 8.0f;
+            Player_Animator.speed = nSpeed * 0.0357f + 1.0f;
+        }
+        else    // 減算
+        {
+            float nSpeed = m_fSpeed - 8.0f;
+            Player_Animator.speed = 1.0f + nSpeed * 0.0625f;
+        }
+
+        // --- アニメーション切り替え ---
+        if (m_fSpeed < thresholds[0] + 1) 
+        {
+            Player_Animator.SetInteger("AnimNo", 0);
+            return;
+        }
+        if (m_fSpeed > thresholds[0])
+        {
+            Player_Animator.SetInteger("AnimNo", 1);
+            if (m_fSpeed > thresholds[1])
+            {
+                Player_Animator.SetInteger("AnimNo", 2);
+                if (m_fSpeed > thresholds[2])
+                {
+                    Player_Animator.SetInteger("AnimNo", 3);
+                    if (m_fSpeed > thresholds[3])
+                    {
+                        Player_Animator.SetInteger("AnimNo", 4);
+                        return;
+                    }
+                    return;
+                }
+                return ;
+            }
+        }
+        return;
+    }
+
     /*＞状態を送る関数
    引数：なし
    ｘ
@@ -387,4 +442,5 @@ public class Player : MonoBehaviour
     {
         return (int)PlayerState;
     }
+
 }
