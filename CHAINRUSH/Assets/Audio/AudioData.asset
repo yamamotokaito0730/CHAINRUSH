@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5bf740efa1435744aaa556faa4dcd07, type: 3}
+  m_Name: AudioData
+  m_EditorClassIdentifier: 
+  bgmClips:
+  - name: Stage1
+    audioClip: {fileID: 8300000, guid: 263f7d85a249af34e96a8ebe935dcdcd, type: 3}
+  seClips:
+  - name: Rock
+    audioClip: {fileID: 8300000, guid: 520186197eb56f240aeddf4cd078f3bd, type: 3}
+  - name: Tree
+    audioClip: {fileID: 8300000, guid: 84c307f1683e0954195fad17d0692358, type: 3}
