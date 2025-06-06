@@ -45,6 +45,8 @@ public class ExitGameUI : MonoBehaviour
             // カーソルを表示＆ロック解除
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
+
+            Time.timeScale = 0f;
         }
     }
 
@@ -63,5 +65,7 @@ public class ExitGameUI : MonoBehaviour
         // カーソルを再び非表示＆ロック
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        Time.timeScale = 1.0f;
     }
 }

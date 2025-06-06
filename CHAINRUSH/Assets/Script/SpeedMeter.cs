@@ -13,6 +13,8 @@ Y25
 _M05
 __D  
 ___29:プログラム作成:mori
+_M06
+___06:プログラム大幅変更:mori
 
 =====*/
 
@@ -20,46 +22,47 @@ using UnityEngine;
 
 public class SpeedMeter : MonoBehaviour
 {
-    public GameObject[] bars; // Bar1〜Bar5を順に設定
-    public int level = 2;
+    [Header("針のTransform")]
+    public RectTransform needle;
 
+    [Header("速度の設定")]
+    public float currentSpeed = 0f;
+    public float maxSpeed = 50f;
+
+    [Header("角度の設定")]
+    public float minAngle = -90f; // 0km/h のとき
+    public float maxAngle = 90f;  // MAX速度のとき
+
+    [Header("カタカタ揺れの設定")]
+    public float shakeAmount = 1.0f; // 揺れの強さ（角度）
+    public float shakeSpeed = 20.0f; // 揺れの速さ
+
+    private float baseAngle = 0f;
     private Player player;
-    public float currentSpeed = 0.0f; // プレイヤーの現在速度
-    private int[] thresholds = { 4, 17, 35, 44, 50 };
 
-    void Start()
+    private void Start()
     {
         // "Player" タグの GameObject から Player スクリプトを取得
         player = GameObject.FindWithTag("Player")?.GetComponent<Player>();
-        if (player == null)
-        {
-            Debug.LogError("Playerオブジェクトが見つかりません。タグが正しいか確認してください。");
-        }
     }
 
     void Update()
     {
-        if (player == null) return; // null チェック
-        //currentSpeed = player.m_fSpeed;
-        UpdateSpeedMeter(currentSpeed);
+        SetSpeed(player.GetSpeed());
+        // スピードを角度に変換
+        float t = Mathf.Clamp01(currentSpeed / maxSpeed);
+        baseAngle = Mathf.Lerp(minAngle, maxAngle, t);
+
+        // ランダムなカタカタ揺れ（時間ベースでノイズを入れる）
+        float shake = Mathf.Sin(Time.time * shakeSpeed) * shakeAmount;
+
+        // 実際に針を回転させる
+        needle.localRotation = Quaternion.Euler(0f, 0f, -(baseAngle + shake));
     }
 
-    void UpdateSpeedMeter(float speed)
+    // 外部から速度を更新するメソッド（必要なら）
+    public void SetSpeed(float speed)
     {
-        level = 0;
-
-        for (int i = 0; i < thresholds.Length; i++)
-        {
-            if (speed <= thresholds[i])
-            {
-                level = i + 1;
-                break;
-            }
-        }
-
-        for (int i = 0; i < bars.Length; i++)
-        {
-            bars[i].SetActive(i < level);
-        }
+        currentSpeed = speed;
     }
 }
