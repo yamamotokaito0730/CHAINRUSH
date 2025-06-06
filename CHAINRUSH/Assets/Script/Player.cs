@@ -1,29 +1,31 @@
-/*=====
+ï»¿/*=====
 <Player.cs>
-„¤ì¬ÒFyamamoto
+â””ä½œæˆè€…ï¼šyamamoto
 
-„“à—e
-Player‚Ì‹““®‚ğŠÇ—‚·‚éƒXƒNƒŠƒvƒg
+ï¼å†…å®¹
+Playerã®æŒ™å‹•ã‚’ç®¡ç†ã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
 
-„’ˆÓ–€
+ï¼æ³¨æ„äº‹é …
 
 
-„XV—š—ğ
+ï¼æ›´æ–°å±¥æ­´
 Y25   
 _M04    
 __D     
-___11:ƒvƒƒOƒ‰ƒ€ì¬:yamamoto   
-___12:ƒXƒRƒAƒfƒoƒbƒN—p‚ÌƒvƒƒOƒ‰ƒ€‚ğ’Ç‰Á:yamamoto
-___22:ˆÚ“®‚Ìd—l•ÏX:yamamoto
-___27:ƒvƒŒƒCƒ„[‚ÌˆÚ“®‚ğADƒL[‚Ì‚İ‚É•ÏX:mori
+___11:ãƒ—ãƒ­ã‚°ãƒ©ãƒ ä½œæˆ:yamamoto   
+___12:ã‚¹ã‚³ã‚¢ãƒ‡ãƒãƒƒã‚¯ç”¨ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’è¿½åŠ :yamamoto
+___22:ç§»å‹•ã®ä»•æ§˜å¤‰æ›´:yamamoto
+___27:ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç§»å‹•ã‚’ADã‚­ãƒ¼ã®ã¿ã«å¤‰æ›´:mori
 _M05
-___01:‘¬“x‚É‚ ‚í‚¹‚Äd—Í‚ğ‘‰Á‚·‚éˆ—‚ğ’Ç‰Á:tooyama
-___09:•s•K—v‚Èˆø”A•Ï”éŒ¾‚ğíœ:yamamoto
-___11:ƒoƒEƒ“ƒh–h~ˆ—‚ğ’Ç‰Á:tooyama
-___14:ƒGƒlƒ~[•ªŠ„ˆ—ŒÄ‚Ño‚µ‚ğ’Ç‰Á:mori
-___16:ƒŠƒtƒ@ƒNƒ^ƒŠƒ“ƒO:yamamoto
-___17:â‚ÌŠp“x‚É‰‚¶‚½‰ÁŒ¸‘¬ˆ—‚Ì’Ç‰Á:tooyama
-___23:“Ç‚İæ‚èê—pƒvƒƒpƒeƒB‚Ì’Ç‰Á:tooyama
+___01:é€Ÿåº¦ã«ã‚ã‚ã›ã¦é‡åŠ›ã‚’å¢—åŠ ã™ã‚‹å‡¦ç†ã‚’è¿½åŠ :tooyama
+___09:ä¸å¿…è¦ãªå¼•æ•°ã€å¤‰æ•°å®£è¨€ã‚’å‰Šé™¤:yamamoto
+___11:ãƒã‚¦ãƒ³ãƒ‰é˜²æ­¢å‡¦ç†ã‚’è¿½åŠ :tooyama
+___14:ã‚¨ãƒãƒŸãƒ¼åˆ†å‰²å‡¦ç†å‘¼ã³å‡ºã—ã‚’è¿½åŠ :mori
+___16:ãƒªãƒ•ã‚¡ã‚¯ã‚¿ãƒªãƒ³ã‚°:yamamoto
+___17:å‚ã®è§’åº¦ã«å¿œã˜ãŸåŠ æ¸›é€Ÿå‡¦ç†ã®è¿½åŠ :tooyama
+___23:èª­ã¿å–ã‚Šå°‚ç”¨ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã®è¿½åŠ :tooyama
+_M06
+___06:å‚ã‚’ã‚¹ãƒ ãƒ¼ã‚ºã«æ˜‡ã‚Šé™ã‚Šå‡ºæ¥ã‚‹å‡¦ç†ã®è¿½åŠ 
 =====*/
 
 using System.Data;
@@ -40,43 +42,43 @@ public class Player : MonoBehaviour
         Strongest
     }
 
-    // •Ï”éŒ¾
-    [Header("ƒXƒe[ƒ^ƒX")]
-    [SerializeField, Tooltip("ˆÚ“®‘¬“x")] private float m_fSpeed;
-    [SerializeField, Tooltip("‰Á‘¬—Ê")] private float m_fBoost;
-    [SerializeField, Tooltip("Å‚‘¬“x")] private float m_fMaxSpeed;
+    // å¤‰æ•°å®£è¨€
+    [Header("ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹")]
+    [SerializeField, Tooltip("ç§»å‹•é€Ÿåº¦")] private float m_fSpeed;
+    [SerializeField, Tooltip("åŠ é€Ÿé‡")] private float m_fBoost;
+    [SerializeField, Tooltip("æœ€é«˜é€Ÿåº¦")] private float m_fMaxSpeed;
     private E_State PlayerState;
     private int[] thresholds = { 4, 17, 35, 44, 50 };
 
-    [Header("d—ÍŠÖŒW")]
-    [SerializeField, Tooltip("ƒx[ƒX‚Ìd—Í")] private float m_fBaseGravity = 9.81f;
+    [Header("é‡åŠ›é–¢ä¿‚")]
+    [SerializeField, Tooltip("ãƒ™ãƒ¼ã‚¹ã®é‡åŠ›")] private float m_fBaseGravity = 9.81f;
 
-    [SerializeField, Tooltip("d—Í‚Ì‘‰Á—Ê")] private float m_fAddGravity = 3.0f;
+    [SerializeField, Tooltip("é‡åŠ›ã®å¢—åŠ é‡")] private float m_fAddGravity = 3.0f;
 
     private UnityEngine.Camera mainCamera;
-    private Rigidbody rb; // ƒvƒŒƒCƒ„[‚Ì•¨—‹““®‚ğ§Œä‚·‚é‚½‚ß‚ÌRigidbody
-    private int nEnemyKillCount = 0; // “|‚µ‚½“G‚Ì”
-    private int m_nPrevSlopeAngleKey = int.MinValue; // ‘OƒtƒŒ[ƒ€‚Å“K—p‚³‚ê‚½ŒXÎŠpi10“x’PˆÊj
-    private float m_fRecordedBaseSpeed = 0.0f; // ŒXÎ‚É“ü‚Á‚½uŠÔ‚Ì‘¬“x‹L˜^—p
+    private Rigidbody rb; // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç‰©ç†æŒ™å‹•ã‚’åˆ¶å¾¡ã™ã‚‹ãŸã‚ã®Rigidbody
+    private int nEnemyKillCount = 0; // å€’ã—ãŸæ•µã®æ•°
+    private int m_nPrevSlopeAngleKey = int.MinValue; // å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã§é©ç”¨ã•ã‚ŒãŸå‚¾æ–œè§’ï¼ˆ10åº¦å˜ä½ï¼‰
+    private float m_fRecordedBaseSpeed = 0.0f; // å‚¾æ–œã«å…¥ã£ãŸç¬é–“ã®é€Ÿåº¦è¨˜éŒ²ç”¨
 
     [SerializeField] private Animator Player_Animator;
 
-    // “Ç‚İæ‚èê—pƒvƒƒpƒeƒB‚ğ’Ç‰Á(ShotWebƒNƒ‰ƒX‚Å”­Ë‚·‚é…‚Ì‘¬“x‚ÉæZ‚³‚¹‚éˆ×)
+    // èª­ã¿å–ã‚Šå°‚ç”¨ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã‚’è¿½åŠ (ShotWebã‚¯ãƒ©ã‚¹ã§ç™ºå°„ã™ã‚‹ç³¸ã®é€Ÿåº¦ã«ä¹—ç®—ã•ã›ã‚‹ç‚º)
     public float PlayerSpeed => m_fSpeed;
 
-    /*„StartŠÖ”
-    ˆø”F‚È‚µ
-    ‚˜
-    –ß’lF‚È‚µ
-    ‚˜
-    ŠT—v:‰Šú‰»
+    /*ï¼Starté–¢æ•°
+    å¼•æ•°ï¼šãªã—
+    ï½˜
+    æˆ»å€¤ï¼šãªã—
+    ï½˜
+    æ¦‚è¦:åˆæœŸåŒ–
     */
     void Start()
     {
         mainCamera = UnityEngine.Camera.main;
-        rb = GetComponent<Rigidbody>();  // Rigidbody‚Ìæ“¾
+        rb = GetComponent<Rigidbody>();  // Rigidbodyã®å–å¾—
                                          
-        m_fRecordedBaseSpeed = m_fSpeed; // ŒXÎ‚É“ü‚Á‚½uŠÔ‚Ì‘¬“x‹L˜^‚Æ‰Šú‘¬“x‚ğ“¯Šú‚³‚¹‚é
+        m_fRecordedBaseSpeed = m_fSpeed; // å‚¾æ–œã«å…¥ã£ãŸç¬é–“ã®é€Ÿåº¦è¨˜éŒ²ã¨åˆæœŸé€Ÿåº¦ã‚’åŒæœŸã•ã›ã‚‹
 
         PlayerState=E_State.Normal;
 
@@ -84,70 +86,103 @@ public class Player : MonoBehaviour
 
     }
 
-    /*„FixedUpdateŠÖ”
-    ˆø”F‚È‚µ
-    ‚˜
-    –ß’lF‚È‚µ
-    ‚˜
-    ŠT—v:ˆê’èŠÔŠu‚ÅXV
+    /*ï¼FixedUpdateé–¢æ•°
+    å¼•æ•°ï¼šãªã—
+    ï½˜
+    æˆ»å€¤ï¼šãªã—
+    ï½˜
+    æ¦‚è¦:ä¸€å®šé–“éš”ã§æ›´æ–°
     */
     void FixedUpdate()
     {
         
-        // Œü‚¢‚Ä‚¢‚é•ûŒü‚Éi‚İ‘±‚¯‚é
+        // å‘ã„ã¦ã„ã‚‹æ–¹å‘ã«é€²ã¿ç¶šã‘ã‚‹
         rb.linearVelocity = new Vector3(
             transform.forward.x * m_fSpeed,
             rb.linearVelocity.y,
             transform.forward.z * m_fSpeed
             );
-        
 
-        // YÀ•W‚É§ŒÀ‚ğŠ|‚¯‚é
-        ClampPlayerHeight();
-
-
-        /*
-        // d—Í‚Ì’Ç‰Á
-        rb.AddForce(Vector3.down * m_fBaseGravity, ForceMode.Acceleration);
-
-        // â‚ÌŠp“x‚ÌXV
+        // å‚ã®è§’åº¦ã®æ›´æ–°
         float slope = GetGroundSlope();
 
-        // Šp“x‚ğŠÛ‚ß‚é(ó‘Ô‘JˆÚ‚ÌŒŸo—p)
+        // è§’åº¦ã‚’ä¸¸ã‚ã‚‹(çŠ¶æ…‹é·ç§»ã®æ¤œå‡ºç”¨)
         int slopeKey = Mathf.RoundToInt(slope / 10.0f) * 10;
 
-        // ’n–Ê‚É—§‚Á‚Ä‚¨‚èAŒXÎ‚É“ü‚Á‚½ê‡
-        if (slope != -1.0f && slopeKey != m_nPrevSlopeAngleKey)
-        {
-            // ‰‚ß‚ÄŒXÎ‚É“ü‚Á‚½‚Æ‚«‚¾‚¯‘¬“x‚ğ‹L˜^
-            if (m_nPrevSlopeAngleKey == 0)
-                m_fRecordedBaseSpeed = m_fSpeed;
+        //// åœ°é¢ã«ç«‹ã£ã¦ãŠã‚Šã€å‚¾æ–œã«å…¥ã£ãŸå ´åˆ
+        //if (slope != -1.0f && slopeKey != m_nPrevSlopeAngleKey)
+        //{
+        //    // åˆã‚ã¦å‚¾æ–œã«å…¥ã£ãŸã¨ãã ã‘é€Ÿåº¦ã‚’è¨˜éŒ²
+        //    if (m_nPrevSlopeAngleKey == 0)
+        //        m_fRecordedBaseSpeed = m_fSpeed;
 
-            // â‚ÌŠp“x‚©‚ç‰ÁŒ¸‘¬’l‚ğŒˆ‚ß‚é
-            float boost = ApplySlopeSpeedBoost(slope);
-            // ApplySlopeSpeedBoostŠÖ”‚Ì–ß‚è’l‚ğ‰ÁŒ¸‘¬‚És‚¤
-            AddBoost(boost);
-            //–{ƒtƒŒ[ƒ€‚ÌŒXÎŠp‚ğ•Û‘¶‚µA‚Q“x–Ú‚Ì‰ÁŒ¸‘¬‚ğ–h‚®
-            m_nPrevSlopeAngleKey = slopeKey;
+        //    // å‚ã®è§’åº¦ã‹ã‚‰åŠ æ¸›é€Ÿå€¤ã‚’æ±ºã‚ã‚‹
+        //    float boost = ApplySlopeSpeedBoost(slope);
+        //    // ApplySlopeSpeedBoosté–¢æ•°ã®æˆ»ã‚Šå€¤ã‚’åŠ æ¸›é€Ÿã«è¡Œã†
+        //    AddBoost(boost);
+        //    //æœ¬ãƒ•ãƒ¬ãƒ¼ãƒ ã®å‚¾æ–œè§’ã‚’ä¿å­˜ã—ã€ï¼’åº¦ç›®ã®åŠ æ¸›é€Ÿã‚’é˜²ã
+        //    m_nPrevSlopeAngleKey = slopeKey;
+        //}
+
+        //===== ProjectOnPlaneé–¢æ•°ã‚’ä½¿ã„æ–œé¢ã®è£œæ­£ã‚’è¡Œã†
+        const float rayLen = 100.0f;
+        const float radius = 10.4f;
+
+        Vector3 origin = transform.position;
+        Vector3 direction = Vector3.down;
+        float range = 0.5f; // è¨±å®¹ç¯„å›²
+                            //        float frontAngle= 45.0f; // è¨±å®¹ç¯„å›²
+
+
+        Debug.DrawRay(origin, direction * rayLen, Color.red);
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, rayLen))
+        {
+
+            if (range > Vector3.Distance(transform.position, hit.point))
+            {
+                //Debug.Log("åœ°ã«ã¤ã„ã¦ã„ã‚‹");
+                // åœ°å½¢ãƒ™ã‚¯ãƒˆãƒ«ã€å†…ç©ã‚’ä½¿ã„ã€ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç§»å‹•ãƒ™ã‚¯ãƒˆãƒ«ã‚’è£œæ­£ã™ã‚‹
+                Vector3 groundN = hit.normal;
+                Vector3 moveDir = rb.linearVelocity.sqrMagnitude > 0.01f
+                                      ? rb.linearVelocity.normalized
+                                      : transform.forward;
+
+                Vector3 slopeDir = Vector3.ProjectOnPlane(moveDir, groundN).normalized;
+
+                Vector3 newVel = slopeDir * m_fSpeed;   // XZ ã‚’ç½®ãæ›ãˆ
+                newVel.y = rb.linearVelocity.y;   // Y ã¯é‡åŠ›åˆ†ã‚’ç¶­æŒ
+                rb.linearVelocity = newVel; //
+            }
+            else
+            {
+                // ä¸‹ã‚Šã§é©ç”¨ã™ã‚‹å‡¦ç†
+                Debug.Log("æµ®ã„ã¦ã„ã‚‹");
+                // é‡åŠ›ã®è¿½åŠ 
+                //    rb.AddForce(Vector3.down * m_fBaseGravity * 10.0f, ForceMode.Acceleration);
+                Vector3 corrected = transform.position;
+                corrected.y = Mathf.Lerp(transform.position.y, hit.point.y, Time.fixedDeltaTime * 20.0f);
+                rb.MovePosition(corrected);
+            }
         }
-        */
+
     }
 
-    /*„UpdateŠÖ”
-    ˆø”F‚È‚µ
-    ‚˜
-    –ß’lF‚È‚µ
-    ‚˜
-    ŠT—v:XVŠÖ”
+    /*ï¼Updateé–¢æ•°
+    å¼•æ•°ï¼šãªã—
+    ï½˜
+    æˆ»å€¤ï¼šãªã—
+    ï½˜
+    æ¦‚è¦:æ›´æ–°é–¢æ•°
     */
 
     private void Update()
     {
         //////////////////////////////////////////////////////////
-        //ƒfƒoƒbƒO—p
+        //ãƒ‡ãƒãƒƒã‚°ç”¨
         if (Input.GetKeyDown(KeyCode.E))
         {
-            AddBoost(m_fBoost); // ‰Á‘¬ƒfƒoƒbƒO—p
+            AddBoost(m_fBoost); // åŠ é€Ÿãƒ‡ãƒãƒƒã‚°ç”¨
             m_fRecordedBaseSpeed += m_fBoost;
             AddGravity();
         }
@@ -157,25 +192,25 @@ public class Player : MonoBehaviour
         ChangeAnimation();
     }
 
-    /*„‰ñ“]ŠÖ”
-    ˆø”F‚È‚µ
-    ‚˜
-    –ß’lF‚È‚µ
-    ‚˜
-    ŠT—v:ƒvƒŒƒCƒ„[‚ÌŒü‚«‚ğ‰ñ“]‚³‚¹‚é
+    /*ï¼å›è»¢é–¢æ•°
+    å¼•æ•°ï¼šãªã—
+    ï½˜
+    æˆ»å€¤ï¼šãªã—
+    ï½˜
+    æ¦‚è¦:ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‘ãã‚’å›è»¢ã•ã›ã‚‹
     */
     private void rotation()
     {
-        float rotateSpeed = 100.0f; // ‰ñ“]‘¬“x
+        float rotateSpeed = 100.0f; // å›è»¢é€Ÿåº¦
 
         float turn = 0.0f;
 
-        if (Input.GetKey(KeyCode.A)) turn = -1.0f; // ¶‰ñ“]
-        if (Input.GetKey(KeyCode.D)) turn = 1.0f;  // ‰E‰ñ“]
+        if (Input.GetKey(KeyCode.A)) turn = -1.0f; // å·¦å›è»¢
+        if (Input.GetKey(KeyCode.D)) turn = 1.0f;  // å³å›è»¢
 
         if (turn != 0.0f)
         {
-            // Y²‚ğ’†S‚É‰ñ“]‚³‚¹‚é
+            // Yè»¸ã‚’ä¸­å¿ƒã«å›è»¢ã•ã›ã‚‹
             transform.Rotate(0.0f, turn * rotateSpeed * Time.deltaTime, 0.0f);
         }
     }
@@ -187,21 +222,21 @@ public class Player : MonoBehaviour
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
             if (enemy != null)
             {
-                enemy.Die(mainCamera); // ƒGƒlƒ~[•ªŠ„ˆ—
+                enemy.Die(mainCamera); // ã‚¨ãƒãƒŸãƒ¼åˆ†å‰²å‡¦ç†
                 AddBoost(m_fBoost);
                 m_fRecordedBaseSpeed += m_fBoost;
                 AddGravity();
-                nEnemyKillCount++; // ƒLƒ‹ƒJƒEƒ“ƒg‚Ì‘‰Á
+                nEnemyKillCount++; // ã‚­ãƒ«ã‚«ã‚¦ãƒ³ãƒˆã®å¢—åŠ 
             }
         }
     }
 
-    /*„‰Á‘¬“x‘‰ÁŠÖ”
-   ˆø”Ffloat _boost:‘‰Á‚·‚é’l
-   ‚˜
-   –ß’lF‚È‚µ
-   ‚˜
-   ŠT—v:ƒvƒŒƒCƒ„[‚Ì‘¬“x‚ğ‚ ‚°‚é
+    /*ï¼åŠ é€Ÿåº¦å¢—åŠ é–¢æ•°
+   å¼•æ•°ï¼šfloat _boost:å¢—åŠ ã™ã‚‹å€¤
+   ï½˜
+   æˆ»å€¤ï¼šãªã—
+   ï½˜
+   æ¦‚è¦:ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®é€Ÿåº¦ã‚’ã‚ã’ã‚‹
    */
     public void AddBoost(float _boost)
     {
@@ -217,12 +252,12 @@ public class Player : MonoBehaviour
         }
     }
 
-    /*„Œ¸‘¬ŠÖ”
-   ˆø”Ffloat _down:Œ¸­‚·‚é’l
-   ‚˜
-   –ß’lF‚È‚µ
-   ‚˜
-   ŠT—v:ƒvƒŒƒCƒ„[‚Ì‘¬“x‚ğ‰º‚°‚é
+    /*ï¼æ¸›é€Ÿé–¢æ•°
+   å¼•æ•°ï¼šfloat _down:æ¸›å°‘ã™ã‚‹å€¤
+   ï½˜
+   æˆ»å€¤ï¼šãªã—
+   ï½˜
+   æ¦‚è¦:ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®é€Ÿåº¦ã‚’ä¸‹ã’ã‚‹
    */
     public void SubSpeed(float _down)
     {
@@ -230,12 +265,12 @@ public class Player : MonoBehaviour
         StateCheck();
     }
 
-    /*„ó‘Ô•Ï‰»ŠÖ”
-    ˆø”F‚È‚µ
-    ‚˜
-    –ß’lF‚È‚µ
-    ‚˜
-    ŠT—v:ƒvƒŒƒCƒ„[‚Ì‘¬“x‚É‚æ‚Á‚Äó‘Ô‚ğ•Ï‚¦‚é
+    /*ï¼çŠ¶æ…‹å¤‰åŒ–é–¢æ•°
+    å¼•æ•°ï¼šãªã—
+    ï½˜
+    æˆ»å€¤ï¼šãªã—
+    ï½˜
+    æ¦‚è¦:ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®é€Ÿåº¦ã«ã‚ˆã£ã¦çŠ¶æ…‹ã‚’å¤‰ãˆã‚‹
     */
     private void StateCheck()
     {
@@ -248,119 +283,89 @@ public class Player : MonoBehaviour
             }
         }
     }
-  /*„d—Í‘‰ÁŠÖ”
-  ˆø”F‚È‚µ
-  ‚˜
-  –ß’lF‚È‚µ
-  ‚˜
-  ŠT—v:‰Á‘¬“x‘‰Á‚É‡‚í‚¹‚Äd—Í‚ğ‘‰Á‚³‚¹‚é
+  /*ï¼é‡åŠ›å¢—åŠ é–¢æ•°
+  å¼•æ•°ï¼šãªã—
+  ï½˜
+  æˆ»å€¤ï¼šãªã—
+  ï½˜
+  æ¦‚è¦:åŠ é€Ÿåº¦å¢—åŠ ã«åˆã‚ã›ã¦é‡åŠ›ã‚’å¢—åŠ ã•ã›ã‚‹
   */
     private void AddGravity()
     {
-        m_fBaseGravity += m_fAddGravity; // d—Í‚Ì‘‰Á
-        m_fBaseGravity = Mathf.Min(m_fBaseGravity, 40.0f); // ãŒÀ(40.0f)‚ğ’´‚¦‚È‚¢‚æ‚¤‚Éİ’è
-    }
-
-    /*„‚“x§ŒÀŠÖ”
-    ˆø”F‚È‚µ
-    ‚˜
-    –ß’lF‚È‚µ
-    ‚˜
-    ŠT—v: ƒvƒŒƒCƒ„[‚ª‚Å‚±‚Ú‚±‚µ‚½’nŒ`‚Å’µ‚Ë‚é‚æ‚¤‚ÉŒ©‚¦‚Ä‚µ‚Ü‚¤–â‘è‚ğ–h‚®‚½‚ßA
-          ƒvƒŒƒCƒ„[‚ÌYÀ•Wi‚‚³j‚ÉãŒÀ‚ğİ‚¯‚ÄA’n–Ê‚É‚·‚¢‚Â‚­‚æ‚¤‚ÉˆÚ“®‚³‚¹‚é
-    */
-    private void ClampPlayerHeight()
-    {
-        float rayStartOffsetY = 0.1f; // ’n–Ê‚Æ‚Ì‚ß‚è‚İ‚ğ–h‚®‚½‚ßARaycast‚Ìn“_‚ğ­‚µã‚É‚¸‚ç‚·
-        Vector3 rayOrigin = transform.position + Vector3.up * rayStartOffsetY; // ­‚µã‚©‚çRay‚ğ”­Ë
-        RaycastHit hit; // ’n–Ê‚Æ‚Ì“–‚½‚è”»’è—p
-
-        // ’n–Ê‚É—§‚Á‚Ä‚¢‚½(‘«Œ³‚Ì’n–Ê‚ÉRay‚ªƒqƒbƒg‚µ‚½)ê‡‚Ì‚İˆ—‚ğs‚¤
-        if (Physics.Raycast(rayOrigin, Vector3.down, out hit, 10.0f))
-        {
-            
-            float groundY = hit.point.y; //’n–Ê‚Ì‚‚³
-            float maxHeight = groundY + 0.5f;   // ‹–—e‚·‚éÅ‘å‚Ì‚‚³i•‚‚«–h~j
-
-            // ƒvƒŒƒCƒ„[‚ªw’è‚µ‚½‚‚³‚æ‚è•‚‚¢‚Ä‚¢‚éê‡‚Í§ŒÀ‚ğ‚©‚¯‚é
-            if (transform.position.y > maxHeight)
-            {
-                // YÀ•W‚É§ŒÀ‚ğŠ|‚¯‚Ä‚‚³‚ğ‹¸³‚·‚é
-                Vector3 correctedPos = transform.position;
-                correctedPos.y = maxHeight;
-                transform.position = correctedPos;
-
-                // ã¸’†‚ÌY‘¬“x‚à0‚É—}‚¦‚é
-                Vector3 velocity = rb.linearVelocity;
-                velocity.y =-3.0f;
-                rb.linearVelocity = velocity;
-            }
-        }
-
+        m_fBaseGravity += m_fAddGravity; // é‡åŠ›ã®å¢—åŠ 
+    //    m_fBaseGravity = Mathf.Min(m_fBaseGravity, 40.0f); // ä¸Šé™(40.0f)ã‚’è¶…ãˆãªã„ã‚ˆã†ã«è¨­å®š
     }
 
     public void DebugMode(DebugMode _debug)
     {
-        _debug.UpdateDebugUI(transform, m_fSpeed, nEnemyKillCount); // ƒfƒoƒbƒOUI‚ÌXV
+        _debug.UpdateDebugUI(transform, m_fSpeed, nEnemyKillCount); // ãƒ‡ãƒãƒƒã‚°UIã®æ›´æ–°
     }
 
-    /*„Šp“xæ“¾ŠÖ”
-    ˆø”F‚È‚µ
-    ‚˜
-    –ß’lFâ‚ÌŠp“x
-    ‚˜
-    ŠT—v: ƒvƒŒƒCƒ„[‚ª—§‚Á‚Ä‚¢‚éâ‚ÌŠp“x‚ğæ“¾‚·‚é
-          ‚±‚Ì•„†•t‚«Šp“x‚Í ApplySlopeSpeedBoost() ‚Å
-          10‹’PˆÊ‚ÉŠÛ‚ß‚ç‚êA‘¬“x•â³ƒe[ƒuƒ‹‚É“n‚³‚ê‚é
+    /*ï¼è§’åº¦å–å¾—é–¢æ•°
+    å¼•æ•°ï¼šãªã—
+    ï½˜
+    æˆ»å€¤ï¼šå‚ã®è§’åº¦
+    ï½˜
+    æ¦‚è¦: ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒç«‹ã£ã¦ã„ã‚‹å‚ã®è§’åº¦ã‚’å–å¾—ã™ã‚‹
+          ã“ã®ç¬¦å·ä»˜ãè§’åº¦ã¯ ApplySlopeSpeedBoost() ã§
+          10Â°å˜ä½ã«ä¸¸ã‚ã‚‰ã‚Œã€é€Ÿåº¦è£œæ­£ãƒ†ãƒ¼ãƒ–ãƒ«ã«æ¸¡ã•ã‚Œã‚‹
     */
     private float GetGroundSlope()
     {
-        float rayLength = 2.0f; // Raycast ‹——£i‘«Œ³”»’è—pj
-        Vector3 origin = transform.position; // Ray ¶¬ˆÊ’u
+        float rayLength = 10.0f;
+        float radius = 0.4f;          // â† åœ°å½¢ã‚µã‚¤ã‚ºã«åˆã‚ã›ã¦èª¿æ•´ï¼ˆ0.2ã€œ0.5 m ãŒç›®å®‰ï¼‰
 
         RaycastHit hit;
-        if (Physics.Raycast(origin, Vector3.down, out hit, rayLength))
+        // åœ°é¢ã®æ³•ç·šã‚’ã‚¹ãƒ•ã‚£ã‚¢ã‚­ãƒ£ã‚¹ãƒˆã§å–å¾—
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, rayLength))
         {
-            // ƒvƒŒƒCƒ„[is•ûŒü‚ÆÎ–Ê•ûŒü‚ğ‹‚ß‚é
-            Vector3 moveDir = rb.linearVelocity.normalized; // is•ûŒü
-            Vector3 slopeDir = Vector3.Cross(Vector3.Cross(hit.normal, Vector3.up), hit.normal).normalized; // Î–Ê•ûŒü
+            Vector3 onNormal = hit.normal; // æ–œé¢ã®æ³•ç·š
+                                           // ç¾åœ¨ã®é€²è¡Œæ–¹å‘ï¼ˆåœæ­¢ä¸­ã¯ forward æ‰±ã„ï¼‰
+            Vector3 inputVector = rb.linearVelocity.sqrMagnitude > 0.01f
+                                ? rb.linearVelocity.normalized
+                                : transform.forward;
 
-            //  ŒXÎŠp‚Ìâ‘Î’l‚ğ‹‚ß‚é
-            float angleAbs = Vector3.Angle(hit.normal, Vector3.up);
+            // æ–œé¢é¢ä¸Šã®å˜ä½ãƒ™ã‚¯ãƒˆãƒ«
+            Vector3 onPlane = Vector3.ProjectOnPlane(inputVector, onNormal).normalized;
 
-            // “o‚è‚©‰º‚è‚©‚ğ“àÏ‚Å”»’è‚µ•„†‚ğ•t—^
-            float dot = Vector3.Dot(moveDir, slopeDir);
-            float signedAngle = (dot >= 0) ? angleAbs  // moveDir ‚Æ“¯‚¶Œü‚« ¨ ‰º‚è
-                                           : -angleAbs; // ‹tŒü‚« ¨ ã‚è
+            float angleAbs = Vector3.Angle(onNormal, Vector3.up);          // 0â€“90
+            bool isDownHill = Vector3.Dot(inputVector, onPlane) >= 0;              // å†…ç©ã§åˆ¤å®š
+            float signed = isDownHill ? angleAbs : -angleAbs; // ä¸Šã‚Šå‚ã‹ä¸‹ã‚Šå‚ã‹
 
-            return signedAngle; // ‚±‚±‚Å•Ô‚µ‚½Šp“x‚ğ ApplySlopeSpeedBoostŠÖ”‚Åg—p‚·‚é
+            //Debug.Log("æ³•ç·šæ–¹å‘ã®ãƒ™ã‚¯ãƒˆãƒ«(é’)" + onNormal);
+            //Debug.Log("å¹³é¢ã«æ²¿ã£ãŸæ–¹å‘ã®ãƒ™ã‚¯ãƒˆãƒ«(ç·‘)" + onPlane);
+            //Debug.Log("å¹³é¢ã«æ²¿ã‚ã›ãŸã„ãƒ™ã‚¯ãƒˆãƒ«(èµ¤)" + inputVector);
+
+            //// ãƒ‡ãƒãƒƒã‚°å¯è¦–åŒ–
+            //Debug.DrawRay(hit.point, onNormal, Color.blue);
+            //Debug.DrawRay(hit.point, onPlane, Color.green);
+            //Debug.DrawRay(hit.point, inputVector, Color.red);
+
+            return signed;     // +ä¸‹ã‚Š / â€“ä¸Šã‚Š
         }
-        else
-        {
-            return -1.0f; // ‹ó’†‚É•‚‚¢‚Ä‚¨‚èA’n–Ê‚ªŒ©‚Â‚©‚ç‚È‚¢ê‡‚Í-1‚ğ•Ô‚µ”»’è‚ğs‚í‚È‚¢
-        }
+        return -1.0f;          // åœ°é¢å–å¾—å¤±æ•—
     }
 
-    /*„â‚ÌŒXÎŠp‚É‚æ‚é‰Á‘¬EŒ¸‘¬ˆ—ŠÖ”
-   ˆø”FŒXÎŠp
-   ‚˜
-   –ß’lF‰Á‘¬“xƒpƒ‰ƒ[ƒ^
-   ‚˜
-   ŠT—v:â‚ÌŒXÎŠp‚É‰‚¶‚ÄƒvƒŒƒCƒ„[‘¬“x‚ğ‘Œ¸‚³‚¹‚é
-   */
+
+    /*ï¼å‚ã®å‚¾æ–œè§’ã«ã‚ˆã‚‹åŠ é€Ÿãƒ»æ¸›é€Ÿå‡¦ç†é–¢æ•°
+    å¼•æ•°ï¼šå‚¾æ–œè§’
+    ï½˜
+    æˆ»å€¤ï¼šåŠ é€Ÿåº¦ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+    ï½˜
+    æ¦‚è¦:å‚ã®å‚¾æ–œè§’ã«å¿œã˜ã¦ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼é€Ÿåº¦ã‚’å¢—æ¸›ã•ã›ã‚‹
+    */
     private float ApplySlopeSpeedBoost(float _slopeAngle)
     {
-        // ’n–Ê‚ªŒŸo‚³‚ê‚È‚©‚Á‚½
+        // åœ°é¢ãŒæ¤œå‡ºã•ã‚Œãªã‹ã£ãŸ
         if (_slopeAngle == -1.0f) return 0.0f;
 
-        // Šp“x‚ğŠÛ‚ß‚é(ƒƒWƒbƒNŒvZ—p)
+        // è§’åº¦ã‚’ä¸¸ã‚ã‚‹(ãƒ­ã‚¸ãƒƒã‚¯è¨ˆç®—ç”¨)
         int slopeKey = Mathf.RoundToInt(_slopeAngle / 10.0f) * 10;
 
-        // 30“x‚ğ’´‚¦‚½ŒXÎŠp‚Í30“x‚Æ‚·‚é
-        if (slopeKey < -30.0f) slopeKey = -30;
-        else if (slopeKey > 30.0f) slopeKey = 30;
+        // 30åº¦ã‚’è¶…ãˆãŸå‚¾æ–œè§’ã¯30åº¦ã¨ã™ã‚‹
+        slopeKey = Mathf.Clamp(slopeKey, -30, 30);
 
-        // ŒXÎŠp‚É‰‚¶‚Ä‰Á‘¬EŒ¸‘¬‚·‚é’l‚ğŒˆ‚ß‚é
+        // å‚¾æ–œè§’ã«å¿œã˜ã¦åŠ é€Ÿãƒ»æ¸›é€Ÿã™ã‚‹å€¤ã‚’æ±ºã‚ã‚‹
         switch (slopeKey)
         {
             case -30:
@@ -370,7 +375,7 @@ public class Player : MonoBehaviour
             case -10:
                 return 1.0f;
             case 0:
-                return m_fRecordedBaseSpeed - m_fSpeed; // •½’n‚É–ß‚éÛAŒ³‚Ì‘¬“x‚É–ß‚·
+                return m_fRecordedBaseSpeed - m_fSpeed; // å¹³åœ°ã«æˆ»ã‚‹éš›ã€å…ƒã®é€Ÿåº¦ã«æˆ»ã™
             case 10:
                 return -1.0f;
             case 20:
@@ -382,28 +387,29 @@ public class Player : MonoBehaviour
         }
     }
 
-    /*„ƒAƒjƒ[ƒVƒ‡ƒ“‚ğØ‚è‘Ö‚¦‚éŠÖ”
-    ˆø”F‚È‚µ
-    ‚˜
-    –ß’lF‚È‚µ
-    ‚˜
-    ŠT—v:ƒ_ƒbƒVƒ…‚ÌÄ¶‘¬“x‚ÆƒAƒjƒ[ƒVƒ‡ƒ“‚ğ•ÏX
+
+    /*ï¼ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹é–¢æ•°
+    å¼•æ•°ï¼šãªã—
+    ï½˜
+    æˆ»å€¤ï¼šãªã—
+    ï½˜
+    æ¦‚è¦:ãƒ€ãƒƒã‚·ãƒ¥ã®å†ç”Ÿé€Ÿåº¦ã¨ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å¤‰æ›´
     */
     private void ChangeAnimation()
     {
-        // --- ƒAƒjƒ[ƒVƒ‡ƒ“Ä¶‘¬“x ---
-        if (m_fSpeed > 8.0f)    // ‰ÁZ
+        // --- ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å†ç”Ÿé€Ÿåº¦ ---
+        if (m_fSpeed > 8.0f)    // åŠ ç®—
         {
             float nSpeed = m_fSpeed - 8.0f;
             Player_Animator.speed = nSpeed * 0.0357f + 1.0f;
         }
-        else    // Œ¸Z
+        else    // æ¸›ç®—
         {
             float nSpeed = m_fSpeed - 8.0f;
             Player_Animator.speed = 1.0f + nSpeed * 0.0625f;
         }
 
-        // --- ƒAƒjƒ[ƒVƒ‡ƒ“Ø‚è‘Ö‚¦ ---
+        // --- ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³åˆ‡ã‚Šæ›¿ãˆ ---
         if (m_fSpeed < thresholds[0] + 1) 
         {
             Player_Animator.SetInteger("AnimNo", 0);
@@ -431,24 +437,24 @@ public class Player : MonoBehaviour
         return;
     }
 
-    /*„ó‘Ô‚ğ‘—‚éŠÖ”
-   ˆø”F‚È‚µ
-   ‚˜
-   –ß’lFó‘Ô‚ğ•\‚·”’l
-   ‚˜
-   ŠT—v:ƒvƒŒƒCƒ„[‚Ìó‘Ô‚ğ‘—‚é
+    /*ï¼çŠ¶æ…‹ã‚’é€ã‚‹é–¢æ•°
+   å¼•æ•°ï¼šãªã—
+   ï½˜
+   æˆ»å€¤ï¼šçŠ¶æ…‹ã‚’è¡¨ã™æ•°å€¤
+   ï½˜
+   æ¦‚è¦:ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®çŠ¶æ…‹ã‚’é€ã‚‹
    */
     public int GetState()
     {
         return (int)PlayerState;
     }
 
-    /*„ó‘Ô‚ğ‘—‚éŠÖ”
-    ˆø”F‚È‚µ
-    ‚˜
-    –ß’lFŒ»İ‚Ì‘¬“x‚ğ•\‚·”’l
-    ‚˜
-    ŠT—v:ƒvƒŒƒCƒ„[‚ÌŒ»İ‚Ì‘¬“x‚ğ‘—‚é
+    /*ï¼çŠ¶æ…‹ã‚’é€ã‚‹é–¢æ•°
+    å¼•æ•°ï¼šãªã—
+    ï½˜
+    æˆ»å€¤ï¼šç¾åœ¨ã®é€Ÿåº¦ã‚’è¡¨ã™æ•°å€¤
+    ï½˜
+    æ¦‚è¦:ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç¾åœ¨ã®é€Ÿåº¦ã‚’é€ã‚‹
     */
     public float GetSpeed()
     {
