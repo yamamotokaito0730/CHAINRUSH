@@ -125,13 +125,11 @@ public class Player : MonoBehaviour
         //}
 
         //===== ProjectOnPlane関数を使い斜面の補正を行う
-        const float rayLen = 100.0f;
-        const float radius = 10.4f;
+        const float rayLen = 100.0f; // レイを飛ばす距離
 
         Vector3 origin = transform.position;
         Vector3 direction = Vector3.down;
-        float range = 0.5f; // 許容範囲
-                            //        float frontAngle= 45.0f; // 許容範囲
+        float range = 0.5f; // 地面に当たるまでの許容範囲
 
 
         Debug.DrawRay(origin, direction * rayLen, Color.red);
@@ -141,7 +139,6 @@ public class Player : MonoBehaviour
 
             if (range > Vector3.Distance(transform.position, hit.point))
             {
-                //Debug.Log("地についている");
                 // 地形ベクトル、内積を使い、プレイヤーの移動ベクトルを補正する
                 Vector3 groundN = hit.normal;
                 Vector3 moveDir = rb.linearVelocity.sqrMagnitude > 0.01f
@@ -157,7 +154,6 @@ public class Player : MonoBehaviour
             else
             {
                 // 下りで適用する処理
-                Debug.Log("浮いている");
                 // 重力の追加
                 //    rb.AddForce(Vector3.down * m_fBaseGravity * 10.0f, ForceMode.Acceleration);
                 Vector3 corrected = transform.position;
@@ -313,7 +309,6 @@ public class Player : MonoBehaviour
     private float GetGroundSlope()
     {
         float rayLength = 10.0f;
-        float radius = 0.4f;          // ← 地形サイズに合わせて調整（0.2〜0.5 m が目安）
 
         RaycastHit hit;
         // 地面の法線をスフィアキャストで取得
@@ -331,15 +326,6 @@ public class Player : MonoBehaviour
             float angleAbs = Vector3.Angle(onNormal, Vector3.up);          // 0–90
             bool isDownHill = Vector3.Dot(inputVector, onPlane) >= 0;              // 内積で判定
             float signed = isDownHill ? angleAbs : -angleAbs; // 上り坂か下り坂か
-
-            //Debug.Log("法線方向のベクトル(青)" + onNormal);
-            //Debug.Log("平面に沿った方向のベクトル(緑)" + onPlane);
-            //Debug.Log("平面に沿わせたいベクトル(赤)" + inputVector);
-
-            //// デバッグ可視化
-            //Debug.DrawRay(hit.point, onNormal, Color.blue);
-            //Debug.DrawRay(hit.point, onPlane, Color.green);
-            //Debug.DrawRay(hit.point, inputVector, Color.red);
 
             return signed;     // +下り / –上り
         }
