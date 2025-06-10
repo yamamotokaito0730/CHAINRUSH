@@ -20,6 +20,8 @@ using UnityEngine;
 
 public class SEManager : MonoBehaviour
 {
+    public static SEManager Instance { get; private set; }
+
     [Tooltip("AudioDataを参照する")]public AudioData audioData;
     [Tooltip("SE再生用の変数")]     private AudioSource audioSource;
 
@@ -32,6 +34,14 @@ public class SEManager : MonoBehaviour
     */
     void Awake()
     {
+        if(Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
         audioSource = gameObject.AddComponent<AudioSource>();
     }
 
@@ -44,7 +54,7 @@ public class SEManager : MonoBehaviour
         */
     public void Play(string name)
     {
-        AudioClip clip = audioData.GetSE(name);
+        AudioClip clip = audioData?.GetSE(name);
         if (clip != null)
         {
             audioSource.PlayOneShot(clip);  // 同時に10個ぐらい(パソコンにもよるけど)までならSEを鳴らせる

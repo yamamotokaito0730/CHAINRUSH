@@ -22,7 +22,7 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "AudioData", menuName = "Scriptable Objects/AudioData")]
 public class AudioData : ScriptableObject
 {
-    // 
+    
     [System.Serializable, Tooltip("BGMやSEのファイル名と再生クリップ管理用クラス")]
     public class NamedClip  
     {
