@@ -37,12 +37,14 @@ public class ShotWeb : MonoBehaviour
    ｘ
    概要:糸の目標位置決定とプレイヤー速度を糸の速度に加算させる
    */
-    public void Shot(Vector3 _Direction,float _fShotSpeed, float _fPlayerSpeed)
+    
+    public void Start(Vector3 _Direction,float _fShotSpeed, float _fPlayerSpeed)
     {
         m_direction = _Direction.normalized;
         m_fShotSpeed = _fPlayerSpeed + _fShotSpeed; // 糸の速度をプレイヤー速度に加算させる
         Destroy(gameObject, m_fLifeTime); // 一定時間後に消滅させる
     }
+    
     /*＞Update関数
      引数：なし
      ｘ
