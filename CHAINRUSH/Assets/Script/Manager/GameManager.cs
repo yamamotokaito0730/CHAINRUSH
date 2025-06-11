@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
         while(activeEnemies.Count < currentMaxEnemies)
         {
             Vector3 spawnPos = GetRandomPositionOnTerrain();
-            GameObject enemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+            GameObject enemy = ObjectPoolManager.Instance.SpawnFromPool("enemy1", spawnPos, Quaternion.identity);
             Image enemyIcon = Instantiate(enemyIconPrefab, spawnPos, Quaternion.identity);
             activeEnemies.Add(enemy);
             activeEnemyIcones.Add(enemyIcon);
