@@ -19,7 +19,7 @@ ___14:Die関数の仕様変更
 
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IPool
 {
 
     [Header("エフェクト")]
@@ -27,6 +27,16 @@ public class Enemy : MonoBehaviour
     [SerializeField, Tooltip("生成数")] private int m_nPartsNum;    // オブジェクトの生成
 
     public GameManager gamemanager;
+
+    public void OnSpawn()
+    {
+       
+    }
+
+    public void OnReturn()
+    {
+        
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -63,7 +73,7 @@ public class Enemy : MonoBehaviour
             {
                 die = false;
                 gamemanager.OnEnemyKilled(gameObject);
-                Destroy(gameObject);
+                ObjectPoolManager.Instance.ReturnToPool("enemy1", gameObject);
             }
         }
     }
