@@ -147,7 +147,7 @@ public class EnemyPattern : MonoBehaviour
    ｘ
    戻値：なし
    ｘ
-   概要:半径15m以内に入ったプレイヤーを速度を上げて追跡する
+   概要:半径30m以内に入ったプレイヤーを速度を上げて追跡する
    */
     private IEnumerator ChaseRoutine()
     {
@@ -209,30 +209,8 @@ public class EnemyPattern : MonoBehaviour
         if (rb == null) rb = bullet.AddComponent<Rigidbody>();
 
         rb.useGravity = false;
-        rb.AddForce(shootDir * shootSpeed, ForceMode.VelocityChange);
-        //rb.velocity = shootDir * shootSpeed;
-
-        //// nullチェック
-        //if (!m_targetPlayer || !m_BulletPrefab) return;
-        //// 弾の生成位置を決める
-        //Vector3 spawnPos = transform.position;
-        //// 弾を飛ばす位置を決める
-        //Vector3 direction = (m_targetPlayer.position - spawnPos).normalized;
-
-        //// プレイヤーの速度を取得
-        //Player player = m_targetPlayer.GetComponent<Player>();
-        //if (!player) return;
-
-        //float f_PlayerSpeed = player.PlayerSpeed;
-
-        //GameObject ShotWeb = Instantiate(m_BulletPrefab, spawnPos, Quaternion.LookRotation(direction));
-
-        //// ShotWebスクリプトを取得し、初期化
-        //ShotWeb webScript = ShotWeb.GetComponent<ShotWeb>();
-        //if (webScript)
-        //{
-        //    webScript.Shot(direction, m_fShotSpeed, f_PlayerSpeed); // 弾を発射させる
-        //}
+        rb.AddForce(shootDir * m_fShotSpeed, ForceMode.VelocityChange);
+        
     }
 
     /*＞移動コルーチン

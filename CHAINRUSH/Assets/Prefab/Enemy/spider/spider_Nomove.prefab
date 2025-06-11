@@ -241,13 +241,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f1ac7990d5d02a43b550aedef2616ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_fFindSpeed: 5
-  m_fNormalSpeed: 3
-  m_fRetart: 10
-  m_fSearchRange: 15
+  m_fFindSpeed: 10
+  m_fNormalSpeed: 8
+  m_fRetart: 5
+  m_fSearchRange: 30
   m_SearchRangeObject: {fileID: 9172341991809055910}
   m_BulletPrefab: {fileID: 7382276296219717103, guid: a0d5851d538cefd4398930b1e91bcf7b, type: 3}
-  m_fShotInterval: 2
+  m_fShotInterval: 1
   m_fShotSpeed: 5
   effectPrefab: {fileID: 3255156177815928084, guid: 3085671264812344a9ac27d714881dff, type: 3}
   distanceInFront: 2
