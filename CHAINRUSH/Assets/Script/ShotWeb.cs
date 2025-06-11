@@ -38,7 +38,7 @@ public class ShotWeb : MonoBehaviour
    概要:糸の目標位置決定とプレイヤー速度を糸の速度に加算させる
    */
     
-    public void Start(Vector3 _Direction,float _fShotSpeed, float _fPlayerSpeed)
+    public void Shot(Vector3 _Direction,float _fShotSpeed, float _fPlayerSpeed)
     {
         m_direction = _Direction.normalized;
         m_fShotSpeed = _fPlayerSpeed + _fShotSpeed; // 糸の速度をプレイヤー速度に加算させる
