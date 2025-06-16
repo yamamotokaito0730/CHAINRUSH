@@ -19,6 +19,9 @@ _M05
 __D
 ___14:カメラ移動↑↓キー操作追加:yamamoto
 ___16:カメラ移動をマウス操作に変更、Rキーで初期位置にリセット:mori
+_M06
+__D
+___15:カメラがTerrainやGameObjectの裏面を映さないように修正:matsushima
 
 =====*/
 using UnityEngine;
@@ -102,12 +105,26 @@ public class Camera : MonoBehaviour
             m_Pitch = m_InitialPitch;
         }
 
-        // カメラ位置をターゲットの位置＋オフセットに設定
+        // カメラの理想位置をターゲットの位置＋オフセットに設定
         Vector3 targetPosition = m_Target.position + Quaternion.Euler(m_Pitch, m_Yaw, 0.0f) * m_Offset;
         transform.position = targetPosition;
 
         // ターゲットを常に見る
         //transform.LookAt(m_Target.position);
+
+        // Terrainなどの遮蔽物との衝突をチェック
+        RaycastHit hit;
+        Vector3 direction = targetPosition - m_Target.position;    // プレイヤーから理想位置への方向ベクトル
+        float distance = direction.magnitude;                       // 方向ベクトルの長さ
+        Vector3 finalPosition = targetPosition;                    // 最終的な位置
+        if (Physics.Raycast(m_Target.position, direction.normalized, out hit, distance))
+        {
+            // 遮蔽物があれば、ヒットポイントの少し手前にカメラを配置
+            finalPosition = hit.point - direction.normalized * 0.2f;
+        }
+
+        // 水面下にカメラがいかないように補正
+        finalPosition.y = Mathf.Max(finalPosition.y, 3.0f);
 
         // シェイク処理
         if (m_ShakeDuration > 0f)
@@ -120,7 +137,7 @@ public class Camera : MonoBehaviour
             m_ShakeOffset = Vector3.zero;
         }
 
-        transform.position = targetPosition + m_ShakeOffset;
+        transform.position = finalPosition + m_ShakeOffset;
         transform.LookAt(m_Target.position);
     }
 
