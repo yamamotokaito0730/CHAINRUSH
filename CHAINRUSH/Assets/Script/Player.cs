@@ -218,7 +218,7 @@ public class Player : MonoBehaviour
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
             if (enemy != null)
             {
-                enemy.Die(mainCamera); // エネミー分割処理
+                enemy.Die(mainCamera,this); // エネミー分割処理
                 AddBoost(m_fBoost);
                 m_fRecordedBaseSpeed += m_fBoost;
                 AddGravity();

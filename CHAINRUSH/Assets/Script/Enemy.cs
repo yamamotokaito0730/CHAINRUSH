@@ -47,16 +47,16 @@ public class Enemy : MonoBehaviour
     ｘ
     概要:この敵を消滅させる、カメラに向かって飛ばす＆張り付け処理
     */
-    public void Die(UnityEngine.Camera camera)
+    public void Die(UnityEngine.Camera _camera,Player _player)
     {
         bool die = true; // 初回ループ時のみEnemyオブジェクト削除
-
+        float Speed=_player.GetSpeed();
         for (int i = 0; i < m_nPartsNum; i++)
         {
 
             GameObject obj = Instantiate(m_Parts[i], transform.position, Quaternion.identity);
             FlyToCamera fly = obj.GetComponent<FlyToCamera>();
-            fly.StartFly(camera); // カメラに向かって飛ぶ＆張り付き処理開始
+            fly.StartFly(_camera, Speed); // カメラに向かって飛ぶ＆張り付き処理開始
 
             // 初回ループ時のみEnemyオブジェクト削除
             if (die)

@@ -123,3 +123,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdad30f6b4837ae4197de9bcd1abe3a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  harituki: 0.1
+  tobukyori: 6
+  tobujikan: 1
