@@ -30,14 +30,13 @@ public class SeaRhythm : MonoBehaviour
     private bool b_Start;       // 潮を引くか満たすか
     void Start()
     {
-        f_StartPosition= transform.position;
+        f_StartPosition = transform.position;
+        // スタート地点と到達地点との距離を計算
         Distance = Vector3.Distance(f_StartPosition, f_MaxPosition);
         b_Start = true;
-        
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         //  0～1の範囲を往復
         float t = Mathf.PingPong(Time.time / f_Speed, 1.0f);
