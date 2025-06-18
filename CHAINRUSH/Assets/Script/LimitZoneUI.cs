@@ -55,11 +55,9 @@ public class LimitZoneUI : MonoBehaviour
             // 壁の表面上でプレイヤーに一番近い点を取得
             Vector3 closest = t.ClosestPoint(player.position);
             float distance = Vector3.Distance(player.position, closest);
-
-            Debug.Log(distance);
+            
             if(distance < StartUIFade)
             {
-                Debug.Log("通った");
                 nearWall = true;
                 break;  
             }
