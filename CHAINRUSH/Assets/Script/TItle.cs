@@ -3,62 +3,42 @@
 └作成者：mori
 
 ＞内容
-タイトルシーンの処理
+タイトルの実装
 
 ＞注意事項
 
 
 ＞更新履歴
 Y25         
-_M06
+_M05
 __D  
-___06:プログラム作成:mori
+___22:プログラム作成:mori
+_M06
+__D
+___17:シーン切り替えに1.5秒遅延させるように変更
 
 =====*/
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Title : MonoBehaviour
 {
+    private bool isLoading = false;  // 2度押し防止用
 
-    public float moveSpeed;
-    private bool isMoving = false;
-    private float posY;
-
-    void Awake()
-    {
-
-    }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        Animator animator;
-        animator = GetComponent<Animator>();
-        animator.Update(0f);           // Animatorの内部初期化
-        animator.Play("Run_1", 0, 0.0f); // 第2引数: Layer、第3引数: 時間（0秒から）
-        animator.Update(0f);           // 再度更新して即座に反映させる
-        posY = transform.position.y;
-    }
-
-    // Update is called once per frame
     void Update()
     {
-        // エンターキーを押したら移動開始
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (!isLoading && Input.GetKeyDown(KeyCode.Return))
         {
-            isMoving = true;
+            isLoading = true;
+            StartCoroutine(LoadSceneWithDelay());
         }
+    }
 
-        // 移動処理
-        if (isMoving)
-        {
-            transform.position += Vector3.right * moveSpeed * Time.deltaTime;
-        }
-
-        // Y座標が下がってくるので固定にする
-        Vector3 pos = transform.position;
-        pos.y = posY;
-        transform.position = pos;
+    // ２秒遅延用
+    private System.Collections.IEnumerator LoadSceneWithDelay()
+    {
+        yield return new WaitForSeconds(1.5f);  // 1.5秒待つ
+        SceneManager.LoadScene("LoadScene");
     }
 }
