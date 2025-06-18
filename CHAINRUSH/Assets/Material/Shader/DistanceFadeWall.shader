@@ -1,3 +1,20 @@
+/*=====
+<DistanceFadeWall.shader>
+└作成者：saito
+
+＞内容
+壁のテクスチャを表示するためのシェーダー
+
+＞注意事項
+
+
+＞更新履歴
+Y25   
+_M12  
+__D     
+___13:シェーダー作成:saito
+___16:プロパティを追加：saito
+=====*/
 Shader "Custom/DistanceFadeWall"
 {
     Properties
