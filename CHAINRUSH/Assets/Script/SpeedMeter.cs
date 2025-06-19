@@ -39,8 +39,19 @@ public class SpeedMeter : MonoBehaviour
     [Header("背景")]
     public Image[] backgroundImages;
 
-    [Header("ゲージ")]
-    public RawImage[] gaugeImages;
+    [Header("ゲージ２段階目")]
+    public Image[] gaugeImages2;
+    [Header("ゲージ３段階目")]
+    public Image[] gaugeImages3;
+    [Header("ゲージ４段階目")]
+    public Image[] gaugeImages4;
+    [Header("ゲージ５段階目")]
+    public Image[] gaugeImages5;
+
+    [Header("速度 10の位表示用 Image(0〜9)")]
+    public Image[] tensImages;
+    [Header("速度 1の位表示用 Image(0〜9)")]
+    public Image[] onesImages;
 
     private float baseAngle = 0f;
     private Player player;
@@ -57,39 +68,39 @@ public class SpeedMeter : MonoBehaviour
     };
 
     // 段階2
-    private readonly (float speed, float uv)[] Stage2 = new (float, float)[]
+    private readonly float[] Stage2 = new float[]
     {
-        (5f,  0.2f),
-        (8f,  0.4f),
-        (11f, 0.6f),
-        (14f, 0.8f),
-        (17f, 1.0f)
+        5f,
+        8f,
+        11f,
+        14f,
+        17f
     };
 
     // 段階3
-    private readonly (float speed, float uv)[] Stage3 = new (float, float)[]
+    private readonly float[] Stage3 = new float[]
     {
-        (20f, 0.16f),
-        (23f, 0.33f),
-        (26f, 0.5f),
-        (29f, 0.66f),
-        (32f, 0.83f),
-        (35f, 1.0f)
+        20f,
+        23f,
+        26f,
+        29f,
+        32f,
+        35f
     };
 
     // 段階4
-    private readonly (float speed, float uv)[] Stage4 = new (float, float)[]
+    private readonly float[] Stage4 = new float[]
     {
-        (38f, 0.33f),
-        (41f, 0.66f),
-        (44f, 1.0f)
+        38f,
+        41f,
+        44f
     };
 
     // 段階5
-    private readonly (float speed, float uv)[] Stage5 = new (float, float)[]
+    private readonly float[] Stage5 = new float[]
     {
-        (47f, 0.5f),
-        (50f, 1.0f)
+        47f,
+        50f,
     };
 
     private void Start()
@@ -102,12 +113,6 @@ public class SpeedMeter : MonoBehaviour
         {
             backgroundImages[i].gameObject.SetActive(false);
         }
-
-        // ゲージ初期化
-        for (int i = 0; i < gaugeImages.Length; i++)
-        {
-            gaugeImages[i].gameObject.SetActive(false);
-        }
     }
 
     void Update()
@@ -119,29 +124,53 @@ public class SpeedMeter : MonoBehaviour
         // プレイヤーの段階（1〜5）を0始まりにして stage とする
         int stage = Mathf.Clamp(player.GetState() - 1, 0, speedStages.Length - 1);
 
+        // 10の位と1の位を計算
+        int tens = ((int)speed) / 10;
+        int ones = ((int)speed) % 10;
+
+        // 10の位表示更新
+        for (int i = 0; i < tensImages.Length; ++i)
+        {
+            tensImages[i].gameObject.SetActive(i == tens);
+        }
+
+        // 1の位表示更新
+        for (int i = 0; i < onesImages.Length; ++i)
+        {
+            onesImages[i].gameObject.SetActive(i == ones);
+        }
+
         // 速度に応じて、メーターの表示量を変化させる
-        float fill = 0;
+        int num = 0;
         switch (stage - 1)
         {
-            case 0:
-                fill = GetFillFromTable(Stage2);
-                //gaugeImages[stage - 1].fillAmount = fill;
-                gaugeImages[stage - 1].uvRect = new Rect(0.0f, 0.0f, fill, 1.0f);
+            case 0: // 段階２
+                num = GetNumFromTable(Stage2);
+                for (int i = 0; i < gaugeImages2.Length; ++i)
+                {
+                    gaugeImages2[i].gameObject.SetActive(i <= num);
+                }
                 break;
-            case 1:
-                fill = GetFillFromTable(Stage3);
-                //gaugeImages[stage - 1].fillAmount = fill;
-                gaugeImages[stage - 1].uvRect = new Rect(0.0f, 0.0f, fill, 1.0f);
+            case 1: // 段階３
+                num = GetNumFromTable(Stage3);
+                for (int i = 0; i < gaugeImages3.Length; ++i)
+                {
+                    gaugeImages3[i].gameObject.SetActive(i <= num);
+                }
                 break;
-            case 2:
-                fill = GetFillFromTable(Stage4);
-                //gaugeImages[stage - 1].fillAmount = fill;
-                gaugeImages[stage - 1].uvRect = new Rect(0.0f, 0.0f, fill, 1.0f);
+            case 2: // 段階４
+                num = GetNumFromTable(Stage4);
+                for (int i = 0; i < gaugeImages4.Length; ++i)
+                {
+                    gaugeImages4[i].gameObject.SetActive(i <= num);
+                }
                 break;
-            case 3:
-                fill = GetFillFromTable(Stage5);
-                //gaugeImages[stage - 1].fillAmount = fill;
-                gaugeImages[stage - 1].uvRect = new Rect(0.0f, 0.0f, fill, 1.0f);
+            case 3: // 段階５
+                num = GetNumFromTable(Stage5);
+                for (int i = 0; i < gaugeImages5.Length; ++i)
+                {
+                    gaugeImages5[i].gameObject.SetActive(i <= num);
+                }
                 break;
         }
 
@@ -157,10 +186,22 @@ public class SpeedMeter : MonoBehaviour
                 backgroundImages[i].gameObject.SetActive(i == currentStage);
             }
 
-            // ゲージImage切り替え
-            for (int i = 0; i < gaugeImages.Length; i++)
+            // ゲージImageリセット
+            for (int i = 0; i < gaugeImages2.Length; i++)
             {
-                gaugeImages[i].gameObject.SetActive(i == currentStage - 1);
+                gaugeImages2[i].gameObject.SetActive(false);
+            }
+            for (int i = 0; i < gaugeImages3.Length; i++)
+            {
+                gaugeImages3[i].gameObject.SetActive(false);
+            }
+            for (int i = 0; i < gaugeImages4.Length; i++)
+            {
+                gaugeImages4[i].gameObject.SetActive(false);
+            }
+            for (int i = 0; i < gaugeImages5.Length; i++)
+            {
+                gaugeImages5[i].gameObject.SetActive(false);
             }
         }
 
@@ -178,26 +219,26 @@ public class SpeedMeter : MonoBehaviour
         needle.localRotation = Quaternion.Euler(0f, 0f, -(baseAngle + shake));
     }
 
-    /*＞GetFillFromTable関数
+    /*＞GetNumFromTable関数
     引数：参照先テーブル
     ｘ
-    戻値：表示するuv量
+    戻値：表示するメーター量
     ｘ
     概要:各段階ごとに応じたスピードによるメーターの表示幅を変化させる
     */
-    float GetFillFromTable((float speed, float uv)[] table)
+    int GetNumFromTable(float[] table)
     {
-        float fill = 0f; // 戻り値格納用
+        int num = 0; // 戻り値格納用
 
-        // テーブルの中身を順番に見て、スピードが下回ったらその時点のuvを格納
+        // テーブルの中身を順番に見て、スピードが下回ったらその時点の配列番号を格納
         for (int i = 0; i < table.Length; i++)
         {
-            if (table[i].speed >= player.GetSpeed())
+            if (table[i] >= player.GetSpeed())
             {
-                fill = table[i].uv;
+                num = i;
                 break;
             }
         }
-        return fill;
+        return num;
     }
 }
