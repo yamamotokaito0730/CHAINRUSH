@@ -26,6 +26,11 @@ public class Title : MonoBehaviour
 {
     private bool isLoading = false;  // 2“x‰Ÿ‚µ–hŽ~—p
 
+    private void Awake()
+    {
+        BGMManager.Instance.PlayBGMWithFade("Title", 1f);    
+    }
+
     void Update()
     {
         if (!isLoading && Input.GetKeyDown(KeyCode.Return))
@@ -42,6 +47,7 @@ public class Title : MonoBehaviour
     private System.Collections.IEnumerator LoadSceneWithDelay()
     {
         yield return new WaitForSeconds(1.5f);  // 1.5•b‘Ò‚Â
+        BGMManager.Instance.ChangeBGM("Stage1", 1.5f);
         SceneManager.LoadScene("LoadScene");
     }
 }

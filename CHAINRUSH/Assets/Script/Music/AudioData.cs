@@ -22,18 +22,19 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "AudioData", menuName = "Scriptable Objects/AudioData")]
 public class AudioData : ScriptableObject
 {
-    // 
     [System.Serializable, Tooltip("BGMやSEのファイル名と再生クリップ管理用クラス")]
     public class NamedClip  
     {
         public string name;
         public AudioClip audioClip;
+        public float volume = 1f;
     }
 
     [Header("BGM・SE管理用リスト")]
     public List<NamedClip> bgmClips;
+    public List<NamedClip> ambClips;
     public List<NamedClip> seClips;
-
+    
 
     /*＞BGM・SE取得用関数
      引数:string : 名前  
@@ -46,8 +47,8 @@ public class AudioData : ScriptableObject
      */
     public AudioClip GetBGM(string name) =>
         bgmClips.Find(c => c.name == name)?.audioClip;  // ラムダ式を使って探索・取得を短くしています
-
     public AudioClip GetSE(string name) =>
         seClips.Find(c => c.name == name)?.audioClip;
-
+    public float GetBGMVolume(string name) =>
+        bgmClips.Find(c => c.name == name)?.volume ?? 1f;
 }
