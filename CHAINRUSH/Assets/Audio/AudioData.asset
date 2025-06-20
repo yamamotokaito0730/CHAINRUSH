@@ -20,3 +20,7 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: 520186197eb56f240aeddf4cd078f3bd, type: 3}
   - name: Tree
     audioClip: {fileID: 8300000, guid: 84c307f1683e0954195fad17d0692358, type: 3}
+  - name: damagevoice
+    audioClip: {fileID: 8300000, guid: 3ed7b04748ef0ae42907f2eb3b739913, type: 3}
+  - name: spiderdeath
+    audioClip: {fileID: 8300000, guid: c5458ed121b07e84fac63750abd4de23, type: 3}

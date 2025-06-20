@@ -16,7 +16,8 @@ _M05
 ___14:DieŠÖ”‚Ìd—l•ÏX
 _M06
 __D     
-___13:SE’Ç‰Á:Nakashima
+___13:SE’Ç‰Á:nakashima
+___20:SE’Ç‰Á:nakashima
 =====*/
 
 using UnityEngine;
@@ -65,6 +66,7 @@ public class Enemy : MonoBehaviour
             {
                 //SE////////////////////////////////////////
                 SEManager.Instance.Play("spiderdeath");
+                SEManager.Instance.Play("chainsaw");
                 ////////////////////////////////////////////
 
                 die = false;

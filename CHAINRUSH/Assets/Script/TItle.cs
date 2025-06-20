@@ -16,7 +16,7 @@ ___22:プログラム作成:mori
 _M06
 __D
 ___17:シーン切り替えに1.5秒遅延させるように変更
-
+___20:SE追加:nakashima
 =====*/
 
 using UnityEngine;
@@ -30,6 +30,9 @@ public class Title : MonoBehaviour
     {
         if (!isLoading && Input.GetKeyDown(KeyCode.Return))
         {
+            //SE////////////////////////////////////////
+            SEManager.Instance.Play("chainsaw");
+            ////////////////////////////////////////////
             isLoading = true;
             StartCoroutine(LoadSceneWithDelay());
         }
