@@ -138,6 +138,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7318165269961779606, guid: b094554c20ef53649a44a9c89a2010e5, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b094554c20ef53649a44a9c89a2010e5, type: 3}
       propertyPath: m_Name
       value: Player
@@ -146,6 +150,14 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 2655125941099099771, guid: b094554c20ef53649a44a9c89a2010e5, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2655125941099099771, guid: b094554c20ef53649a44a9c89a2010e5, type: 3}
+      propertyPath: 'm_Materials.Array.data[9]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 3dc60b64a06cece499254b61a1a3ddf5, type: 2}
     - target: {fileID: 5866666021909216657, guid: b094554c20ef53649a44a9c89a2010e5, type: 3}
       propertyPath: m_Avatar
       value: 
@@ -245,5 +257,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_fSpeed: 5
   m_fBoost: 3
+  m_fMaxSpeed: 0
   m_fBaseGravity: 98.1
   m_fAddGravity: 3
+  Player_Animator: {fileID: 0}
