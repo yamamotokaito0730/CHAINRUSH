@@ -65,20 +65,9 @@ public class ObjectSpawner : MonoBehaviour
                 int index = tree.prototypeIndex;
                 if (index >= 0 && index < m_treePrefab.Length)
                 {
-                    switch(index)
-                    {
-                        case 0:
-                            GameObject newTree = ObjectPoolManager.Instance.SpawnFromPool(
-                                "Conifer", worldPos, Quaternion.identity);
-                            m_spawnedPositions.Add(worldPos);
-                            break;
-                        case 1:
-                            GameObject newRock = ObjectPoolManager.Instance.SpawnFromPool(
-                                "Rock_C_01", worldPos, Quaternion.identity);
-                            m_spawnedPositions.Add(worldPos);
-                            break;
-                    }
-
+                    GameObject treePrefab = ObjectPoolManager.Instance.SpawnFromPool(
+                        m_treePrefab[index].name, worldPos, Quaternion.identity);
+                    m_spawnedPositions.Add(worldPos);
                 }
             }
         }
