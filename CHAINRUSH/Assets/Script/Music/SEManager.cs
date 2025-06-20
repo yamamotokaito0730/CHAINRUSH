@@ -20,8 +20,10 @@ using UnityEngine;
 
 public class SEManager : MonoBehaviour
 {
-    [Tooltip("AudioDataを参照する")]public AudioData audioData;
-    [Tooltip("SE再生用の変数")]     private AudioSource audioSource;
+    public static SEManager Instance { get; private set; }
+
+    [Tooltip("AudioDataを参照する")] public AudioData audioData;
+    [Tooltip("SE再生用の変数")] private AudioSource audioSource;
 
     /*＞Awake関数
     引数：なし   
@@ -32,6 +34,14 @@ public class SEManager : MonoBehaviour
     */
     void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
         audioSource = gameObject.AddComponent<AudioSource>();
     }
 

@@ -14,7 +14,9 @@ __D
 ___23:プログラム作成:yamamoto
 _M05
 ___14:Die関数の仕様変更
-
+_M06
+__D     
+___13:SE追加:Nakashima
 =====*/
 
 using UnityEngine;
@@ -61,6 +63,10 @@ public class Enemy : MonoBehaviour
             // 初回ループ時のみEnemyオブジェクト削除
             if (die)
             {
+                //SE////////////////////////////////////////
+                SEManager.Instance.Play("spiderdeath");
+                ////////////////////////////////////////////
+
                 die = false;
                 gamemanager.OnEnemyKilled(gameObject);
                 //ObjectPoolManager.Instance.ReturnToPool("enemy1", gameObject);
