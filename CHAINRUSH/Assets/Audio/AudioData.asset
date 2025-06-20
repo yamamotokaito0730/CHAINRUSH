@@ -13,10 +13,20 @@ MonoBehaviour:
   m_Name: AudioData
   m_EditorClassIdentifier: 
   bgmClips:
+  - name: Title
+    audioClip: {fileID: 8300000, guid: 906ac7d8296a90e42a08c81c2f8ac4d0, type: 3}
+    volume: 1
   - name: Stage1
     audioClip: {fileID: 8300000, guid: 263f7d85a249af34e96a8ebe935dcdcd, type: 3}
+    volume: 1
+  ambClips:
+  - name: 
+    audioClip: {fileID: 0}
+    volume: 0
   seClips:
   - name: Rock
     audioClip: {fileID: 8300000, guid: 520186197eb56f240aeddf4cd078f3bd, type: 3}
+    volume: 1
   - name: Tree
     audioClip: {fileID: 8300000, guid: 84c307f1683e0954195fad17d0692358, type: 3}
+    volume: 1
