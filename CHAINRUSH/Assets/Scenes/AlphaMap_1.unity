@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 51760246}
   - component: {fileID: 51760247}
+  - component: {fileID: 51760248}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -171,6 +172,26 @@ MonoBehaviour:
   totalkillGoal: 20
   initialMaxEnemies: 10
   maxEnemiesLimit: 15
+--- !u!114 &51760248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 51760245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53699b3ff8a4b0549b378860bff89fb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  terrain: {fileID: 0}
+  enemyPrefab: {fileID: 0}
+  minimapPanelPrefab: {fileID: 0}
+  player: {fileID: 0}
+  enemyIconPrefab: {fileID: 0}
+  totalkillGoal: 20
+  initialMaxEnemies: 5
+  maxEnemiesLimit: 8
 --- !u!1 &91927244
 GameObject:
   m_ObjectHideFlags: 0
@@ -775,7 +796,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 533577427}
-  - component: {fileID: 533577426}
   m_Layer: 0
   m_Name: PoolManager
   m_TagString: Untagged
@@ -783,22 +803,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &533577426
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 533577425}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06dbeffd9bfdccc488b5548446290141, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pools:
-  - tag: enemy1
-    prefab: {fileID: 7381330029987104643, guid: bc810944bf880894e9775bd2ed3c5b97, type: 3}
-    size: 20
 --- !u!4 &533577427
 Transform:
   m_ObjectHideFlags: 0
