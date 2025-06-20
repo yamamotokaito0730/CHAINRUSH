@@ -163,6 +163,7 @@ public class EnemyPattern : MonoBehaviour
             float distance = toPlayer.magnitude; // ƒvƒŒƒCƒ„[‚Æ‚Ì‹——£
             Vector3 direction = toPlayer.normalized;
 
+
             // Œü‚«‚ğ‚ä‚Á‚­‚è•Ï‚¦‚é
             if (direction != Vector3.zero)
             {
