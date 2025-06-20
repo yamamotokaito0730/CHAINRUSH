@@ -29,7 +29,6 @@ public class Result : MonoBehaviour
     public CanvasGroup[] rankGroups;     // ランク (S,A,B,C,D) の CanvasGroup（5つ）
 
     public TextMeshProUGUI timeText;     // タイム表示用テキスト
-    public bool isGameOver = false;      // 仮：ゲームオーバーかどうか
 
     float timer = 0f;                    // 表示時間管理
 
@@ -74,7 +73,7 @@ public class Result : MonoBehaviour
 
         float elapsed = Timer.elapsedTime;
 
-        if (isGameOver)
+        if (GameManager.isGameOver)
         {
             rankIndex = 4; // D
         }

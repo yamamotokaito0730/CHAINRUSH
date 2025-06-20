@@ -17,7 +17,7 @@ _M06
 __D
 ___09:スクリプトの
 ___17:スクリプトのエネミー生成部分を変更:banno
-___19:
+___20:ゲームオーバー処理を追加
 =====*/
 using NUnit.Framework;
 using UnityEngine;
@@ -59,7 +59,10 @@ public class GameManager : MonoBehaviour
     private List<GameObject> activeEnemies = new List<GameObject>();
     private List<Image> activeEnemyIcones = new List<Image>();
 
-    
+    private Player playerScript; // Playerスクリプト保持用
+    public static bool isGameOver = false; // ゲームオーバーフラグ（Resultシーン用にstatic）
+
+
 
     void Start()
     {
@@ -70,6 +73,29 @@ public class GameManager : MonoBehaviour
         miniMapIcon = enemyIconPrefab.GetComponent<MiniMapIcon>();
         miniMapIcon.minimapPanel = minimapPanelPrefab;
         miniMapIcon.player = player;
+
+        // Playerスクリプトを取得
+        playerScript = player.GetComponent<Player>();
+
+        // ゲームオーバーフラグリセット
+        isGameOver = false;
+    }
+
+    void Update()
+    {
+        // Playerのスピード監視
+        if (!isGameOver && playerScript != null)
+        {
+            float speed = playerScript.GetSpeed();
+            if (speed <= 0f)
+            {
+                Debug.Log("ゲームオーバー！");
+                isGameOver = true;
+
+                // リザルトへ遷移
+                SceneManager.LoadScene("Result");
+            }
+        }
     }
 
     void SpawnEnemies()
@@ -79,6 +105,8 @@ public class GameManager : MonoBehaviour
             Debug.Log("ステージクリア");
             CancelInvoke(nameof(SpawnEnemies));
 
+            // クリア時は false
+            isGameOver = false;
             // リザルトシーンへ遷移
             SceneManager.LoadScene("Result");
 
