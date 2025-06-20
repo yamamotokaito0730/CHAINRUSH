@@ -246,12 +246,14 @@ MonoBehaviour:
   m_fRetart: 5
   m_fSearchRange: 30
   m_SearchRangeObject: {fileID: 9172341991809055910}
+  m_PlayerToEnemyDistance: 5
+  m_SpeedDown: 0.5
   m_BulletPrefab: {fileID: 7382276296219717103, guid: a0d5851d538cefd4398930b1e91bcf7b, type: 3}
-  m_fShotInterval: 1
+  m_fShotInterval: 3
   m_fShotSpeed: 5
+  m_fShotStopTime: 0.5
   effectPrefab: {fileID: 3255156177815928084, guid: 3085671264812344a9ac27d714881dff, type: 3}
   distanceInFront: 2
-  shootSpeed: 10
   upwardOffset: 1
 --- !u!4 &7864428585329515833 stripped
 Transform:
