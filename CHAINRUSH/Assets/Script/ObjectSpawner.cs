@@ -16,7 +16,9 @@ ___23:プログラム作成:matsushima
 ___25:石が大量発生する問題を解決:matsushima
 ___25:BreckNationalObjectからTerrain関係のスクリプトを移動:matsushima
 ___25:Detailとしていた石もTreesに加えたため、Detailに関するものを削除:matsushima
-
+_M06
+__D
+___12:オブジェクト生成箇所をプールから取り出すように変更
 =====*/
 using UnityEngine;
 using System.Collections.Generic;
@@ -63,7 +65,8 @@ public class ObjectSpawner : MonoBehaviour
                 int index = tree.prototypeIndex;
                 if (index >= 0 && index < m_treePrefab.Length)
                 {
-                    GameObject newTree = Instantiate(m_treePrefab[index], worldPos, Quaternion.identity);
+                    GameObject treePrefab = ObjectPoolManager.Instance.SpawnFromPool(
+                        m_treePrefab[index].name, worldPos, Quaternion.identity);
                     m_spawnedPositions.Add(worldPos);
                 }
             }

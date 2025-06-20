@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5864739774521006739}
   - component: {fileID: 8602746830369855455}
   - component: {fileID: 352948655459796366}
+  - component: {fileID: 6900307040786436231}
   m_Layer: 0
   m_Name: Tree_Stump
   m_TagString: Untagged
@@ -60160,3 +60161,16 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6507582229949200936}
   m_Mesh: {fileID: 0}
+--- !u!114 &6900307040786436231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6507582229949200936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ce2b8dab9fdfaa4bbab5f51d51ca1ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
