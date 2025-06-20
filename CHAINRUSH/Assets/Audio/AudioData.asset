@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: AudioData
   m_EditorClassIdentifier: 
   bgmClips:
+  - name: Title
+    audioClip: {fileID: 8300000, guid: de1e8cf48e396b84da18ec9a2abb27c4, type: 3}
   - name: Stage1
     audioClip: {fileID: 8300000, guid: 263f7d85a249af34e96a8ebe935dcdcd, type: 3}
   seClips:
