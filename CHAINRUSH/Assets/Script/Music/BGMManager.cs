@@ -21,6 +21,8 @@ using UnityEngine;
 
 public class BGMManager : MonoBehaviour
 {
+    public static BGMManager Instance { get; private set; }
+
     [Tooltip("AudioDataを参照する")] public AudioData audioData;
     [Tooltip("BGM再生用の変数")] private AudioSource audioSource;
 
@@ -33,8 +35,19 @@ public class BGMManager : MonoBehaviour
     */
     void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.loop = true;    // 初期の時点でループを実行しておく
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        BGMManager.Instance.Play("Stage1");
     }
 
     /*＞Play関数
@@ -51,10 +64,10 @@ public class BGMManager : MonoBehaviour
 
         // 同じ曲ならもう一度再生しないようにする
         if (audioSource.clip == clip && audioSource.isPlaying) return;
-        
+
         audioSource.clip = clip;
         audioSource.Play();
-        
+
     }
 
     /*＞Stop関数
