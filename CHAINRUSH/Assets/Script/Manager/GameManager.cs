@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -46,7 +47,7 @@ public class GameManager : MonoBehaviour
     [SerializeField, Tooltip("ミニマップの敵UI")]public Image enemyIconPrefab;
 
     [Header("敵の生成、管理で扱う変数")]
-    [SerializeField, Tooltip("ステージクリアのための目標数")]public int totalkillGoal = 20;
+    [SerializeField, Tooltip("ステージクリアのための目標数")]public int totalkillGoal = 40;
     [SerializeField, Tooltip("ステージの最初に湧く敵の数")] public int initialMaxEnemies = 5;
     [SerializeField, Tooltip("ステージに敵が湧く最大数")] public int maxEnemiesLimit = 8;
     private int currentMaxEnemies;  // 現在の最大湧き数
@@ -77,6 +78,10 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("ステージクリア");
             CancelInvoke(nameof(SpawnEnemies));
+
+            // リザルトシーンへ遷移
+            SceneManager.LoadScene("Result");
+
             return;
         }
 
