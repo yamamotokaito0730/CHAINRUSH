@@ -24,3 +24,7 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: 3ed7b04748ef0ae42907f2eb3b739913, type: 3}
   - name: spiderdeath
     audioClip: {fileID: 8300000, guid: c5458ed121b07e84fac63750abd4de23, type: 3}
+  - name: chainsaw
+    audioClip: {fileID: 8300000, guid: 5bd4667072945e045b265dae868fb90d, type: 3}
+  - name: noEntry
+    audioClip: {fileID: 8300000, guid: 410eac60ad2972a4ba46fcd797bdedf3, type: 3}
