@@ -11,33 +11,45 @@
 Y25   
 _M05    
 __D     
-___23:プログラム作成:tooyama
+___23:プログラム作成:tooya
 ___25:索敵・移動処理の追加 tooyama
 ___26:追跡処理の追加＆弾の速度を3→5に変更 tooyama
 ___30:攻撃エフェクトを追加 mori
+_M06
+___20:後退処理の追加 tooyama
 
 =====*/
+using NUnit.Framework.Constraints;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyPattern : MonoBehaviour
 {
     [Header("ステータス")]
-    [SerializeField, Tooltip("移動速度(発見時)")] private float m_fFindSpeed = 5.0f;
-    [SerializeField, Tooltip("移動速度(通常時)")] private float m_fNormalSpeed = 3.0f;
+    [SerializeField, Tooltip("移動速度(発見時)")] private float m_fFindSpeed = 10.0f;
+    [SerializeField, Tooltip("移動速度(通常時)")] private float m_fNormalSpeed = 8.0f;
     [SerializeField, Tooltip("再始動までの時間")] private float m_fRetart = 10.0f;
-    [SerializeField, Tooltip("索敵範囲(半径)")] private float m_fSearchRange = 15.0f;    // プレイヤーが侵入したら攻撃する範囲
+    [SerializeField, Tooltip("索敵範囲(半径)")] private float m_fSearchRange = 30.0f;    // プレイヤーが侵入したら攻撃する範囲
     [SerializeField, Tooltip("索敵範囲オブジェクト（子オブジェクト）")] private GameObject m_SearchRangeObject;
+    [SerializeField, Tooltip("プレイヤーと敵の距離間")] private float m_PlayerToEnemyDistance = 5.0f;
+    [SerializeField, Tooltip("後退時の速度現象値")] private float m_SpeedDown = 0.7f;
+
+
 
     [Header("攻撃関係")]
     [SerializeField, Tooltip("糸のプレハブ")] private GameObject m_BulletPrefab;
-    [SerializeField, Tooltip("攻撃間隔(秒)")] private float m_fShotInterval = 2.0f;
-    [SerializeField, Tooltip("弾の速度")] private float m_fShotSpeed = 5.0f;
+    [SerializeField, Tooltip("攻撃間隔(秒)")] private float m_fShotInterval = 1.0f;
+    [SerializeField, Tooltip("弾の加速度")] private float m_fShotSpeed = 10.0f;
+    [SerializeField, Tooltip("攻撃時に止まる秒数")] private float m_fShotStopTime = 0.8f;
+
 
     private Transform m_targetPlayer; // 攻撃対象
 
-
     private bool m_bIsFinding = false; // プレイヤーを発見したか
+
+    private bool m_bIsAttacking = false; // 攻撃中か
+
 
     private SphereCollider m_SearchCollider; // 索敵に使用するスフィアコライダー
 
@@ -45,18 +57,24 @@ public class EnemyPattern : MonoBehaviour
 
     private Vector3 m_vStartPos; // 初期位置を保存する変数
 
-    // コルーチン
-    private Coroutine m_attackCoroutine;
-    private Coroutine m_moveCoroutine;
-    private Coroutine m_chaseCoroutine;
-
     // 攻撃エフェクト
     public GameObject effectPrefab;
     public float distanceInFront = 2.0f;     // 出現位置（前方距離）
-    public float shootSpeed = 10.0f;          // 前方に飛ばす速度
     public float upwardOffset = 1.0f; // 上方向に1m上げる
 
     private Player player;
+
+    // 敵の状態管理
+    public enum E_EnemyState
+    {
+        E_EnemyState_Patrol, // 巡回
+        E_EnemyState_Chase,  // 追跡 
+    }
+    // 現在の状態
+    private E_EnemyState m_CurrentState;
+
+    // 現在動いているコルーチン
+    private Coroutine m_CurrentRoutine;
 
     /*＞Start関数
     引数：なし
@@ -67,15 +85,14 @@ public class EnemyPattern : MonoBehaviour
     */
     void Start()
     {
-        m_vStartPos = transform.position; // Start時の位置を保存
+        // ゲーム開始時の座標を保存
+        m_vStartPos = transform.position;
         m_SearchCollider = m_SearchRangeObject.GetComponent<SphereCollider>();
         // 半径を設定 ※索敵範囲を100分の1に割っているのはスフィアコライダーのradiusに合わせるため
         m_SearchCollider.radius = m_fSearchRange / 100.0f;
-        // 索敵範囲を初期位置に固定させる(ローカル→ワールド座標に固定)
-        m_SearchRangeObject.transform.position = m_vStartPos;  // 拠点に設置
-        m_SearchRangeObject.transform.parent = null;        // 親を外す = ワールド固定
-        // 移動処理を始める
-        m_moveCoroutine = StartCoroutine(MoveRoutine());
+        // 初期状態を巡回にする
+        ChangeState(E_EnemyState.E_EnemyState_Patrol);
+
     }
 
     /*＞索敵範囲侵入検知関数
@@ -88,21 +105,13 @@ public class EnemyPattern : MonoBehaviour
     public void HandleSensorEnter(Collider other)
     {
         // プレイヤーが索敵範囲に侵入した時
-        if (other.gameObject.CompareTag("Player") && !m_bIsFinding)
+        if (other.CompareTag("Player") && !m_bIsFinding)
         {
-            // 侵入時の位置を記録
-            m_targetPlayer = other.transform;
-            // プレイヤーの速度を取得
-            player = other.GetComponent<Player>();
-            m_fShotSpeed = player.GetSpeed() + 5.0f;
-            // 発見フラグをオンに
-            m_bIsFinding = true;
-
-            // コルーチン開始（糸を定期的に発射する）
-            if (m_attackCoroutine == null)
-                m_attackCoroutine = StartCoroutine(ShootWebPeriodically());
-
-            StateChange(); // 状態変更に応じて切り替え
+            m_targetPlayer = other.transform; // 侵入時の位置を記録
+            player = other.GetComponent<Player>(); // プレイヤーの情報を取得(後々速度を取得するため)
+            m_bIsFinding = true; // 発見フラグをオンに
+            // コルーチンの移行
+            ChangeState(E_EnemyState.E_EnemyState_Chase);  // 追跡を開始する
         }
     }
 
@@ -116,30 +125,14 @@ public class EnemyPattern : MonoBehaviour
     public void HandleSensorExit(Collider other)
     {
         // プレイヤーが索敵範囲から離れた時
-        if (other.CompareTag("Player") && m_attackCoroutine != null)
+        if (other.CompareTag("Player") && m_bIsFinding)
         {
-            // ターゲットをリセット
-            m_targetPlayer = null;
-            // 発見フラグをオフに
-            m_bIsFinding = false;
-            // 状態変更に応じて切り替え
-            StateChange();
+            m_targetPlayer = null; // ターゲットをリセット
+            m_bIsFinding = false;  // 発見フラグをオフに
+            m_vStartPos = transform.position; // 追跡終了地点を新たな拠点とする(長距離を追跡し、離れると固まる問題を防止するため)
+            // コルーチンの移行
+            ChangeState(E_EnemyState.E_EnemyState_Patrol); // 巡回を開始する
         }
-    }
-
-    /*＞索敵範囲描画関数
-    引数：なし
-    ｘ
-    戻値：なし
-    ｘ
-    概要:シーン内で索敵範囲を表示させる
-    */
-    void OnDrawGizmosSelected()
-    {
-        if (Application.isPlaying)
-            Gizmos.DrawWireSphere(m_vStartPos, m_fSearchRange);
-        else
-            Gizmos.DrawWireSphere(transform.position, m_fSearchRange);
     }
 
     /*＞追跡コルーチン
@@ -148,26 +141,27 @@ public class EnemyPattern : MonoBehaviour
    戻値：なし
    ｘ
    概要:半径30m以内に入ったプレイヤーを速度を上げて追跡する
+        自爆特攻しないようにプレイヤーとの距離は15mを保つ
    */
     private IEnumerator ChaseRoutine()
     {
+        float _fAttackInterval = m_fShotInterval; // 攻撃間隔(2秒)
+        float _fLastAttackTime = -_fAttackInterval;
+
 
         while (m_targetPlayer != null)
         {
-            // 拠点との距離チェック
-            if (Vector3.Distance(transform.position, m_vStartPos) > m_fSearchRange)
+            if (m_bIsAttacking)
             {
-                // 索敵範囲を越えたら追跡中断 → 帰還へ
-                m_targetPlayer = null;
-                m_bIsFinding = false;
-                StateChange();               // 帰還 or 巡回に切替
-                yield break;                 // 追跡コルーチン終了
+                yield return null;
+                continue;
             }
             // 移動速度を発見時の速度に変更
-            m_fSpeed = m_fFindSpeed;
+            m_fSpeed = m_fFindSpeed; // 速度8→10
 
-            Vector3 direction = (m_targetPlayer.position - transform.position).normalized;
-            float speed = m_fFindSpeed;
+            Vector3 toPlayer = m_targetPlayer.position - transform.position;
+            float distance = toPlayer.magnitude; // プレイヤーとの距離
+            Vector3 direction = toPlayer.normalized;
 
             // 向きをゆっくり変える
             if (direction != Vector3.zero)
@@ -175,8 +169,30 @@ public class EnemyPattern : MonoBehaviour
                 Quaternion targetRotation = Quaternion.LookRotation(direction);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5.0f);
             }
-            // プレイヤーに向かって前進
-            transform.position += transform.forward * speed * Time.deltaTime;
+
+            float _fTolerance = 1.0f; // 距離の許容範囲（±1m）
+
+            // プレイヤーとの距離を5mに保つ
+            if (distance < m_PlayerToEnemyDistance - _fTolerance)
+            {
+                float overDistance = m_PlayerToEnemyDistance - distance;
+                m_fSpeed -= m_SpeedDown;
+                float moveDistance = Mathf.Min(m_fSpeed * Time.deltaTime, overDistance);
+                transform.position -= direction * moveDistance;
+            }
+            else if (distance > m_PlayerToEnemyDistance + _fTolerance)
+            {
+                float underDistance = distance - m_PlayerToEnemyDistance;
+                float moveDistance = Mathf.Min(m_fSpeed * Time.deltaTime, underDistance);
+                transform.position += direction * moveDistance;
+            }
+
+            // 攻撃間隔をチェック
+            if (Time.time - _fLastAttackTime >= _fAttackInterval)
+            {
+                StartCoroutine(AttackCoroutine()); // 弾の発射処理
+                _fLastAttackTime = Time.time;
+            }
 
             yield return null;
         }
@@ -190,9 +206,9 @@ public class EnemyPattern : MonoBehaviour
     ｘ
     概要:プレイヤーに向けて弾を発射する
     */
-    private void Attack()
+    private IEnumerator AttackCoroutine()
     {
-        if (!effectPrefab) return;
+        if (!effectPrefab) yield break;
 
         // 発射方向を敵の forward にする（プレイヤー方向じゃない）
         Vector3 shootDir = transform.forward;
@@ -209,8 +225,17 @@ public class EnemyPattern : MonoBehaviour
         if (rb == null) rb = bullet.AddComponent<Rigidbody>();
 
         rb.useGravity = false;
-        rb.AddForce(shootDir * m_fShotSpeed, ForceMode.VelocityChange);
-        
+
+        // 現在のプレイヤー速度を取得して弾速に加算する
+        float currentPlayerSpeed = player.GetSpeed();
+        float finalShotSpeed = m_fShotSpeed + currentPlayerSpeed;
+
+        rb.AddForce(shootDir * finalShotSpeed, ForceMode.VelocityChange);
+
+        // 攻撃中は移動処理を行わない
+        m_bIsAttacking = true;
+        yield return new WaitForSeconds(m_fShotStopTime);
+        m_bIsAttacking = false;
     }
 
     /*＞移動コルーチン
@@ -220,13 +245,13 @@ public class EnemyPattern : MonoBehaviour
     ｘ
     概要: 索敵範囲内をランダムに移動する
     */
-    private IEnumerator MoveRoutine()
+    private IEnumerator PatrolRoutine()
     {
         while (true)
         {
 
             // 移動速度を非発見時の速度に変更
-            m_fSpeed = m_fNormalSpeed;
+            m_fSpeed = m_fNormalSpeed; // 速度10→8
 
             // ランダムな方向に移動
             // 方向を決める
@@ -281,53 +306,39 @@ public class EnemyPattern : MonoBehaviour
 
         }
     }
-
-    /*＞糸発射コルーチン
-    引数：なし
-    ｘ
-    戻値：攻撃頻度(m_fShotInterval)の秒数
-    ｘ
-    概要:設定した秒数毎に糸を発射させる
-    */
-    private IEnumerator ShootWebPeriodically()
-    {
-        while (true)
-        {
-            if (m_targetPlayer != null) Attack(); // 攻撃関数の呼び出し
-
-            yield return new WaitForSeconds(m_fShotInterval); // 指定時間(2秒)攻撃を待機させる
-        }
-    }
-
     /*＞状態遷移関数
-     引数：なし
+     引数：E_EnemyState _EnemyState:切り替える状態
      ｘ
      戻値：なし
      ｘ
-     概要:移動・追跡状態を切り替える
+     概要:状態を切り替え、該当のコルーチンを起動する
      */
-    private void StateChange()
+    private void ChangeState(E_EnemyState _EnemyState)
     {
-        // プレイヤーを発見しているか
-        if (m_bIsFinding)
+        // 既に実行中の処理があれば停止
+        if (m_CurrentRoutine != null)
         {
-            if (m_moveCoroutine != null)
-            {
-                StopCoroutine(m_moveCoroutine); // 移動コルーチンの停止
-                m_moveCoroutine = null; // 移動コルーチンの破棄     
-            }
-            if (m_chaseCoroutine == null) m_chaseCoroutine = StartCoroutine(ChaseRoutine()); // 追跡コルーチンの開始
-        }
-        else
-        {
-            if (m_chaseCoroutine != null)
-            {
-                StopCoroutine(m_chaseCoroutine); // 追跡コルーチンの停止
-                m_chaseCoroutine = null; // 追跡コルーチンの破棄   
-            }
-            if (m_moveCoroutine == null) m_moveCoroutine = StartCoroutine(MoveRoutine()); // 移動コルーチンの開始
+            StopCoroutine(m_CurrentRoutine); // コルーチンの停止
+            m_CurrentRoutine = null;
         }
 
+        // 状態切り替え
+        m_CurrentState = _EnemyState;
+
+        // 新しい状態に応じた処理を開始
+        switch (m_CurrentState)
+        {
+            case E_EnemyState.E_EnemyState_Patrol:
+                m_CurrentRoutine = StartCoroutine(PatrolRoutine()); // 巡回処理
+                m_SearchRangeObject.transform.parent = null; // SearchRangeとの親子付けを解除しその場に固定する 
+                break;
+            case E_EnemyState.E_EnemyState_Chase:
+                m_CurrentRoutine = StartCoroutine(ChaseRoutine()); // 追跡処理
+                m_SearchRangeObject.transform.SetParent(transform, true); // 親子付けを復元させる
+                break;
+            default:
+                break;
+        }
     }
 
     /*＞OnDestroy関数
