@@ -22,7 +22,13 @@ using TMPro;
 public class Timer : MonoBehaviour
 {
     public TextMeshProUGUI timerText;
-    private float elapsedTime = 0f;
+    public static float elapsedTime = 0f;
+
+    void Start()
+    {
+        // タイマーリセット
+        elapsedTime = 0f;
+    }
 
     void Update()
     {
