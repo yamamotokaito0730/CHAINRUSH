@@ -35,7 +35,6 @@ public class BreakObject : MonoBehaviour
        */
     private void OnEnable()
     {
-        Debug.Log("呼ばれた");
         switch(type)
         {
             // オブジェクト破片の処理
@@ -64,7 +63,6 @@ public class BreakObject : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
 
-        Debug.Log("入った");
         string cleanName = NameUtility.GetCleanName(gameObject);
         ObjectPoolManager.Instance.ReturnToPool(cleanName, gameObject);
     }

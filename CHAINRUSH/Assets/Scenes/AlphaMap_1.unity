@@ -129,7 +129,6 @@ GameObject:
   m_Component:
   - component: {fileID: 51760246}
   - component: {fileID: 51760247}
-  - component: {fileID: 51760248}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -164,34 +163,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53699b3ff8a4b0549b378860bff89fb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyTypes:
+  - prefab: {fileID: 7381330029987104643, guid: bc810944bf880894e9775bd2ed3c5b97, type: 3}
+    spawnRate: 0.7
+  - prefab: {fileID: 7381330029987104643, guid: bc810944bf880894e9775bd2ed3c5b97, type: 3}
+    spawnRate: 0.3
   terrain: {fileID: 1524491827}
-  enemyPrefab: {fileID: 7381330029987104643, guid: bc810944bf880894e9775bd2ed3c5b97, type: 3}
   minimapPanelPrefab: {fileID: 594012075}
   player: {fileID: 1691890328}
   enemyIconPrefab: {fileID: 3594885297401367273, guid: 47ea8cb58a58c734fac7c30d9480456e, type: 3}
   totalkillGoal: 20
   initialMaxEnemies: 10
   maxEnemiesLimit: 15
---- !u!114 &51760248
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 51760245}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53699b3ff8a4b0549b378860bff89fb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  terrain: {fileID: 0}
-  enemyPrefab: {fileID: 0}
-  minimapPanelPrefab: {fileID: 0}
-  player: {fileID: 0}
-  enemyIconPrefab: {fileID: 0}
-  totalkillGoal: 20
-  initialMaxEnemies: 5
-  maxEnemiesLimit: 8
 --- !u!1 &91927244
 GameObject:
   m_ObjectHideFlags: 0
@@ -796,6 +779,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 533577427}
+  - component: {fileID: 533577428}
   m_Layer: 0
   m_Name: PoolManager
   m_TagString: Untagged
@@ -818,6 +802,46 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &533577428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 533577425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06dbeffd9bfdccc488b5548446290141, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pools:
+  - tag: spider_Nomove
+    prefab: {fileID: 7381330029987104643, guid: bc810944bf880894e9775bd2ed3c5b97, type: 3}
+    size: 20
+  - tag: Conifer
+    prefab: {fileID: 1620417488002718097, guid: cce4d8667f2436a479759f07084d8ff4, type: 3}
+    size: 15
+  - tag: Rock_C_01
+    prefab: {fileID: 1030678204986712962, guid: 398b156fac7c6f44db09e9ad046c24dd, type: 3}
+    size: 12
+  - tag: Tree_Upper
+    prefab: {fileID: 2957882097944700477, guid: 5b338e1a92b400843a3506bba63d61e3, type: 3}
+    size: 12
+  - tag: Tree_Stump
+    prefab: {fileID: 6507582229949200936, guid: 541e0331a4294a943ac27a10db793f16, type: 3}
+    size: 12
+  - tag: Rock_Disconnect
+    prefab: {fileID: 3637796947403494840, guid: bb0b92aba141ecd40ba494765675e6e6, type: 3}
+    size: 15
+  - tag: PS_TreeBreak_Leaf
+    prefab: {fileID: 1494436239441686450, guid: ce02af8c558b65c44b7e1f96f54d3b02, type: 3}
+    size: 12
+  - tag: PS_TreeBreak_Branch
+    prefab: {fileID: 2241668035170208254, guid: 9d3221f1a22aea24da46f7b229d3ee53, type: 3}
+    size: 12
+  - tag: PS_RockBreak
+    prefab: {fileID: 4217102013951305458, guid: 72b22529f0cfa7c42beaa087be5098ad, type: 3}
+    size: 12
 --- !u!224 &594012075 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7843821281049050782, guid: d162ff4e3e9f19247a65169716834644, type: 3}
@@ -852,7 +876,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e68c9c79955581a4f922a13fe295afe6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioData: {fileID: 0}
+  audioData: {fileID: 11400000, guid: b642cbca72e60ea4f8c55ed8c48df0cb, type: 2}
 --- !u!4 &661175736
 Transform:
   m_ObjectHideFlags: 0
@@ -1095,7 +1119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9a7e456ff6f0db47b1019bfa59a34bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioData: {fileID: 0}
+  audioData: {fileID: 11400000, guid: b642cbca72e60ea4f8c55ed8c48df0cb, type: 2}
 --- !u!4 &940812622
 Transform:
   m_ObjectHideFlags: 0

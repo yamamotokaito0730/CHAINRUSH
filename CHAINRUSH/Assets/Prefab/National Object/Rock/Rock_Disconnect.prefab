@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5775080443220036902}
   - component: {fileID: 7232957610023901165}
   - component: {fileID: 979063614102668614}
+  - component: {fileID: -6337173661453677819}
   m_Layer: 0
   m_Name: Rock_Disconnect
   m_TagString: Untagged
@@ -42063,3 +42064,16 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1.0907135}
   m_Center: {x: 0, y: 0, z: -0.04535675}
+--- !u!114 &-6337173661453677819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3637796947403494840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ce2b8dab9fdfaa4bbab5f51d51ca1ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0

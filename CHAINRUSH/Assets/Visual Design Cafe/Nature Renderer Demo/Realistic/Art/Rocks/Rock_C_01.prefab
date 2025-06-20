@@ -314,11 +314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a26c74678a6f7e46a6371751c32e8e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_particle:
-  - {fileID: 4217102013951305458, guid: 72b22529f0cfa7c42beaa087be5098ad, type: 3}
-  m_shiftPosition: {x: 0, y: 2, z: 0}
-  m_upperDisconnectedPrefab: {fileID: 3637796947403494840, guid: bb0b92aba141ecd40ba494765675e6e6, type: 3}
-  m_bottomDisconnectedPrefab: {fileID: 3637796947403494840, guid: bb0b92aba141ecd40ba494765675e6e6, type: 3}
+  objectData: {fileID: 11400000, guid: 1e1b032fb305bb144a8ca118060f8b26, type: 2}
 --- !u!4 &1030678204987211682 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 9ec4ab395efae3f44b859f77742dd451, type: 3}

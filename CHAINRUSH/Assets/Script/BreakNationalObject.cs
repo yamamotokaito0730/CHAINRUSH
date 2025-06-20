@@ -30,7 +30,6 @@ public class BreakNationalObject : MonoBehaviour, IPool
     public NationalObject objectData;       // オブジェクトのデータをScriptabeObjectから取得
 
     private ObjectSpawner objectSpawner;    // オブジェクトスポナークラス
-    private BreakObject breakObj;           // ブレイクオブジェクトクラス
     private Player player;                  // プレイヤークラス
     void Start()
     {
@@ -93,13 +92,6 @@ public class BreakNationalObject : MonoBehaviour, IPool
                 GameObject tree_botom =
                     ObjectPoolManager.Instance.SpawnFromPool(
                         "Tree_Stump", modelPosition, Quaternion.identity);
-                // 生成したプールオブジェクトをdelayをかけてプールに戻る関数を呼ぶ
-                // ------------
-                //breakObj = tree_up.GetComponent<BreakObject>();
-                //breakObj.Start();
-                //breakObj = tree_botom.GetComponent<BreakObject>();
-                //breakObj.Start();
-                //-------------
 
                 // 各パーティクルのPrefabを生成して再生
                 foreach (GameObject prefab in objectData.m_particle)
@@ -133,10 +125,6 @@ public class BreakNationalObject : MonoBehaviour, IPool
                     ObjectPoolManager.Instance.SpawnFromPool(
                         "Rock_Disconnect", modelPosition, Quaternion.identity);
 
-                //breakObj = rock1_dis1.GetComponent<BreakObject>();
-                //breakObj.Start();
-                //breakObj = rock1_dis2.GetComponent<BreakObject>();
-                //breakObj.Start();
                 // 各パーティクルのPrefabを生成して再生
                 foreach (GameObject prefab in objectData.m_particle)
                 {
@@ -149,8 +137,6 @@ public class BreakNationalObject : MonoBehaviour, IPool
                         ps.transform.position = modelPosition + objectData.m_shiftPosition;
                         ps.Play();
                     }
-                    //breakObj = psObj.GetComponent<BreakObject>();
-                    //breakObj.Start();
                 }
 
                 break;
