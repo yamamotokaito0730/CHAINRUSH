@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6ccce3dd758be648b1c5a43a56fcbe2, type: 3}
+  m_Name: wood_1
+  m_EditorClassIdentifier: 
+  m_particle:
+  - {fileID: 1494436239441686450, guid: ce02af8c558b65c44b7e1f96f54d3b02, type: 3}
+  - {fileID: 2241668035170208254, guid: 9d3221f1a22aea24da46f7b229d3ee53, type: 3}
+  m_shiftPosition: {x: 0, y: 5, z: 0}
+  type: 0
+  m_breakModel: {fileID: 1620417488002718097, guid: cce4d8667f2436a479759f07084d8ff4, type: 3}
+  m_upperDisconnectedPrefab: {fileID: 2957882097944700477, guid: 5b338e1a92b400843a3506bba63d61e3, type: 3}
+  m_bottomDisconnectedPrefab: {fileID: 6507582229949200936, guid: 541e0331a4294a943ac27a10db793f16, type: 3}

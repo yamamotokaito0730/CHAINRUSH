@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6ccce3dd758be648b1c5a43a56fcbe2, type: 3}
+  m_Name: rock_1
+  m_EditorClassIdentifier: 
+  m_particle:
+  - {fileID: 4217102013951305458, guid: 72b22529f0cfa7c42beaa087be5098ad, type: 3}
+  m_shiftPosition: {x: 0, y: 0, z: 0}
+  type: 1
+  m_breakModel: {fileID: 1030678204986712962, guid: 398b156fac7c6f44db09e9ad046c24dd, type: 3}
+  m_upperDisconnectedPrefab: {fileID: 3637796947403494840, guid: bb0b92aba141ecd40ba494765675e6e6, type: 3}
+  m_bottomDisconnectedPrefab: {fileID: 3637796947403494840, guid: bb0b92aba141ecd40ba494765675e6e6, type: 3}

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 65860083568790769}
   - component: {fileID: 6490906303304843937}
   - component: {fileID: 3578581377041528653}
+  - component: {fileID: -5380615442205793279}
   m_Layer: 0
   m_Name: PS_TreeBreak_Branch
   m_TagString: Untagged
@@ -43,7 +44,7 @@ ParticleSystem:
   serializedVersion: 8
   lengthInSec: 1.5
   simulationSpeed: 1
-  stopAction: 2
+  stopAction: 1
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
@@ -4833,3 +4834,16 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &-5380615442205793279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2241668035170208254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ce2b8dab9fdfaa4bbab5f51d51ca1ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 1

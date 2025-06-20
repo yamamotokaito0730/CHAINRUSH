@@ -44,6 +44,10 @@ PrefabInstance:
       value: Rock_A_02
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 0347a2ca593e212468d38a00c0f15925, type: 3}
+      propertyPath: m_TagString
+      value: Rock_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 0347a2ca593e212468d38a00c0f15925, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 126
       objectReference: {fileID: 0}
@@ -280,6 +284,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a26c74678a6f7e46a6371751c32e8e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_particle:
-  - {fileID: 4217102013951305458, guid: 72b22529f0cfa7c42beaa087be5098ad, type: 3}
-  m_shiftPosition: {x: 0, y: 3, z: 0}
+  objectData: {fileID: 11400000, guid: aaf53461afe4fbd44a4ac04cb06ffe0f, type: 2}

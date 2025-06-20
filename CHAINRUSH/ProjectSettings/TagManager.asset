@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Enemy
   - MainTerrain
+  - Rock_1
+  - Rock_2
+  - Tree_1
   layers:
   - Default
   - TransparentFX
