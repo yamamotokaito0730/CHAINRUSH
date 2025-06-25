@@ -49,16 +49,15 @@ public class ObjectPoolManager : MonoBehaviour
     private void Awake()
     {
         // シングルトンを行うための宣言
-        if(Instance == null)
-        {
+        //if(Instance == null)
+        //{
             Instance = this;
-            DontDestroyOnLoad(gameObject);  // シーンをまたいでも保存されるようにする
-        }
-        else
-        {
-            Destroy(gameObject); // 複製防止用Destroy
-        }
-
+        //}
+        //else
+        //{
+        //    Destroy(gameObject); // 複製防止用Destroy
+        //}
+        DontDestroyOnLoad(gameObject);  // シーンをまたいでも保存されるようにする
     }
 
     void Start()

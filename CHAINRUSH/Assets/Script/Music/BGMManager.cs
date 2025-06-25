@@ -17,6 +17,7 @@ ___31:プログラム作成banno
 
 =====*/
 
+using System.Collections;
 using UnityEngine;
 
 public class BGMManager : MonoBehaviour
@@ -25,6 +26,9 @@ public class BGMManager : MonoBehaviour
 
     [Tooltip("AudioDataを参照する")] public AudioData audioData;
     [Tooltip("BGM再生用の変数")] private AudioSource audioSource;
+    private Coroutine currentFadeCoroutine;
+
+    public float fadeDuration = 1.0f;
 
     /*＞Awake関数
     引数：なし   
@@ -46,8 +50,6 @@ public class BGMManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-
-        BGMManager.Instance.Play("Stage1");
     }
 
     /*＞Play関数
@@ -83,4 +85,97 @@ public class BGMManager : MonoBehaviour
         audioSource = null;
     }
 
+    // フェードイン再生
+    public void PlayBGMWithFade(string name, float fadeDuration = 1f)
+    {
+        if (currentFadeCoroutine != null)
+            StopCoroutine(currentFadeCoroutine);
+
+        currentFadeCoroutine = StartCoroutine(FadeInBGM(name, fadeDuration));
+    }
+
+    // フェードアウトして停止させる
+    public void StopBGMWithFade(float fadeDuration = 1f)
+    {
+        if (currentFadeCoroutine != null)
+            StopCoroutine(currentFadeCoroutine);
+
+        currentFadeCoroutine = StartCoroutine(FadeOutAndStop(fadeDuration));
+    }
+
+    // フェードでBGMを切り替える
+    public void ChangeBGM(string name, float fadeDuration = 1f)
+    {
+        if (currentFadeCoroutine != null)
+            StopCoroutine(currentFadeCoroutine);
+
+        currentFadeCoroutine = StartCoroutine(FadeOutAndPlayNew(name, fadeDuration));
+    }
+
+
+
+    // ---- コルーチン処理 ----
+
+    private IEnumerator FadeInBGM(string name, float duration)
+    {
+        var clip = audioData.GetBGM(name);
+        float targetVolume = audioData.GetBGMVolume(name);
+
+        if (clip == null)
+        {
+            Debug.LogWarning($"BGM '{name}' not found.");
+            yield break;
+        }
+
+        audioSource.clip = clip;
+        audioSource.volume = 0f;
+        audioSource.loop = true;
+        audioSource.Play();
+
+        float timer = 0f;
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(0f, targetVolume, timer / duration);
+            yield return null;
+        }
+
+        audioSource.volume = targetVolume;
+    }
+
+    private IEnumerator FadeOutAndStop(float duration)
+    {
+        float startVolume = audioSource.volume;
+
+        float timer = 0f;
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(startVolume, 0f, timer / duration);
+            yield return null;
+        }
+
+        audioSource.Stop();
+        audioSource.volume = startVolume;
+    }
+
+    private IEnumerator FadeOutAndPlayNew(string newClipName, float duration)
+    {
+        float startVolume = audioSource.volume;
+
+        // フェードアウト
+        float timer = 0f;
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(startVolume, 0f, timer / duration);
+            yield return null;
+        }
+
+        audioSource.Stop();
+
+        // フェードイン
+        yield return FadeInBGM(newClipName, duration);
+
+    }
 }

@@ -165,9 +165,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyTypes:
   - prefab: {fileID: 7381330029987104643, guid: bc810944bf880894e9775bd2ed3c5b97, type: 3}
-    spawnRate: 0.7
+    spawnRate: 1
   - prefab: {fileID: 7381330029987104643, guid: bc810944bf880894e9775bd2ed3c5b97, type: 3}
-    spawnRate: 0.3
+    spawnRate: 0
   terrain: {fileID: 1524491827}
   minimapPanelPrefab: {fileID: 594012075}
   player: {fileID: 1691890328}
@@ -914,7 +914,7 @@ MonoBehaviour:
   pools:
   - tag: spider_Nomove
     prefab: {fileID: 7381330029987104643, guid: bc810944bf880894e9775bd2ed3c5b97, type: 3}
-    size: 20
+    size: 40
   - tag: Conifer
     prefab: {fileID: 1620417488002718097, guid: cce4d8667f2436a479759f07084d8ff4, type: 3}
     size: 15
