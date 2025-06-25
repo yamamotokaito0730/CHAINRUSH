@@ -261,3 +261,4 @@ MonoBehaviour:
   m_fBaseGravity: 98.1
   m_fAddGravity: 3
   Player_Animator: {fileID: 0}
+  m_auraMaterials: {fileID: 2100000, guid: 694eec0b7e882444bb1e9939c14c69e5, type: 2}
