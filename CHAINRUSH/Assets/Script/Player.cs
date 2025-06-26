@@ -26,6 +26,7 @@ ___17:坂の角度に応じた加減速処理の追加:tooyama
 ___23:読み取り専用プロパティの追加:tooyama
 _M06
 ___06:坂をスムーズに昇り降り出来る処理の追加
+___25:オーラエフェクトに関する処理を追加:matsushima
 =====*/
 
 using System.Data;
@@ -57,6 +58,7 @@ public class Player : MonoBehaviour
 
     private UnityEngine.Camera mainCamera;
     private Rigidbody rb; // プレイヤーの物理挙動を制御するためのRigidbody
+    private Renderer renderer;
     private int nEnemyKillCount = 0; // 倒した敵の数
     private int m_nPrevSlopeAngleKey = int.MinValue; // 前フレームで適用された傾斜角（10度単位）
     private float m_fRecordedBaseSpeed = 0.0f; // 傾斜に入った瞬間の速度記録用
@@ -84,6 +86,9 @@ public class Player : MonoBehaviour
 
         Player_Animator = GetComponent<Animator>();
 
+        // オーラエフェクトのマテリアルを取得
+        GameObject childObject = transform.GetChild(1).gameObject; // マテリアルが入っている子オブジェクトを取得
+        renderer = childObject.GetComponent<Renderer>();
     }
 
     /*＞FixedUpdate関数
@@ -95,7 +100,6 @@ public class Player : MonoBehaviour
     */
     void FixedUpdate()
     {
-        
         // 向いている方向に進み続ける
         rb.linearVelocity = new Vector3(
             transform.forward.x * m_fSpeed,
@@ -162,6 +166,30 @@ public class Player : MonoBehaviour
             }
         }
 
+        // オーラエフェクトの色変更
+        MaterialPropertyBlock block = new MaterialPropertyBlock();
+        renderer.GetPropertyBlock(block);
+        switch (PlayerState)
+        {
+            case E_State.Danger:
+                // "_OutLineColor"というReferenceを持つマテリアルの色を変更
+                block.SetColor("_OutLineColor", Color.clear * 5.0f);
+                break;
+            case E_State.Normal:
+                block.SetColor("_OutLineColor", Color.yellow * 5.0f);
+                break;
+            case E_State.TreeDestroy:
+                block.SetColor("_OutLineColor", Color.red * 5.0f);
+                break;
+            case E_State.HomeDestroy:
+                block.SetColor("_OutLineColor", Color.magenta * 5.0f);
+                break;
+            case E_State.Strongest:
+                block.SetColor("_OutLineColor", new Color(0.5f, 0.8f, 1.0f, 1.0f) * 5.0f);
+                break;
+        }
+        // 適用
+        renderer.SetPropertyBlock(block);
     }
 
     /*＞Update関数
