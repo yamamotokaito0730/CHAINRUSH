@@ -870,6 +870,7 @@ GameObject:
   - component: {fileID: 507378139}
   - component: {fileID: 507378138}
   - component: {fileID: 507378137}
+  - component: {fileID: 507378141}
   m_Layer: 0
   m_Name: Tile
   m_TagString: Untagged
@@ -966,6 +967,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -3.317, y: 0, z: 0}
+--- !u!114 &507378141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 507378136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c9795aad061c8d4fa8d464a6984b5b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scrollDirection: 1
+  scrollSpeed: 0.1
 --- !u!1001 &521342531
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1294,7 +1309,6 @@ MonoBehaviour:
   - {fileID: 83422813}
   - {fileID: 807548654}
   timeText: {fileID: 69602240}
-  isGameOver: 0
 --- !u!4 &919005208
 Transform:
   m_ObjectHideFlags: 0
