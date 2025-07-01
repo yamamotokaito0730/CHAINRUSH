@@ -27,8 +27,11 @@ ___23:読み取り専用プロパティの追加:tooyama
 _M06
 ___06:坂をスムーズに昇り降り出来る処理の追加
 ___25:オーラエフェクトに関する処理を追加:matsushima
+_M07
+___01:プレイヤーのパーティクルの再生、位置をずらす処理の追加:matsushima
 =====*/
 
+using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
 
@@ -50,6 +53,7 @@ public class Player : MonoBehaviour
     [SerializeField, Tooltip("最高速度")] private float m_fMaxSpeed;
     private E_State PlayerState;
     private int[] thresholds = { 4, 17, 35, 44, 50 };
+    private E_State preState = E_State.Normal;  // プレイヤーの状態退避
 
     [Header("重力関係")]
     [SerializeField, Tooltip("ベースの重力")] private float m_fBaseGravity = 9.81f;
@@ -58,10 +62,11 @@ public class Player : MonoBehaviour
 
     private UnityEngine.Camera mainCamera;
     private Rigidbody rb; // プレイヤーの物理挙動を制御するためのRigidbody
-    private Renderer renderer;
+    private Renderer renderer;       // オーラエフェクトのレンダラー
     private int nEnemyKillCount = 0; // 倒した敵の数
     private int m_nPrevSlopeAngleKey = int.MinValue; // 前フレームで適用された傾斜角（10度単位）
     private float m_fRecordedBaseSpeed = 0.0f; // 傾斜に入った瞬間の速度記録用
+    private ParticleSystem[] particleSystems;  // パーティクルの配列
 
     [SerializeField] private Animator Player_Animator;
 
@@ -89,6 +94,16 @@ public class Player : MonoBehaviour
         // オーラエフェクトのマテリアルを取得
         GameObject childObject = transform.GetChild(1).gameObject; // マテリアルが入っている子オブジェクトを取得
         renderer = childObject.GetComponent<Renderer>();
+
+        // パーティクルを取得
+        Transform particleParent = transform.Find("Particle");
+        List<ParticleSystem> particles = new List<ParticleSystem>();
+        foreach (Transform child in particleParent)
+        {
+            ParticleSystem ps = child.GetComponent<ParticleSystem>();
+            particles.Add(ps);
+        }
+        particleSystems = particles.ToArray();
     }
 
     /*＞FixedUpdate関数
@@ -185,11 +200,33 @@ public class Player : MonoBehaviour
                 block.SetColor("_OutLineColor", Color.magenta * 5.0f);
                 break;
             case E_State.Strongest:
-                block.SetColor("_OutLineColor", new Color(0.5f, 0.8f, 1.0f, 1.0f) * 5.0f);
+                block.SetColor("_OutLineColor", new Color(0.5f, 0.8f, 1.0f, 1.0f) * 5.0f);  // 水色
                 break;
         }
-        // 適用
-        renderer.SetPropertyBlock(block);
+        renderer.SetPropertyBlock(block);   // 適用
+
+        //---パーティクル関連
+        if(preState != PlayerState)
+        {
+            // 炎,ブースターのエフェクト(プレイヤーのアニメーションによって位置をずらす)
+            if (PlayerState >= E_State.HomeDestroy)
+            {
+                particleSystems[0].transform.localPosition = new Vector3(0.0f, 0.2f, 0.8f); // 炎
+                particleSystems[1].transform.localPosition = new Vector3(0.0f, 0.3f, 0.3f); // ブースター
+            }
+            else 
+            {
+                particleSystems[0].transform.localPosition = new Vector3(0.0f, 0.3f, 0.5f);
+                particleSystems[1].transform.localPosition = new Vector3(0.0f, 0.3f, 0.2f);
+            }
+
+            // 加速時のエフェクト(速度が次の状態まで上昇した時だけ再生する)
+            if (preState < PlayerState)
+            {               
+                particleSystems[3].Play();
+            }
+        }        
+        preState = PlayerState; // 状態の退避
     }
 
     /*＞Update関数
