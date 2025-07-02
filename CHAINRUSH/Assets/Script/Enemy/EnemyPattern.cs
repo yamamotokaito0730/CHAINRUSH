@@ -104,8 +104,10 @@ public class EnemyPattern : MonoBehaviour
     */
     public void HandleSensorEnter(Collider other)
     {
-        // プレイヤーが索敵範囲に侵入した時
-        if (other.CompareTag("Player") && !m_bIsFinding)
+        if (!GameManager.IsGameActive) return;
+
+            // プレイヤーが索敵範囲に侵入した時
+            if (other.CompareTag("Player") && !m_bIsFinding)
         {
             m_targetPlayer = other.transform; // 侵入時の位置を記録
             player = other.GetComponent<Player>(); // プレイヤーの情報を取得(後々速度を取得するため)

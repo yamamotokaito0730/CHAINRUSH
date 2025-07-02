@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
     [SerializeField, Tooltip("ステージに敵が湧く最大数")] public int maxEnemiesLimit = 8;
     private int currentMaxEnemies;  // 現在の最大湧き数
     private int totalKilled = 0;    // 倒した敵の合計数
-
+    public static bool IsGameActive { get; private set; } = false;  //ゲームの状態管理用
 
     private MiniMapIcon miniMapIcon;
 
@@ -83,6 +83,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+
         // Playerのスピード監視
         if (!isGameOver && playerScript != null)
         {
@@ -194,4 +195,13 @@ public class GameManager : MonoBehaviour
         return totalKilled;
     }
 
+    public void StartGame()
+    {
+        IsGameActive = true;
+    }
+
+    public void StopGameTemporarily()
+    {
+        IsGameActive = false;
+    }
 }

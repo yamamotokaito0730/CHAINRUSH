@@ -32,6 +32,10 @@ public class Timer : MonoBehaviour
 
     void Update()
     {
+        //ゲーム開始前は停止
+        if (!GameManager.IsGameActive) return;
+
+
         elapsedTime += Time.deltaTime;
 
         int minutes = Mathf.FloorToInt(elapsedTime / 60f);
