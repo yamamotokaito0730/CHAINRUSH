@@ -220,7 +220,8 @@ public class EnemyPattern : MonoBehaviour
         // ”­Ë•ûŒü‚É‰ñ“]‚ğ‡‚í‚¹‚é
         Quaternion rotation = Quaternion.LookRotation(shootDir);
 
-        GameObject bullet = Instantiate(effectPrefab, spawnPos, rotation);
+        GameObject bullet = ObjectPoolManager.Instance.SpawnFromPool("spiderATK_001", spawnPos, rotation);
+            //Instantiate(effectPrefab, spawnPos, rotation);
 
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
         if (rb == null) rb = bullet.AddComponent<Rigidbody>();

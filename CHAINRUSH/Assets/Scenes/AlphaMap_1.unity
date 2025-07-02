@@ -914,7 +914,7 @@ MonoBehaviour:
   pools:
   - tag: spider_Nomove
     prefab: {fileID: 7381330029987104643, guid: bc810944bf880894e9775bd2ed3c5b97, type: 3}
-    size: 40
+    size: 18
   - tag: Conifer
     prefab: {fileID: 1620417488002718097, guid: cce4d8667f2436a479759f07084d8ff4, type: 3}
     size: 15
@@ -939,6 +939,9 @@ MonoBehaviour:
   - tag: PS_RockBreak
     prefab: {fileID: 4217102013951305458, guid: 72b22529f0cfa7c42beaa087be5098ad, type: 3}
     size: 12
+  - tag: spiderATK_001
+    prefab: {fileID: 3255156177815928084, guid: 3085671264812344a9ac27d714881dff, type: 3}
+    size: 8
 --- !u!1001 &538606238
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1047,6 +1050,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioData: {fileID: 11400000, guid: b642cbca72e60ea4f8c55ed8c48df0cb, type: 2}
+  fadeDuration: 1
 --- !u!4 &661175736
 Transform:
   m_ObjectHideFlags: 0

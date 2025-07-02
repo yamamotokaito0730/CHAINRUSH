@@ -45,6 +45,8 @@ public class ShotWeb : MonoBehaviour
     {
         m_direction = _Direction.normalized;
         m_fShotSpeed = _fPlayerSpeed + _fShotSpeed; // 糸の速度をプレイヤー速度に加算させる
+        string clearname = NameUtility.GetCleanName(gameObject);
+        ObjectPoolManager.Instance.ReturnToPool(clearname, gameObject);
         Destroy(gameObject, m_fLifeTime); // 一定時間後に消滅させる
     }
 
@@ -77,7 +79,8 @@ public class ShotWeb : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             Debug.Log("当たった");
-            Destroy(gameObject);
+            string clearname = NameUtility.GetCleanName(gameObject);
+            ObjectPoolManager.Instance.ReturnToPool(clearname, gameObject);
 
             Player player = collision.gameObject.GetComponent<Player>();
             if (player != null)
