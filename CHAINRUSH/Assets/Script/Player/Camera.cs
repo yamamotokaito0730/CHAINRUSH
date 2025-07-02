@@ -83,6 +83,9 @@ public class Camera : MonoBehaviour
     */
     void LateUpdate()
     {
+        //ゲーム開始前は停止
+        if (!GameManager.IsGameActive) return;
+
         // マウス入力によるカメラの回転
         float mouseX = Input.GetAxis("Mouse X") * m_RotationSpeed * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * m_RotationSpeed * Time.deltaTime;
@@ -100,9 +103,7 @@ public class Camera : MonoBehaviour
         // Rキーで初期のオフセットと角度にリセット（プレイヤーの向きに対応）
         if (Input.GetKeyDown(KeyCode.R))
         {
-            // カメラのYawもプレイヤーの向きに合わせてリセット
-            m_Yaw = m_Target.eulerAngles.y + m_InitialYaw;
-            m_Pitch = m_InitialPitch;
+            ResetCamera();
         }
 
         // カメラの理想位置をターゲットの位置＋オフセットに設定
@@ -154,5 +155,12 @@ public class Camera : MonoBehaviour
     {
         m_ShakeDuration = duration;
         m_ShakeMagnitude = magnitude;
+    }
+    
+    public void ResetCamera()
+    {
+        // カメラのYawもプレイヤーの向きに合わせてリセット
+        m_Yaw = m_Target.eulerAngles.y + m_InitialYaw;
+        m_Pitch = m_InitialPitch;
     }
 }

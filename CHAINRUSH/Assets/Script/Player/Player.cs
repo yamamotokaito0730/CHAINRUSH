@@ -100,6 +100,15 @@ public class Player : MonoBehaviour
     */
     void FixedUpdate()
     {
+        //ゲーム開始前は停止
+        if (!GameManager.IsGameActive)
+        {
+            //todo
+           //アニメーション関係書くと思う
+
+            return;
+        }
+
         // 向いている方向に進み続ける
         rb.linearVelocity = new Vector3(
             transform.forward.x * m_fSpeed,
