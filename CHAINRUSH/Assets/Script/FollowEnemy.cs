@@ -59,6 +59,10 @@ public class FollowEnemy : MonoBehaviour
         rotationHistory.Enqueue(transform.rotation);
         if (positionHistory.Count > 60) { positionHistory.Dequeue(); rotationHistory.Dequeue(); } // メモリ制限
 
+        // Debug: 自分の履歴数
+        Debug.Log($"{gameObject.name} の履歴数: {positionHistory.Count}");
+
+
         // 2. 直前キャラ（リーダー or フォロワー）の履歴Queueを取得
         Queue<Vector3> leadPosQueue = null;
         Queue<Quaternion> leadRotQueue = null;
@@ -67,15 +71,26 @@ public class FollowEnemy : MonoBehaviour
         {
             leadPosQueue = ep.positionHistory;
             leadRotQueue = ep.rotationHistory;
+            Debug.Log($"{gameObject.name} は EnemyPattern({ep.gameObject.name}) を追従中 (リーダー履歴: {leadPosQueue.Count})");
         }
         else if (leaderObject is FollowEnemy fe)
         {
             leadPosQueue = fe.positionHistory;
             leadRotQueue = fe.rotationHistory;
+            Debug.Log($"{gameObject.name} は FollowEnemy({fe.gameObject.name}) を追従中 (リーダー履歴: {leadPosQueue.Count})");
         }
 
-        if (leadPosQueue == null || leadRotQueue == null) return;
-        if (leadPosQueue.Count < m_fDelayFrames) return; // 履歴が足りなければ待機
+        if (leadPosQueue == null || leadRotQueue == null)
+        {
+            Debug.Log($"{gameObject.name}: リーダーの履歴Queueがnullです");
+            return;
+        }
+        // 履歴が足りなければ待機
+        if (leadPosQueue.Count < m_fDelayFrames) 
+        {
+            Debug.Log($"{gameObject.name}: リーダーの履歴が不足 ({leadPosQueue.Count}/{m_fDelayFrames}) しています");
+            return;
+        }
 
         // 3. 遅延分前の位置・回転を取得
         Vector3[] leadPosArr = leadPosQueue.ToArray();
@@ -83,10 +98,15 @@ public class FollowEnemy : MonoBehaviour
         Vector3 targetPos = leadPosArr[0];          // 一番古い（遅延分前の）位置
         Quaternion targetRot = leadRotArr[0];
 
+        // Debug: 追従目標位置と現在地
+        Debug.Log($"{gameObject.name} の移動: {transform.position} → {targetPos}");
         // 速度切り替え
         float speed = m_fNormalSpeed; // 通常速度
         if (leaderObject is EnemyPattern ep2 && ep2.IsChasing()) // リーダーが追跡中か
             speed = m_fFindSpeed; // 追跡速度に変える
+
+        // Debug: 現在の速度
+        Debug.Log($"{gameObject.name} の現在速度: {speed}");
 
         // 5. 追従移動・回転
         transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
