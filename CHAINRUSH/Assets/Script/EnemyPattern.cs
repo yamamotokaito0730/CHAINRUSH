@@ -3,7 +3,7 @@
 └作成者：tooyama
 
 ＞内容
-敵の索敵・攻撃を行うスクリプト
+敵の索敵・追跡・攻撃を行うスクリプト
 
 ＞注意事項
 
@@ -17,10 +17,12 @@ ___26:追跡処理の追加＆弾の速度を3→5に変更 tooyama
 ___30:攻撃エフェクトを追加 mori
 _M06
 ___20:後退処理の追加 tooyama
+___27:連結蜘蛛専用処理の追加
 
 =====*/
 using NUnit.Framework.Constraints;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -34,8 +36,6 @@ public class EnemyPattern : MonoBehaviour
     [SerializeField, Tooltip("索敵範囲オブジェクト（子オブジェクト）")] private GameObject m_SearchRangeObject;
     [SerializeField, Tooltip("プレイヤーと敵の距離間")] private float m_PlayerToEnemyDistance = 5.0f;
     [SerializeField, Tooltip("後退時の速度現象値")] private float m_SpeedDown = 0.7f;
-
-
 
     [Header("攻撃関係")]
     [SerializeField, Tooltip("糸のプレハブ")] private GameObject m_BulletPrefab;
@@ -64,6 +64,8 @@ public class EnemyPattern : MonoBehaviour
 
     private Player player;
 
+    public ChainEnemyManager chainEnemyManager; // 連結蜘蛛マネージャーの読み込み
+
     // 敵の状態管理
     public enum E_EnemyState
     {
@@ -75,6 +77,13 @@ public class EnemyPattern : MonoBehaviour
 
     // 現在動いているコルーチン
     private Coroutine m_CurrentRoutine;
+
+    // 連携攻撃を行うか(連結蜘蛛用)
+    private bool m_bChainAttackOrder = false;
+
+    // 座標・角度保存用
+    public Queue<Vector3> positionHistory; 
+    public Queue<Quaternion> rotationHistory;
 
     /*＞Start関数
     引数：なし
@@ -93,6 +102,9 @@ public class EnemyPattern : MonoBehaviour
         // 初期状態を巡回にする
         ChangeState(E_EnemyState.E_EnemyState_Patrol);
 
+        // 連結蜘蛛用 座標履歴のリセット
+        positionHistory = new Queue<Vector3>();
+        rotationHistory = new Queue<Quaternion>();
     }
 
     /*＞索敵範囲侵入検知関数
@@ -188,13 +200,31 @@ public class EnemyPattern : MonoBehaviour
                 transform.position += direction * moveDistance;
             }
 
-            // 攻撃間隔をチェック
-            if (Time.time - _fLastAttackTime >= _fAttackInterval)
+            // 連携攻撃フラグが立っていたら攻撃命令を出す
+            if(m_bChainAttackOrder)
             {
-                StartCoroutine(AttackCoroutine()); // 弾の発射処理
+                m_bChainAttackOrder = false;
+                yield return AttackCoroutine();
                 _fLastAttackTime = Time.time;
             }
 
+            // 攻撃間隔をチェック
+            if (Time.time - _fLastAttackTime >= _fAttackInterval)
+            {
+               // StartCoroutine(AttackCoroutine()); // 弾の発射処理
+                yield return AttackCoroutine();
+                _fLastAttackTime = Time.time;
+            }
+
+            // 追跡中も座標と角度をキューに保存する
+            positionHistory.Enqueue(transform.position);
+            rotationHistory.Enqueue(transform.rotation);
+            // 古い履歴は捨てる
+            if (positionHistory.Count > 60)
+            { 
+                positionHistory.Dequeue();
+                rotationHistory.Dequeue();
+            } 
             yield return null;
         }
     }
@@ -210,6 +240,8 @@ public class EnemyPattern : MonoBehaviour
     private IEnumerator AttackCoroutine()
     {
         if (!effectPrefab) yield break;
+        // 攻撃中は移動処理を行わない
+        m_bIsAttacking = true;
 
         // 発射方向を敵の forward にする（プレイヤー方向じゃない）
         Vector3 shootDir = transform.forward;
@@ -233,8 +265,6 @@ public class EnemyPattern : MonoBehaviour
 
         rb.AddForce(shootDir * finalShotSpeed, ForceMode.VelocityChange);
 
-        // 攻撃中は移動処理を行わない
-        m_bIsAttacking = true;
         yield return new WaitForSeconds(m_fShotStopTime);
         m_bIsAttacking = false;
     }
@@ -303,6 +333,17 @@ public class EnemyPattern : MonoBehaviour
                 elapsed += Time.deltaTime;  // 経過時間を加算
                 yield return null; // 次のフレームまで待機
             }
+
+            // 追跡中も座標と角度をキューに保存する
+            positionHistory.Enqueue(transform.position);
+            rotationHistory.Enqueue(transform.rotation);
+            // 古い履歴は捨てる
+            if (positionHistory.Count > 60)
+            {
+                positionHistory.Dequeue();
+                rotationHistory.Dequeue();
+            }
+
             yield return new WaitForSeconds(m_fRetart); // 次の移動まで指定の時間(10秒)待機させる
 
         }
@@ -330,16 +371,41 @@ public class EnemyPattern : MonoBehaviour
         switch (m_CurrentState)
         {
             case E_EnemyState.E_EnemyState_Patrol:
-                m_CurrentRoutine = StartCoroutine(PatrolRoutine()); // 巡回処理
+                m_CurrentRoutine = StartCoroutine(PatrolRoutine()); // 索敵処理
+                Debug.Log("索敵中");
                 m_SearchRangeObject.transform.parent = null; // SearchRangeとの親子付けを解除しその場に固定する 
                 break;
             case E_EnemyState.E_EnemyState_Chase:
                 m_CurrentRoutine = StartCoroutine(ChaseRoutine()); // 追跡処理
+                Debug.Log("追跡開始");
                 m_SearchRangeObject.transform.SetParent(transform, true); // 親子付けを復元させる
                 break;
             default:
                 break;
         }
+    }
+    /*＞ 連結蜘蛛用 連携攻撃開始関数
+     引数：なし
+     ｘ
+     戻値：なし
+     ｘ
+     概要:TripleEnemyPatternクラスから呼ばれる、連携攻撃開始フラグを立てる
+     */
+    public IEnumerator StartChainAttack()
+    {
+        if(m_bIsAttacking) yield break;
+        m_bChainAttackOrder = true; // フラグを立てて連携攻撃を始める
+        while(m_bIsAttacking) yield return null;
+    }
+
+    /*＞追跡状態取得関数
+    引数：なし
+    戻値：bool 追跡中ならtrue、索敵中ならfalse
+    概要：自分の状態が追跡状態かどうかを返す
+    */
+    public bool IsChasing()
+    {
+        return m_CurrentState == E_EnemyState.E_EnemyState_Chase;
     }
 
     /*＞OnDestroy関数
@@ -353,5 +419,7 @@ public class EnemyPattern : MonoBehaviour
     private void OnDestroy()
     {
         StopAllCoroutines();   // すべてのコルーチンを停止
+        if(m_bChainAttackOrder)
+            chainEnemyManager.OnLeaderDead(); // リーダーが倒れたら
     }
 }
