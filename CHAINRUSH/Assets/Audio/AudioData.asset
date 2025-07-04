@@ -15,18 +15,43 @@ MonoBehaviour:
   bgmClips:
   - name: Title
     audioClip: {fileID: 8300000, guid: de1e8cf48e396b84da18ec9a2abb27c4, type: 3}
+    volume: 1
+    maxRange: 100
+    minRange: 10
   - name: Stage1
     audioClip: {fileID: 8300000, guid: 263f7d85a249af34e96a8ebe935dcdcd, type: 3}
+    volume: 1
+    maxRange: 100
+    minRange: 10
+  ambClips: []
   seClips:
   - name: Rock
     audioClip: {fileID: 8300000, guid: 520186197eb56f240aeddf4cd078f3bd, type: 3}
+    volume: 1
+    maxRange: 100
+    minRange: 10
   - name: Tree
     audioClip: {fileID: 8300000, guid: 84c307f1683e0954195fad17d0692358, type: 3}
+    volume: 1
+    maxRange: 100
+    minRange: 10
   - name: damagevoice
     audioClip: {fileID: 8300000, guid: 3ed7b04748ef0ae42907f2eb3b739913, type: 3}
+    volume: 1
+    maxRange: 100
+    minRange: 10
   - name: spiderdeath
     audioClip: {fileID: 8300000, guid: c5458ed121b07e84fac63750abd4de23, type: 3}
+    volume: 1
+    maxRange: 100
+    minRange: 10
   - name: chainsaw
     audioClip: {fileID: 8300000, guid: 5bd4667072945e045b265dae868fb90d, type: 3}
+    volume: 1
+    maxRange: 100
+    minRange: 10
   - name: noEntry
     audioClip: {fileID: 8300000, guid: 410eac60ad2972a4ba46fcd797bdedf3, type: 3}
+    volume: 0.2
+    maxRange: 100
+    minRange: 10

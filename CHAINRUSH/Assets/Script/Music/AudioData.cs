@@ -28,6 +28,9 @@ public class AudioData : ScriptableObject
         public string name;
         public AudioClip audioClip;
         public float volume = 1f;
+        public float maxRange = 100.0f;
+        public float minRange = 10.0f;
+
     }
 
     [Header("BGM・SE管理用リスト")]
@@ -51,4 +54,8 @@ public class AudioData : ScriptableObject
         seClips.Find(c => c.name == name)?.audioClip;
     public float GetBGMVolume(string name) =>
         bgmClips.Find(c => c.name == name)?.volume ?? 1f;
+    public float GetSEVolume(string name) =>
+        seClips.Find(c => c.name == name)?.volume ?? 1f;
+    public float GetSEMaxRange(string name) =>
+        seClips.Find(c => c.name == name)?.maxRange ?? 100f;
 }
