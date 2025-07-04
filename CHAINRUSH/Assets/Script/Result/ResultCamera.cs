@@ -1,18 +1,18 @@
-/*=====
+ï»¿/*=====
 <ResultCamera.cs>
-„¤ì¬ÒFmori
+â””ä½œæˆè€…ï¼šmori
 
-„“à—e
-ƒŠƒUƒ‹ƒg‚ÌƒJƒƒ‰ˆ—
+ï¼å†…å®¹
+ãƒªã‚¶ãƒ«ãƒˆã®ã‚«ãƒ¡ãƒ©å‡¦ç†
 
-„’ˆÓ–€
+ï¼æ³¨æ„äº‹é …
 
 
-„XV—š—ğ
+ï¼æ›´æ–°å±¥æ­´
 Y25         
 _M07
 __D  
-___04:ƒvƒƒOƒ‰ƒ€ì¬:mori
+___04:ãƒ—ãƒ­ã‚°ãƒ©ãƒ ä½œæˆ:mori
 
 =====*/
 
@@ -23,10 +23,10 @@ public class ResultCamera : MonoBehaviour
 {
     public Transform player;
     public Transform targetPos;
-    public float radius = 5f;
-    public float height = 2f;
-    public float fixedLookHeight = 2f;
-    public float duration = 3f;
+    private float radius = 15f;
+    private float height = 2f;
+    private float fixedLookHeight = 2f;
+    private float halfOrbitDuration = 2f;
 
     private Transform cameraTransform;
 
@@ -38,40 +38,63 @@ public class ResultCamera : MonoBehaviour
 
     private IEnumerator CameraSequence()
     {
-        // ƒJƒƒ‰‚ÌŠJnˆÊ’uF‘O•û‚â‚â‰º
-        Vector3 startOffset = player.forward * 1.0f + Vector3.down * 1.0f;
-        Vector3 startPos = player.position + startOffset + Vector3.up * height;
+        // å›ºå®šã‚«ãƒ¡ãƒ©ä½ç½®ï¼ˆå…±é€šï¼‰
+        Vector3 firstPos = new Vector3(-0.45f, -1f, 7f);
+        Vector3 secondPos = new Vector3(-0.45f, -1f, -7f);
 
-        // I“_F”wŒãˆÊ’uitargetPos‚É‰ˆ‚¤j
-        Vector3 endPos = targetPos.position;
+        // ===== 0ã€œ1ç§’ï¼šå›ºå®šä½ç½®ã§é™æ­¢ =====
+        cameraTransform.position = firstPos;
+        // æ­£é¢æ–¹å‘ã‚’è¦‹ã‚‹ï¼ˆãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®forwardæ–¹å‘ã«å‘ã‘ã‚‹ï¼‰
+        cameraTransform.rotation = Quaternion.LookRotation(-player.forward, Vector3.up);
+        yield return new WaitForSeconds(1f);
 
+        // ===== 1ã€œ2ç§’ï¼šåŒã˜ãå›ºå®šä½ç½®ã§é™æ­¢ =====
+        cameraTransform.position = secondPos;
+        cameraTransform.rotation = Quaternion.LookRotation(player.forward, Vector3.up);
+        yield return new WaitForSeconds(1f);
+
+        //// ===== 0ã€œ1ç§’ï¼šå›ºå®šä½ç½®ã§é™æ­¢ =====
+        //cameraTransform.position = firstPos;
+        //cameraTransform.LookAt(player.position + Vector3.up * fixedLookHeight);
+        //yield return new WaitForSeconds(1f);
+
+        //// ===== 1ã€œ2ç§’ï¼šåŒã˜ãå›ºå®šä½ç½®ã§é™æ­¢ =====
+        //cameraTransform.position = secondPos;
+        //cameraTransform.LookAt(player.position + Vector3.up * fixedLookHeight);
+        //yield return new WaitForSeconds(1f);
+
+        // ===== 2ã€œ4ç§’ï¼šãã®ä½ç½®ã‹ã‚‰åŠå‘¨ç§»å‹• =====
         float t = 0f;
+
+        // å›ºå®šä½ç½®ã‚’åŸºæº–ã«ã€ä¸­å¿ƒç‚¹ã¨ã®ç›¸å¯¾ä½ç½®ã‚’è¨ˆç®—
+        Vector3 center = player.position;
+        Vector3 startOffset = secondPos - center;
+        float startAngle = Mathf.Atan2(startOffset.x, startOffset.z) * Mathf.Rad2Deg;
 
         while (t < 1.0f)
         {
-            t += Time.deltaTime / duration;
+            t += Time.deltaTime / halfOrbitDuration;
             float easedT = Mathf.SmoothStep(0f, 1f, t);
 
-            // ”¼ü‚ÌŠp“xi‘O¨Œã‚ëj
-            float angle = Mathf.Lerp(0f, 180f, easedT);
+            float angle = Mathf.Lerp(startAngle, startAngle + 180f, easedT);
             float rad = angle * Mathf.Deg2Rad;
+
             float x = Mathf.Sin(rad) * radius;
             float z = Mathf.Cos(rad) * radius;
-            float y = Mathf.Lerp(startPos.y, endPos.y, easedT); // Y•âŠÔ
+            float y = Mathf.Lerp(secondPos.y, targetPos.position.y, easedT);
 
-            Vector3 orbitPos = player.position + new Vector3(x, 0f, z);
+            Vector3 orbitPos = center + new Vector3(x, 0f, z);
             orbitPos.y = y;
 
             cameraTransform.position = orbitPos;
 
-            // Œ©‚é‘ÎÛFƒvƒŒƒCƒ„[‚ÌŒÅ’è‚‚³i—áF1.5mãj
             Vector3 lookTarget = player.position + Vector3.up * fixedLookHeight;
             cameraTransform.LookAt(lookTarget);
 
             yield return null;
         }
 
-        // ÅIˆÊ’uEŠp“x‚ÉŠŠ‚ç‚©‚É‹z’…
+        // ===== æœ€çµ‚ã‚¿ãƒ¼ã‚²ãƒƒãƒˆä½ç½®ã«å¸ç€ =====
         float snapTime = 0.3f;
         float snapT = 0f;
         Vector3 fromPos = cameraTransform.position;
@@ -86,9 +109,10 @@ public class ResultCamera : MonoBehaviour
             yield return null;
         }
 
-        // Š®‘S‚Éƒ^[ƒQƒbƒgˆÊ’u‚ÉŒÅ’è
         cameraTransform.position = targetPos.position;
         cameraTransform.rotation = targetPos.rotation;
     }
 }
+
+
 
