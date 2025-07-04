@@ -45,6 +45,7 @@ public class Result : MonoBehaviour
 
     bool allUiShown = false;             // UI全部終わったか
     int rankIndex = 0;                   // どのランクか (0=S, 4=D)
+    public int rank;
 
     void Start()
     {
@@ -95,7 +96,7 @@ public class Result : MonoBehaviour
         }
 
         // === 対象ランクだけ表示 ===
-
+        rankIndex = rank;
         rankGroups[rankIndex].alpha = 0.0f;
 
         // 開始スケール（大きく）
