@@ -83,8 +83,8 @@ public class BreakNationalObject : MonoBehaviour, IPool
 
                 // 元のモデルを削除
                 ObjectPoolManager.Instance.ReturnToPool("Conifer", gameObject);
-                
 
+                SEManager.Instance.Play("Tree");
                 // 切断したプレハブを出現
                 GameObject tree_up =
                     ObjectPoolManager.Instance.SpawnFromPool(
@@ -116,6 +116,7 @@ public class BreakNationalObject : MonoBehaviour, IPool
 
                 // 元のモデルを削除
                 ObjectPoolManager.Instance.ReturnToPool("Rock_C_01", gameObject);
+                SEManager.Instance.Play("Rock");
 
                 // 切断したプレハブを出現
                 GameObject rock1_dis1 =

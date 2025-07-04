@@ -55,8 +55,11 @@ public class SEManager : MonoBehaviour
     public void Play(string name)
     {
         AudioClip clip = audioData.GetSE(name);
+        audioSource.volume = audioData.GetSEVolume(name);
+        audioSource.maxDistance = audioData.GetSEMaxRange(name);
         if (clip != null)
         {
+           
             audioSource.PlayOneShot(clip);  // “¯Žž‚É10ŒÂ‚®‚ç‚¢(ƒpƒ\ƒRƒ“‚É‚à‚æ‚é‚¯‚Ç)‚Ü‚Å‚È‚çSE‚ð–Â‚ç‚¹‚é
         }
     }
