@@ -41,11 +41,11 @@ public class CameraIntroMover : MonoBehaviour
         yield return MoveCameraSmoothly(points[2], points[3]);
 
         // 4. 演出終了 → ゲーム開始
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.5f);
        
-       // cameraTransform.position = player.position+CameraPos;
-        //cameraTransform.LookAt(player.position + Vector3.up * 1.5f);
-        camera.ResetCamera();
+        cameraTransform.position = player.position+CameraPos;
+        cameraTransform.LookAt(player.position + Vector3.up * 1.5f);
+        //camera.ResetCamera();
         gameManager.StartGame();
     }
 
@@ -65,7 +65,6 @@ public class CameraIntroMover : MonoBehaviour
 
             cameraTransform.position = lerped;
 
-
             Vector3 lookTarget = player.position;
             lookTarget.y = fixedLookHeight; // ← プレイヤーの頭や体の高さに固定
 
@@ -77,7 +76,11 @@ public class CameraIntroMover : MonoBehaviour
 
     private void SetCameraInstantly(Vector3 offset)
     {
-        cameraTransform.position = player.position + offset + Vector3.up * height;
+        Vector3 pos = player.position + offset;
+        pos.y = height;
+        
+        cameraTransform.position = pos;
+
         cameraTransform.LookAt(player.position + Vector3.up * 1.5f);
     }
 }
