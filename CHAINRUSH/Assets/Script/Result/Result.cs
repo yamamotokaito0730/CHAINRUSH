@@ -19,8 +19,6 @@ ___21:ランクグループ配列化対応:mori
 
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class Result : MonoBehaviour
 {
@@ -45,7 +43,9 @@ public class Result : MonoBehaviour
 
     bool allUiShown = false;             // UI全部終わったか
     int rankIndex = 0;                   // どのランクか (0=S, 4=D)
-    public int rank;
+
+    float delayTimer = 0f;               // 4.1秒遅延用
+    bool delayFinished = false;
 
     void Start()
     {
@@ -96,16 +96,24 @@ public class Result : MonoBehaviour
         }
 
         // === 対象ランクだけ表示 ===
-        rankIndex = rank;
         rankGroups[rankIndex].alpha = 0.0f;
 
         // 開始スケール（大きく）
-        rankTargetScale = rankGroups[rankIndex].transform.localScale; ;
+        rankTargetScale = rankGroups[rankIndex].transform.localScale;
         rankGroups[rankIndex].transform.localScale = rankTargetScale + new Vector3(3f, 3f, 3f);
     }
 
     void Update()
     {
+        // === 4.1秒待機 ===
+        if (!delayFinished)
+        {
+            delayTimer += Time.deltaTime;
+            if (delayTimer < 4.1f) return;
+            delayFinished = true;
+            timer = 0f; // 表示処理用のタイマーリセット
+        }
+
         timer += Time.deltaTime;
 
         // === RESULT 表示 ===
@@ -167,12 +175,6 @@ public class Result : MonoBehaviour
         if (timer >= 1.7f)
         {
             allUiShown = true;
-        }
-
-        // === Enterキーでタイトルへ ===
-        if (allUiShown && Input.GetKeyDown(KeyCode.Return))
-        {
-            SceneManager.LoadScene("Title");
         }
     }
 }
