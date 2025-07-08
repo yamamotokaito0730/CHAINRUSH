@@ -104,6 +104,13 @@ public class Player : MonoBehaviour
             particles.Add(ps);
         }
         particleSystems = particles.ToArray();
+
+        //// パーティクルを特定のボーンに追従させる
+        //for (int i = 0; i < particleSystems.Length; i++)
+        //{
+        //    particleSystems[i].transform.localPosition = transform.Find("arm/hips").localPosition;
+        //}
+        //particleSystems[0].transform.localPosition -= new Vector3(0.0f, 0.3f, 0.5f);
     }
 
     /*＞FixedUpdate関数
@@ -215,28 +222,64 @@ public class Player : MonoBehaviour
         renderer.SetPropertyBlock(block);   // 適用
 
         //---パーティクル関連
-        if(preState != PlayerState)
+        if (preState != PlayerState)
         {
-            // 炎,ブースターのエフェクト(プレイヤーのアニメーションによって位置をずらす)
+            // 炎,ブースターのエフェクト(アニメーションによって位置を変える)
             if (PlayerState >= E_State.HomeDestroy)
             {
                 particleSystems[0].transform.localPosition = new Vector3(0.0f, 0.2f, 0.8f); // 炎
                 particleSystems[1].transform.localPosition = new Vector3(0.0f, 0.3f, 0.3f); // ブースター
             }
-            else 
+            else
             {
-                particleSystems[0].transform.localPosition = new Vector3(0.0f, 0.3f, 0.5f);
-                particleSystems[1].transform.localPosition = new Vector3(0.0f, 0.3f, 0.2f);
+                particleSystems[0].transform.localPosition = new Vector3(0.0f, 0.3f, 0.2f);
+                particleSystems[1].transform.localPosition = new Vector3(0.0f, 0.3f, -0.15f);
             }
 
             // 加速時のエフェクト(速度が次の状態まで上昇した時だけ再生する)
             if (preState < PlayerState)
-            {               
+            {
                 particleSystems[3].Play();
+            }
+
+            // 蒸気のエフェクト(アニメーションによって位置を変える)
+
+            switch (PlayerState)
+            {
+                case E_State.Normal:
+                    particleSystems[4].transform.localPosition = new Vector3(0.09f, 1.497f, -0.09f); break;
+                case E_State.TreeDestroy:
+                    particleSystems[4].transform.localPosition = new Vector3(-0.031f, 2.841f, -0.91f); break;
+                case E_State.HomeDestroy:
+                    particleSystems[4].transform.localPosition = new Vector3(0.075f, 1.99f, 0.605f); break;
+                case E_State.Strongest:
+                    particleSystems[4].transform.localPosition = new Vector3(0.117f, 1.043f, 0.48f); break;
+            }
+
+            // 火花のエフェクト(最大速度の時のみ再生)
+            if (PlayerState == E_State.Strongest)
+            {
+                particleSystems[5].Play();
+            }
+            else
+            {
+                particleSystems[5].Stop();
             }
         }        
         preState = PlayerState; // 状態の退避
     }
+
+    //void LateUpdate() // 一旦保留
+    //{
+    //    // パーティクルを特定のボーンに追従させる
+    //    for (int i = 0; i < particleSystems.Length; i++)
+    //    {
+    //        //Quaternion rotateOffset = Quaternion.Euler(0.0f, 90.0f, 101.276f);
+    //        particleSystems[i].transform.localPosition = transform.Find("arm/hips").localPosition - new Vector3(0.0f, 1.3f, -0.2f);
+    //        //particleSystems[i].transform.rotation = transform.Find("arm/hips").rotation * Quaternion.Inverse(rotateOffset);
+    //    }
+
+    //}
 
     /*＞Update関数
     引数：なし
