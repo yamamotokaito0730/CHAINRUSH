@@ -28,6 +28,12 @@ public class Result : MonoBehaviour
 
     public TextMeshProUGUI timeText;     // タイム表示用テキスト
 
+    [Header("デバッグ用ランク")]
+    [Header("0=S, 1=A, 2=B, 3=C, 4=D")]
+    public int debugRank;
+    public bool debugMode;
+
+
     float timer = 0f;                    // 表示時間管理
 
     private string[] resultBGM = { "S", "A,B,C", "A,B,C", "A,B,C", "D" };
@@ -95,6 +101,11 @@ public class Result : MonoBehaviour
         else
         {
             rankIndex = 3; // C
+        }
+
+        if(debugMode)
+        {
+            rankIndex = debugRank;
         }
 
         // === 対象ランクだけ表示 ===
