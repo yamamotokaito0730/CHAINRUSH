@@ -30,6 +30,8 @@ public class Result : MonoBehaviour
 
     float timer = 0f;                    // 表示時間管理
 
+    private string[] resultBGM = { "S", "A,B,C", "A,B,C", "A,B,C", "D" };
+
     // スライドイン用
     Vector3 resultStartPos;
     Vector3 timeStartPos;
@@ -97,6 +99,9 @@ public class Result : MonoBehaviour
 
         // === 対象ランクだけ表示 ===
         rankGroups[rankIndex].alpha = 0.0f;
+
+        //BGM再生
+        BGMManager.Instance.Play(resultBGM[rankIndex]);
 
         // 開始スケール（大きく）
         rankTargetScale = rankGroups[rankIndex].transform.localScale;

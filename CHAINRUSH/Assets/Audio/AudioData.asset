@@ -25,17 +25,17 @@ MonoBehaviour:
     minRange: 10
   - name: D
     audioClip: {fileID: 8300000, guid: 83be451a7a7c84f489f4839e8e83a3cb, type: 3}
-    volume: 1
+    volume: 0.5
     maxRange: 100
     minRange: 10
   - name: S
     audioClip: {fileID: 8300000, guid: 2896677bba1cf444a818bb7b031452cb, type: 3}
-    volume: 1
+    volume: 0.2
     maxRange: 100
     minRange: 10
   - name: A,B,C
     audioClip: {fileID: 8300000, guid: 107d52de30b4c4a4096cf45d5ed25fb0, type: 3}
-    volume: 1
+    volume: 0.2
     maxRange: 100
     minRange: 10
   ambClips: []
