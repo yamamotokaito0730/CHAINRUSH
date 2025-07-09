@@ -17,5 +17,7 @@ public class StageEnemyData : ScriptableObject
 
     [Header("ステージ設定")]
     [Tooltip("ステージ上に生成される上限数")]public int maxStageSpawn = 5;
-
+    [Tooltip("敵の増加をするための閾値")] public int increaseThreshold = 10;
+    [Tooltip("敵の増加数")] public int increaseAmount = 1;
+    [Tooltip("敵が増える上限値")] public int maxLimitEnemies = 30;
 }
