@@ -32,6 +32,7 @@ public class BreakHouse : MonoBehaviour
         // 壁が2つ以上破壊されたなら(壁2 + 床 + 屋根 = 4)
         if(m_breakModel.transform.childCount <= 4 && !m_bFell)
         {
+            SEManager.Instance.Play("breakhouse");
             // 瞬間的に下に押し出す
             Transform roof = m_breakModel.transform.Find("house_roof");
             Rigidbody rb = roof.GetComponent<Rigidbody>();
