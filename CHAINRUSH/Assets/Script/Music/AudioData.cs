@@ -51,4 +51,7 @@ public class AudioData : ScriptableObject
         seClips.Find(c => c.name == name)?.audioClip;
     public float GetBGMVolume(string name) =>
         bgmClips.Find(c => c.name == name)?.volume ?? 1f;
+    public float GetSEVolume(string name) =>
+        seClips.Find(c => c.name == name)?.volume ?? 1f;
+
 }

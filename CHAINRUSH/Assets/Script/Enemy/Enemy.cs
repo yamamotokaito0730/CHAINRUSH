@@ -70,8 +70,7 @@ public class Enemy : MonoBehaviour
                 ////////////////////////////////////////////
 
                 die = false;
-                gamemanager.OnEnemyKilled(gameObject);
-                ObjectPoolManager.Instance.ReturnToPool("spider_Nomove", gameObject);
+                EnemyManager.Instance.OnEnemyDefeated(gameObject, gameObject.name);
             }
         }
     }

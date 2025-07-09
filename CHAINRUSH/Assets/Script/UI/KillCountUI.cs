@@ -18,13 +18,12 @@ using UnityEngine;
 public class KillCountDisplay : MonoBehaviour
 {
     public TextMeshProUGUI killCountText; // 表示するテキスト
-    public GameManager gameManager;       // GameManagerへの参照
 
     void Update()
     {
-        if (gameManager == null || killCountText == null) return;
+        if (killCountText == null) return;
 
-        int killCount = gameManager.GetTotalKilled();
+        int killCount = EnemyManager.Instance.GetEnemiesDefeatedTotal();
 
         killCountText.text = string.Format("{0}/40", killCount);
     }

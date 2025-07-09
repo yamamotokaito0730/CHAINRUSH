@@ -54,7 +54,7 @@ public class MiniMapIcon : MonoBehaviour
         }
 
         // 対象（敵）がnullなら、アイコンを非表示にしてオブジェクトごと破棄
-        if (target == null)
+        if (target == null || !target.gameObject.activeInHierarchy)
         {
             iconImage.enabled = false;
             Destroy(iconImage.gameObject);
