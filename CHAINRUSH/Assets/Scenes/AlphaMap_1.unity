@@ -920,8 +920,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pools:
-  - tag: Spider_001_SetUp
-    prefab: {fileID: 7344548549008414489, guid: 5fc4d85b217d6e047b402bad59e2436f, type: 3}
+  - tag: spider_Nomove
+    prefab: {fileID: 7381330029987104643, guid: bc810944bf880894e9775bd2ed3c5b97, type: 3}
     size: 40
   - tag: Conifer
     prefab: {fileID: 1620417488002718097, guid: cce4d8667f2436a479759f07084d8ff4, type: 3}
@@ -946,9 +946,6 @@ MonoBehaviour:
     size: 12
   - tag: PS_RockBreak
     prefab: {fileID: 4217102013951305458, guid: 72b22529f0cfa7c42beaa087be5098ad, type: 3}
-    size: 12
-  - tag: spider_Nomove
-    prefab: {fileID: 7381330029987104643, guid: bc810944bf880894e9775bd2ed3c5b97, type: 3}
     size: 12
 --- !u!1001 &538606238
 PrefabInstance:
