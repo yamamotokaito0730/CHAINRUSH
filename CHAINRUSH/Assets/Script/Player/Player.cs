@@ -92,7 +92,7 @@ public class Player : MonoBehaviour
         Player_Animator = GetComponent<Animator>();
 
         // オーラエフェクトのマテリアルを取得
-        GameObject childObject = transform.GetChild(1).gameObject; // マテリアルが入っている子オブジェクトを取得
+        GameObject childObject = transform.GetChild(2).gameObject; // マテリアルが入っている子オブジェクトを取得
         renderer = childObject.GetComponent<Renderer>();
 
         // パーティクルを取得
