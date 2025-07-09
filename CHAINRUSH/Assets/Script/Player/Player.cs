@@ -29,6 +29,8 @@ ___06:坂をスムーズに昇り降り出来る処理の追加
 ___25:オーラエフェクトに関する処理を追加:matsushima
 _M07
 ___01:プレイヤーのパーティクルの再生、位置をずらす処理の追加:matsushima
+___07:パーティクルの位置の調整、ボーンに合わせたパーティクルの移動(実装中のためコメントアウト):matsushima
+___09:パーティクルの位置の再調整:matsushima
 =====*/
 
 using System.Collections.Generic;
@@ -232,8 +234,8 @@ public class Player : MonoBehaviour
             }
             else
             {
-                particleSystems[0].transform.localPosition = new Vector3(0.0f, 0.3f, 0.2f);
-                particleSystems[1].transform.localPosition = new Vector3(0.0f, 0.3f, -0.15f);
+                particleSystems[0].transform.localPosition = new Vector3(0.0f, 0.3f, 0.5f);
+                particleSystems[1].transform.localPosition = new Vector3(0.0f, 0.3f, 0.2f);
             }
 
             // 加速時のエフェクト(速度が次の状態まで上昇した時だけ再生する)
@@ -249,7 +251,7 @@ public class Player : MonoBehaviour
                 case E_State.Normal:
                     particleSystems[4].transform.localPosition = new Vector3(0.09f, 1.497f, -0.09f); break;
                 case E_State.TreeDestroy:
-                    particleSystems[4].transform.localPosition = new Vector3(-0.031f, 2.841f, -0.91f); break;
+                    particleSystems[4].transform.localPosition = new Vector3(-0.03f, 2.88f, -0.1f); break;
                 case E_State.HomeDestroy:
                     particleSystems[4].transform.localPosition = new Vector3(0.075f, 1.99f, 0.605f); break;
                 case E_State.Strongest:
