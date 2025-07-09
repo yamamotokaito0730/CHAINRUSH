@@ -54,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b094554c20ef53649a44a9c89a2010e5, type: 3}
       propertyPath: m_Name
-      value: PlayerCharacter_002_Setup
+      value: PlayerCharacter_001
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: b094554c20ef53649a44a9c89a2010e5, type: 3}
       propertyPath: m_Controller
@@ -63,5 +63,66 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b094554c20ef53649a44a9c89a2010e5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2789461432568903491}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b094554c20ef53649a44a9c89a2010e5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 668436484561743102}
   m_SourcePrefab: {fileID: 100100000, guid: b094554c20ef53649a44a9c89a2010e5, type: 3}
+--- !u!1 &5141932890494205631 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b094554c20ef53649a44a9c89a2010e5, type: 3}
+  m_PrefabInstance: {fileID: 5447870561503986670}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &2789461432568903491
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5141932890494205631}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
+--- !u!136 &668436484561743102
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5141932890494205631}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 3
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.3, z: 0}
