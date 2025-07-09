@@ -45,11 +45,11 @@ public class MenuSelector : MonoBehaviour
 
     void Update()
     {
-        // 4.5•b‚Ì‘Ò‹@
+        // 6.0•b‚Ì‘Ò‹@
         if (!isMenuActive)
         {
             timer += Time.deltaTime;
-            if (timer >= 4.5f)
+            if (timer >= 6.0f)
             {
                 ActivateMenu();
             }
