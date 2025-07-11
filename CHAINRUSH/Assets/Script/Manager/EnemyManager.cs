@@ -20,6 +20,7 @@ __D9:回収時のエラー修復、敵が増える仕様の追加
 =====*/
 
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class EnemyManager : MonoBehaviour
@@ -36,17 +37,30 @@ public class EnemyManager : MonoBehaviour
 
     public static EnemyManager Instance { get; private set; }
 
+    [Header("参照オブジェクト")]
+    [SerializeField, Tooltip("ミニマップのUIパネル")] public RectTransform minimapPanelPrefab;
+    [SerializeField, Tooltip("プレイヤートランスフォーム")] public Transform player;
+    [SerializeField, Tooltip("ミニマップの敵UI")] public Image enemyIconPrefab;
+
+    private MiniMapIcon miniMapIcon;
+
+    private List<Image> activeEnemyIcones = new List<Image>();
+
     void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
 
-
     void Start()
     {
         currentStageData = GameManager.Instance.CurrentStageData;
         spawnTerrain = GameManager.Instance.CurrentTerrain;
+
+        // MiniMapIconスクリプトに target と player を設定
+        miniMapIcon = enemyIconPrefab.GetComponent<MiniMapIcon>();
+        miniMapIcon.minimapPanel = minimapPanelPrefab;
+        miniMapIcon.player = player;
 
         foreach (var info in currentStageData.enemySpawnLists)
         {
@@ -56,7 +70,7 @@ public class EnemyManager : MonoBehaviour
 
         SpawnInitialEnemies();
 
-       
+        
 
         //StartCoroutine(EnemySpawnAndWait());
     }
@@ -79,6 +93,9 @@ public class EnemyManager : MonoBehaviour
         {
             GameObject enemyObj = ObjectPoolManager.Instance.SpawnFromPool(selected.poolTag, spawnPos, Quaternion.identity);
             if (enemyObj == null) return;
+            Image enemyIcon = Instantiate(enemyIconPrefab, spawnPos, Quaternion.identity);
+            enemyIcon.transform.SetParent(minimapPanelPrefab.transform, false);
+            miniMapIcon.target = enemyObj.transform;
 
             spawnedCount[selected.poolTag]++;
             enemiesAlive++;

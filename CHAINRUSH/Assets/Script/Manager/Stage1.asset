@@ -17,4 +17,7 @@ MonoBehaviour:
     enemyPrefab: {fileID: 7381330029987104643, guid: bc810944bf880894e9775bd2ed3c5b97, type: 3}
     maxSpawnCount: 40
     spawnWeight: 1
-  maxStageSpawn: 5
+  maxStageSpawn: 10
+  increaseThreshold: 10
+  increaseAmount: 1
+  maxLimitEnemies: 12

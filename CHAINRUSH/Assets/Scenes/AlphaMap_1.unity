@@ -167,10 +167,7 @@ MonoBehaviour:
   - sceneName: Stage1
     enemyData: {fileID: 11400000, guid: dbfcd6b6790ac2847bd07e6fd4f6e1b5, type: 2}
     terrain: {fileID: 1524491827}
-  terrain: {fileID: 1524491827}
-  minimapPanelPrefab: {fileID: 594012075}
   player: {fileID: 1691890328}
-  enemyIconPrefab: {fileID: 3594885297401367273, guid: 47ea8cb58a58c734fac7c30d9480456e, type: 3}
 --- !u!1 &91927244
 GameObject:
   m_ObjectHideFlags: 0
@@ -2962,6 +2959,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 16
   spawnCheckRadius: 2
+  minimapPanelPrefab: {fileID: 594012075}
+  player: {fileID: 1691890328}
+  enemyIconPrefab: {fileID: 3594885297401367273, guid: 47ea8cb58a58c734fac7c30d9480456e, type: 3}
 --- !u!4 &1604138084
 Transform:
   m_ObjectHideFlags: 0

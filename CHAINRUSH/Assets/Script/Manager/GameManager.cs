@@ -46,20 +46,11 @@ public class GameManager : MonoBehaviour
     public StageEnemyData CurrentStageData => stages[currentStageIndex].enemyData;
     public Terrain CurrentTerrain => stages[currentStageIndex].terrain;
 
-    [Header("参照オブジェクト")]
-    [SerializeField, Tooltip("使用するマップ")]public Terrain terrain;
-    [SerializeField, Tooltip("ミニマップのUIパネル")]public RectTransform minimapPanelPrefab;
-    [SerializeField, Tooltip("プレイヤートランスフォーム")]public Transform player;
-    [SerializeField, Tooltip("ミニマップの敵UI")]public Image enemyIconPrefab;
-
-
-    private MiniMapIcon miniMapIcon;
-
-    private List<Image> activeEnemyIcones = new List<Image>();
-
     private Player playerScript; // Playerスクリプト保持用
+
     public static bool isGameOver = false; // ゲームオーバーフラグ（Resultシーン用にstatic）
 
+    [SerializeField, Tooltip("プレイヤートランスフォーム")] public Transform player;
 
     void Awake()
     {
@@ -75,30 +66,11 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void LoadStage(int index)
-    {
-        currentStageIndex = index;
-        SceneManager.LoadScene("Stage" + (index + 1));
-    }
-
-    public void OnAllEnemiesDefeated()
-    {
-        Debug.Log("全ての敵を倒しました！");
-        // リザルトや次のシーンへの遷移をここに
-        SceneManager.LoadScene("ResultScene");
-    }
-
-
     void Start()
     {
-
-        // MiniMapIconスクリプトに target と player を設定
-        miniMapIcon = enemyIconPrefab.GetComponent<MiniMapIcon>();
-        miniMapIcon.minimapPanel = minimapPanelPrefab;
-        miniMapIcon.player = player;
-
         // Playerスクリプトを取得
         playerScript = player.GetComponent<Player>();
+
 
         // ゲームオーバーフラグリセット
         isGameOver = false;
@@ -121,21 +93,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void LoadStage(int index)
+    {
+        currentStageIndex = index;
+        SceneManager.LoadScene("Stage" + (index + 1));
+    }
+
+    public void OnAllEnemiesDefeated()
+    {
+        Debug.Log("全ての敵を倒しました！");
+        // リザルトや次のシーンへの遷移をここに
+        SceneManager.LoadScene("ResultScene");
+    }
+
+
+
+
     //void SpawnEnemies()
     //{
-    //    if(totalKilled >= totalkillGoal)
-    //    {
-    //        Debug.Log("ステージクリア");
-    //        CancelInvoke(nameof(SpawnEnemies));
-
-    //        // クリア時は false
-    //        isGameOver = false;
-    //        // リザルトシーンへ遷移
-    //        SceneManager.LoadScene("Result");
-
-    //        return;
-    //    }
-
+    //    
     //    while(activeEnemies.Count < currentMaxEnemies)
     //    {
     //        Vector3 spawnPos = GetRandomPositionOnTerrain();
@@ -146,40 +122,8 @@ public class GameManager : MonoBehaviour
     //        activeEnemyIcones.Add(enemyIcon);
     //        enemyIcon.transform.SetParent(minimapPanelPrefab.transform, false);
     //        miniMapIcon.target = enemy.transform;
-
-    //        // Enemyが倒されたときに通知するスクリプトをアタッチ
-    //        Enemy enemyScript = enemy.GetComponent<Enemy>();
-    //        if (enemyScript != null)
-    //            enemyScript.gamemanager = this;
+    //        
     //    }
 
-
-    //}
-
-    //public void OnEnemyKilled(GameObject enemy)
-    //{
-    //    totalKilled++;
-    //    activeEnemies.Remove(enemy);
-
-    //    // 最大出現数を増やす
-    //    if(currentMaxEnemies < maxEnemiesLimit)
-    //    {
-    //        currentMaxEnemies++;
-    //    }
-
-    //    Debug.Log($"敵撃破: {totalKilled}/{totalkillGoal} (最大出現数: {currentMaxEnemies})");
-    //}
-
-    public void DestroyEnemyIcon(Image enemyIcon)
-    {
-        activeEnemyIcones.Remove(enemyIcon);
-    }
-
-
-    // 敵を倒した合計数を取得してくる
-    //public int GetTotalKilled()
-    //{
-    //    return totalKilled;
-    //}
 
 }
