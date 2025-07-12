@@ -29,53 +29,48 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance{ get; private set; }
+
     [System.Serializable]
-    public class EnemyType
+    public class StageConfig
     {
-        [SerializeField, Tooltip("敵のタイプ")]public GameObject prefab;
-        //[Range(0f, 1f)]
-        [SerializeField, Tooltip("敵の出現割合")] public float spawnRate;
+        public string sceneName;
+        public StageEnemyData enemyData;
+        public Terrain terrain;
     }
 
-    [Header("敵の種類と出現割合")]
-    [SerializeField, Tooltip("敵の種類と出現率を含むクラスのリスト")]public List<EnemyType> enemyTypes = new List<EnemyType>();
+    public List<StageConfig> stages;
 
-    [Header("参照オブジェクト")]
-    [SerializeField, Tooltip("使用するマップ")]public Terrain terrain;
-    [SerializeField, Tooltip("ミニマップのUIパネル")]public RectTransform minimapPanelPrefab;
-    [SerializeField, Tooltip("プレイヤートランスフォーム")]public Transform player;
-    [SerializeField, Tooltip("ミニマップの敵UI")]public Image enemyIconPrefab;
+    private int currentStageIndex = 0;
 
-    [Header("敵の生成、管理で扱う変数")]
-    [SerializeField, Tooltip("ステージクリアのための目標数")]public int totalkillGoal = 40;
-    [SerializeField, Tooltip("ステージの最初に湧く敵の数")] public int initialMaxEnemies = 5;
-    [SerializeField, Tooltip("ステージに敵が湧く最大数")] public int maxEnemiesLimit = 8;
-    private int currentMaxEnemies;  // 現在の最大湧き数
-    private int totalKilled = 0;    // 倒した敵の合計数
-    public static bool IsGameActive { get; private set; } = false;  //ゲームの状態管理用
-
-    private MiniMapIcon miniMapIcon;
-
-    private List<GameObject> activeEnemies = new List<GameObject>();
-    private List<Image> activeEnemyIcones = new List<Image>();
+    public StageEnemyData CurrentStageData => stages[currentStageIndex].enemyData;
+    public Terrain CurrentTerrain => stages[currentStageIndex].terrain;
 
     private Player playerScript; // Playerスクリプト保持用
+
     public static bool isGameOver = false; // ゲームオーバーフラグ（Resultシーン用にstatic）
 
+    [SerializeField, Tooltip("プレイヤートランスフォーム")] public Transform player;
 
+    void Awake()
+    {
+        if(Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+    }
 
     void Start()
     {
-        currentMaxEnemies = initialMaxEnemies;
-        InvokeRepeating(nameof(SpawnEnemies), 1f, 1f);  // 1秒ごとにスポーンチェック
-
-        // MiniMapIconスクリプトに target と player を設定
-        miniMapIcon = enemyIconPrefab.GetComponent<MiniMapIcon>();
-        miniMapIcon.minimapPanel = minimapPanelPrefab;
-        miniMapIcon.player = player;
-
         // Playerスクリプトを取得
         playerScript = player.GetComponent<Player>();
+
 
         // ゲームオーバーフラグリセット
         isGameOver = false;
@@ -83,7 +78,6 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-
         // Playerのスピード監視
         if (!isGameOver && playerScript != null)
         {
@@ -99,109 +93,37 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void SpawnEnemies()
+    public void LoadStage(int index)
     {
-        if(totalKilled >= totalkillGoal)
-        {
-            Debug.Log("ステージクリア");
-            CancelInvoke(nameof(SpawnEnemies));
-
-            // クリア時は false
-            isGameOver = false;
-            // リザルトシーンへ遷移
-            SceneManager.LoadScene("Result");
-
-            return;
-        }
-
-        while(activeEnemies.Count < currentMaxEnemies)
-        {
-            Vector3 spawnPos = GetRandomPositionOnTerrain();
-            GameObject prefab = ChoseEnemyPrefab(); // 割合に応じた敵を生成する
-            GameObject enemy = ObjectPoolManager.Instance.SpawnFromPool(prefab.name, spawnPos, Quaternion.identity);
-            Image enemyIcon = Instantiate(enemyIconPrefab, spawnPos, Quaternion.identity);
-            activeEnemies.Add(enemy);
-            activeEnemyIcones.Add(enemyIcon);
-            enemyIcon.transform.SetParent(minimapPanelPrefab.transform, false);
-            miniMapIcon.target = enemy.transform;
-
-            // Enemyが倒されたときに通知するスクリプトをアタッチ
-            Enemy enemyScript = enemy.GetComponent<Enemy>();
-            if (enemyScript != null)
-                enemyScript.gamemanager = this;
-        }
-
-
+        currentStageIndex = index;
+        SceneManager.LoadScene("Stage" + (index + 1));
     }
 
-    public void OnEnemyKilled(GameObject enemy)
+    public void OnAllEnemiesDefeated()
     {
-        totalKilled++;
-        activeEnemies.Remove(enemy);
-
-        // 最大出現数を増やす
-        if(currentMaxEnemies < maxEnemiesLimit)
-        {
-            currentMaxEnemies++;
-        }
-
-        Debug.Log($"敵撃破: {totalKilled}/{totalkillGoal} (最大出現数: {currentMaxEnemies})");
+        Debug.Log("全ての敵を倒しました！");
+        // リザルトや次のシーンへの遷移をここに
+        SceneManager.LoadScene("ResultScene");
     }
 
-    public void DestroyEnemyIcon(Image enemyIcon)
-    {
-        activeEnemyIcones.Remove(enemyIcon);
-    }
-
-    Vector3 GetRandomPositionOnTerrain()
-    {
-        TerrainData data = terrain.terrainData;
-        Vector3 terrainPos = terrain.transform.position;
-
-        float x = Random.Range(0f, data.size.x);
-        float z = Random.Range(0f, data.size.z);
-        float y = terrain.SampleHeight(new Vector3(x, 0, z)) + terrainPos.y;
 
 
-        return new Vector3(x + terrainPos.x, y, z + terrainPos.z);
-    }
 
-    GameObject ChoseEnemyPrefab()
-    {
-        float total = 0f;
-        foreach (var e in enemyTypes)
-        {
-            total += e.spawnRate;
-        }
+    //void SpawnEnemies()
+    //{
+    //    
+    //    while(activeEnemies.Count < currentMaxEnemies)
+    //    {
+    //        Vector3 spawnPos = GetRandomPositionOnTerrain();
+    //        GameObject prefab = ChoseEnemyPrefab(); // 割合に応じた敵を生成する
+    //        GameObject enemy = ObjectPoolManager.Instance.SpawnFromPool(prefab.name, spawnPos, Quaternion.identity);
+    //        Image enemyIcon = Instantiate(enemyIconPrefab, spawnPos, Quaternion.identity);
+    //        activeEnemies.Add(enemy);
+    //        activeEnemyIcones.Add(enemyIcon);
+    //        enemyIcon.transform.SetParent(minimapPanelPrefab.transform, false);
+    //        miniMapIcon.target = enemy.transform;
+    //        
+    //    }
 
-        float rand = Random.Range(0f, 1f);
-        float accum = 0f;
-        foreach (var e in enemyTypes)
-        {
-            accum += e.spawnRate;
-            if (rand <= accum)
-            {
-                return e.prefab;
-            }
-        }
 
-        // 設定ミスまたは、上の処理に入らなかった場合に返す
-        return enemyTypes[0].prefab;
-    }
-
-    // 敵を倒した合計数を取得してくる
-    public int GetTotalKilled()
-    {
-        return totalKilled;
-    }
-
-    public void StartGame()
-    {
-        IsGameActive = true;
-    }
-
-    public void StopGameTemporarily()
-    {
-        IsGameActive = false;
-    }
 }
