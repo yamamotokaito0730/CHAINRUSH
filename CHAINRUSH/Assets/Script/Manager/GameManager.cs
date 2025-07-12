@@ -30,7 +30,8 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance{ get; private set; }
-
+    public static bool IsGameActive { get; private set; } = false;  //ゲームの状態管理用
+    
     [System.Serializable]
     public class StageConfig
     {
@@ -72,8 +73,9 @@ public class GameManager : MonoBehaviour
         playerScript = player.GetComponent<Player>();
 
 
-        // ゲームオーバーフラグリセット
+        // フラグリセット
         isGameOver = false;
+        IsGameActive = false;
     }
 
     void Update()
@@ -106,7 +108,15 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("ResultScene");
     }
 
+    public void StartGame()
+    {
+        IsGameActive = true;
+    }
 
+    public void StopGameTemporarily()
+    {
+        IsGameActive = false;
+    }
 
 
     //void SpawnEnemies()
