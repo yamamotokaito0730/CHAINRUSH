@@ -91,6 +91,7 @@ public class EnemyManager : MonoBehaviour
 
         if (SpawnHelper.TryGetValidSpawnPoint(spawnTerrain, overlapCheckMask, spawnCheckRadius, out Vector3 spawnPos))
         {
+            Debug.Log(selected.poolTag);
             GameObject enemyObj = ObjectPoolManager.Instance.SpawnFromPool(selected.poolTag, spawnPos, Quaternion.identity);
             if (enemyObj == null) return;
             Image enemyIcon = Instantiate(enemyIconPrefab, spawnPos, Quaternion.identity);
