@@ -163,18 +163,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53699b3ff8a4b0549b378860bff89fb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyTypes:
-  - prefab: {fileID: 7381330029987104643, guid: bc810944bf880894e9775bd2ed3c5b97, type: 3}
-    spawnRate: 1
-  - prefab: {fileID: 7381330029987104643, guid: bc810944bf880894e9775bd2ed3c5b97, type: 3}
-    spawnRate: 0
-  terrain: {fileID: 1524491827}
-  minimapPanelPrefab: {fileID: 594012075}
+  stages:
+  - sceneName: Stage1
+    enemyData: {fileID: 11400000, guid: 08c6e8df8d620d14ca0e0aa83bd87cf5, type: 2}
+    terrain: {fileID: 1524491827}
   player: {fileID: 1673353075}
-  enemyIconPrefab: {fileID: 3594885297401367273, guid: 47ea8cb58a58c734fac7c30d9480456e, type: 3}
-  totalkillGoal: 40
-  initialMaxEnemies: 10
-  maxEnemiesLimit: 15
 --- !u!1 &91927244
 GameObject:
   m_ObjectHideFlags: 0
@@ -906,7 +899,7 @@ MonoBehaviour:
   pools:
   - tag: spider_Nomove
     prefab: {fileID: 7381330029987104643, guid: bc810944bf880894e9775bd2ed3c5b97, type: 3}
-    size: 40
+    size: 20
   - tag: Conifer
     prefab: {fileID: 1620417488002718097, guid: cce4d8667f2436a479759f07084d8ff4, type: 3}
     size: 15
@@ -1004,11 +997,6 @@ PrefabInstance:
       addedObject: {fileID: 1584999609}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6a880bef213fb4644b75b620a009a420, type: 3}
---- !u!224 &594012075 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 7843821281049050782, guid: d162ff4e3e9f19247a65169716834644, type: 3}
-  m_PrefabInstance: {fileID: 913979030}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &661175734
 GameObject:
   m_ObjectHideFlags: 0
@@ -2550,6 +2538,11 @@ Terrain:
   m_EnableHeightmapRayTracing: 1
   m_EnableTreesAndDetailsRayTracing: 0
   m_TreeMotionVectorModeOverride: 3
+--- !u!224 &1443132711 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7843821281049050782, guid: d162ff4e3e9f19247a65169716834644, type: 3}
+  m_PrefabInstance: {fileID: 913979030}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1451274113
 GameObject:
   m_ObjectHideFlags: 0
@@ -2956,6 +2949,57 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4977202743080756836, guid: 05ca26e27c5f7f046873a8e7cfe42ed9, type: 3}
+--- !u!1 &1619010280
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1619010281}
+  - component: {fileID: 1619010282}
+  m_Layer: 0
+  m_Name: EnemyManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1619010281
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1619010280}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -273.39874, y: -548.5231, z: 530.533}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1619010282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1619010280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75fbfd9a10240fe4bac1aec17422a712, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  overlapCheckMask:
+    serializedVersion: 2
+    m_Bits: 16
+  spawnCheckRadius: 2
+  minimapPanelPrefab: {fileID: 1443132711}
+  player: {fileID: 1673353075}
+  enemyIconPrefab: {fileID: 3594885297401367273, guid: 47ea8cb58a58c734fac7c30d9480456e, type: 3}
 --- !u!1001 &1638966163
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4026,6 +4070,7 @@ SceneRoots:
   - {fileID: 940812622}
   - {fileID: 1529788767}
   - {fileID: 303262802}
+  - {fileID: 1619010281}
   - {fileID: 51760246}
   - {fileID: 533577427}
   - {fileID: 738588832}
