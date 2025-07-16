@@ -32,6 +32,7 @@ ___01:プレイヤーのパーティクルの再生、位置をずらす処理�
 ___07:パーティクルの位置の調整、ボーンに合わせたパーティクルの移動(実装中のためコメントアウト):matsushima
 ___09:パーティクルの位置の再調整:matsushima
 ___13:パーティクル関連を変更しいらない部分を削除:matsushima
+___16:蒸気のパーティクルに関する処理を削除:matsushima
 =====*/
 
 using System.Collections.Generic;
@@ -226,27 +227,15 @@ public class Player : MonoBehaviour
                 particleSystems[1].Play();
             }
 
-            // 蒸気のエフェクト(アニメーションによって位置を変える)
-            switch (PlayerState)
-            {
-                case E_State.Normal:
-                    particleSystems[3].transform.localPosition = new Vector3(0.09f, 1.497f, -0.09f); break;
-                case E_State.TreeDestroy:
-                    particleSystems[3].transform.localPosition = new Vector3(-0.03f, 2.88f, -0.1f); break;
-                case E_State.HomeDestroy:
-                    particleSystems[3].transform.localPosition = new Vector3(0.075f, 1.99f, 0.605f); break;
-                case E_State.Strongest:
-                    particleSystems[3].transform.localPosition = new Vector3(0.117f, 1.043f, 0.48f); break;
-            }
 
             // 火花のエフェクト(最大速度の時のみ再生)
             if (PlayerState == E_State.Strongest)
             {
-                particleSystems[4].Play();
+                particleSystems[3].Play();
             }
             else
             {
-                particleSystems[4].Stop();
+                particleSystems[3].Stop();
             }
         }        
         preState = PlayerState; // 状態の退避
