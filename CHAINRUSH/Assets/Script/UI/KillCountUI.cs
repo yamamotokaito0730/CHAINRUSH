@@ -24,7 +24,7 @@ public class KillCountDisplay : MonoBehaviour
     {
         if (gameManager == null || killCountText == null) return;
 
-        int killCount = gameManager.GetTotalKilled();
+        int killCount = EnemyManager.Instance.GetEnemiesDefeatedTotal();
 
         killCountText.text = string.Format("{0}/40", killCount);
     }
