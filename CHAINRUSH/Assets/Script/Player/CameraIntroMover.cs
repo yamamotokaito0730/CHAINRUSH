@@ -10,6 +10,7 @@ public class CameraIntroMover : MonoBehaviour
     public float height = 5f;
     public float fixedLookHeight = 5f;
     public GameManager gameManager;
+    public UIManager UIManager;
     public Camera camera;
     public Vector3 CameraPos= Vector3.zero;
     private Transform cameraTransform;
@@ -48,6 +49,7 @@ public class CameraIntroMover : MonoBehaviour
         cameraTransform.position = player.position+CameraPos;
         cameraTransform.LookAt(player.position + Vector3.up * 1.5f);
         gameManager.StartGame();
+        UIManager.ShowUI();
     }
 
     private IEnumerator MoveCameraSmoothly(Vector3 fromOffset, Vector3 toOffset)
