@@ -41,44 +41,51 @@ public class ObjectPoolManager : MonoBehaviour
         public int size;
     }
 
-    [Tooltip("全てのプールを格納する用リスト")]
-    public List<Pool> pools;
+    [Tooltip("全てのプールを格納する用データ")]
+    //public List<Pool> pools;
+    public PoolListData poolData;
     [Tooltip("プールで生成するオブジェクト登録用辞書")]
     private Dictionary<string, Queue<GameObject>> poolDictionary;
 
     private void Awake()
     {
         // シングルトンを行うための宣言
-        //if(Instance == null)
-        //{
+        if (Instance == null)
+        {
+            Debug.Log("初期化");
             Instance = this;
-        //}
-        //else
-        //{
-        //    Destroy(gameObject); // 複製防止用Destroy
-        //}
-        DontDestroyOnLoad(gameObject);  // シーンをまたいでも保存されるようにする
+            DontDestroyOnLoad(gameObject);  // シーンをまたいでも保存されるようにする
+            InitializedPool();
+        }
+        else
+        {
+            Destroy(gameObject); // 複製防止用Destroy
+        }
     }
 
     void Start()
     {
+
+    }
+
+    private void InitializedPool()
+    {
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
 
-        foreach (Pool pool in pools)
+        foreach (var pool in poolData.pools)
         {
             Queue<GameObject> objectPool = new Queue<GameObject>();
-            
-            for(int i = 0; i < pool.size; i++)
+            for (int i = 0; i < pool.size; i++)
             {
                 GameObject obj = Instantiate(pool.prefab);
                 obj.SetActive(false);
                 objectPool.Enqueue(obj);
             }
-
             poolDictionary.Add(pool.tag, objectPool);
         }
 
     }
+
 
     /*＞SpawnFromPool関数
        引数：string : タグ名 , Vecto3 : 生成座標 , Quaternion : 生成時の回転角度

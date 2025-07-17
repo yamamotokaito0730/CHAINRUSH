@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
 
     public List<StageConfig> stages;
 
-    private int currentStageIndex = 0;
+    private int currentStageIndex = 1;
 
     public StageEnemyData CurrentStageData => stages[currentStageIndex].enemyData;
     public Terrain CurrentTerrain => stages[currentStageIndex].terrain;
