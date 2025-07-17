@@ -19,9 +19,10 @@ __D9:回収時のエラー修復、敵が増える仕様の追加
 
 =====*/
 
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 public class EnemyManager : MonoBehaviour
 {
@@ -54,26 +55,18 @@ public class EnemyManager : MonoBehaviour
 
     void Start()
     {
-        currentStageData = GameManager.Instance.CurrentStageData;
-        spawnTerrain = GameManager.Instance.CurrentTerrain;
-
-        // MiniMapIconスクリプトに target と player を設定
-        miniMapIcon = enemyIconPrefab.GetComponent<MiniMapIcon>();
-        miniMapIcon.minimapPanel = minimapPanelPrefab;
-        miniMapIcon.player = player;
-
-        foreach (var info in currentStageData.enemySpawnLists)
+        if (ObjectPoolManager.Instance == null)
         {
-            spawnedCount[info.poolTag] = 0;
-            defeatedCount[info.poolTag] = 0;
+            Debug.LogError("ObjectPoolManagerが存在しません！");
+            return;
         }
 
-        SpawnInitialEnemies();
-
+        StartCoroutine(SpawnAndWait());
         
-
         //StartCoroutine(EnemySpawnAndWait());
     }
+
+
 
     void SpawnInitialEnemies()
     {
@@ -94,6 +87,7 @@ public class EnemyManager : MonoBehaviour
             Debug.Log(selected.poolTag);
             GameObject enemyObj = ObjectPoolManager.Instance.SpawnFromPool(selected.poolTag, spawnPos, Quaternion.identity);
             if (enemyObj == null) return;
+            Debug.Log("アイコン生成");
             Image enemyIcon = Instantiate(enemyIconPrefab, spawnPos, Quaternion.identity);
             enemyIcon.transform.SetParent(minimapPanelPrefab.transform, false);
             miniMapIcon.target = enemyObj.transform;
@@ -183,6 +177,7 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
+    // 現在倒している敵の数を取得するための関数
     public int GetEnemiesDefeatedTotal()
     {
         int sum = 0;
@@ -193,30 +188,53 @@ public class EnemyManager : MonoBehaviour
         return sum;
     }
 
+    IEnumerator SpawnAndWait()
+    {
+        yield return new WaitUntil(() => ObjectPoolManager.Instance != null);
+
+        currentStageData = GameManager.Instance.CurrentStageData;
+        spawnTerrain = GameManager.Instance.CurrentTerrain;
+
+        Debug.Log(currentStageData);
+        Debug.Log(spawnTerrain);
+        // MiniMapIconスクリプトに target と player を設定
+        miniMapIcon = enemyIconPrefab.GetComponent<MiniMapIcon>();
+        miniMapIcon.minimapPanel = minimapPanelPrefab;
+        miniMapIcon.player = player;
+
+        foreach (var info in currentStageData.enemySpawnLists)
+        {
+            spawnedCount[info.poolTag] = 0;
+            defeatedCount[info.poolTag] = 0;
+        }
+
+        SpawnInitialEnemies();
+
+    }
 
 
-   // IEnumerator EnemySpawnAndWait()
-   // {
-   //     yield return GameStop();
-   //     yield return new WaitForSeconds(5f);
-   //     yield return SpawnEnemies();
-   // }
+    // IEnumerator EnemySpawnAndWait()
+    // {
+    //     yield return GameStop();
+    //     yield return new WaitForSeconds(5f);
+    //     yield return SpawnEnemies();
+    // }
 
-   //IEnumerator GameStop()
-   // {
-   //     // ゲームを一時停止しておく処理
-   //     yield return null;
-   // }
+    //IEnumerator GameStop()
+    // {
+    //     // ゲームを一時停止しておく処理
+    //     yield return null;
+    // }
 
-   // IEnumerator SpawnEnemies()
-   // {
-   //     // ここで一時停止のフラグを下げる
-   //     // その後に敵を生成
+    // IEnumerator SpawnEnemies()
+    // {
+    //     // ここで一時停止のフラグを下げる
+    //     // その後に敵を生成
 
 
 
-   //     yield return null;
-   // }
+    //     yield return null;
+    // }
 
 
 

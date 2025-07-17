@@ -47,5 +47,11 @@ MonoBehaviour:
   stages:
   - sceneName: Stage1
     enemyData: {fileID: 11400000, guid: 08c6e8df8d620d14ca0e0aa83bd87cf5, type: 2}
-    terrain: {fileID: 0}
-  player: {fileID: 0}
+    terrain: {fileID: 7785133577102437096, guid: 64a2e180d68272b41aee0ad986606099, type: 3}
+  - sceneName: Stage2
+    enemyData: {fileID: 11400000, guid: 2ed20134464d51e45911dabec9d61c3e, type: 2}
+    terrain: {fileID: 8314495780674226459, guid: bffe292d703fd854e966f2d1b02c7457, type: 3}
+  - sceneName: Stage3
+    enemyData: {fileID: 11400000, guid: 2d66202f85f3b764dac689f0b32c4693, type: 2}
+    terrain: {fileID: 3672248673950372102, guid: 33cc074462fa70d4887243024b606e86, type: 3}
+  player: {fileID: 3714367657720686284, guid: 97b3977dec8d1a843bc0a4e319a87381, type: 3}

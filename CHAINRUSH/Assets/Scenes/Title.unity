@@ -837,10 +837,38 @@ PrefabInstance:
     - target: {fileID: 8721459258179069321, guid: 424988e4630570341ab0aaa6fec1ea6a, type: 3}
       propertyPath: player
       value: 
+      objectReference: {fileID: 3714367657720686284, guid: 97b3977dec8d1a843bc0a4e319a87381, type: 3}
+    - target: {fileID: 8721459258179069321, guid: 424988e4630570341ab0aaa6fec1ea6a, type: 3}
+      propertyPath: stages.Array.size
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8721459258179069321, guid: 424988e4630570341ab0aaa6fec1ea6a, type: 3}
       propertyPath: stages.Array.data[0].terrain
       value: 
+      objectReference: {fileID: 7785133577102437096, guid: 64a2e180d68272b41aee0ad986606099, type: 3}
+    - target: {fileID: 8721459258179069321, guid: 424988e4630570341ab0aaa6fec1ea6a, type: 3}
+      propertyPath: stages.Array.data[1].terrain
+      value: 
+      objectReference: {fileID: 8314495780674226459, guid: bffe292d703fd854e966f2d1b02c7457, type: 3}
+    - target: {fileID: 8721459258179069321, guid: 424988e4630570341ab0aaa6fec1ea6a, type: 3}
+      propertyPath: stages.Array.data[2].terrain
+      value: 
+      objectReference: {fileID: 3672248673950372102, guid: 33cc074462fa70d4887243024b606e86, type: 3}
+    - target: {fileID: 8721459258179069321, guid: 424988e4630570341ab0aaa6fec1ea6a, type: 3}
+      propertyPath: stages.Array.data[1].enemyData
+      value: 
+      objectReference: {fileID: 11400000, guid: 2ed20134464d51e45911dabec9d61c3e, type: 2}
+    - target: {fileID: 8721459258179069321, guid: 424988e4630570341ab0aaa6fec1ea6a, type: 3}
+      propertyPath: stages.Array.data[1].sceneName
+      value: Stage2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8721459258179069321, guid: 424988e4630570341ab0aaa6fec1ea6a, type: 3}
+      propertyPath: stages.Array.data[2].enemyData
+      value: 
+      objectReference: {fileID: 11400000, guid: 2d66202f85f3b764dac689f0b32c4693, type: 2}
+    - target: {fileID: 8721459258179069321, guid: 424988e4630570341ab0aaa6fec1ea6a, type: 3}
+      propertyPath: stages.Array.data[2].sceneName
+      value: Stage3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1447,6 +1475,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8414664980008501247, guid: 0a5c5962ee9a4724b95234560450c56c, type: 3}
+      propertyPath: poolData
+      value: 
+      objectReference: {fileID: 11400000, guid: 745646bc7fba20a4b88e71c7626c1ed0, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

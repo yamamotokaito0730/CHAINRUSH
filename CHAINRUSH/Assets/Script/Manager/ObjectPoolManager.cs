@@ -27,10 +27,11 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.SceneManagement;
 
 public class ObjectPoolManager : MonoBehaviour
 {
-    [Tooltip("シングルトン用の呼び出し変数")]public static ObjectPoolManager Instance { get; private set; }
+    [Tooltip("シングルトン用の呼び出し変数")] public static ObjectPoolManager Instance { get; private set; }
 
     [System.Serializable]
     [Tooltip("プール1個単位のクラス")]
@@ -41,44 +42,50 @@ public class ObjectPoolManager : MonoBehaviour
         public int size;
     }
 
-    [Tooltip("全てのプールを格納する用リスト")]
-    public List<Pool> pools;
+    [Tooltip("全てのプールを格納する用データ")]
+    //public List<Pool> pools;
+    public PoolListData poolData;
     [Tooltip("プールで生成するオブジェクト登録用辞書")]
     private Dictionary<string, Queue<GameObject>> poolDictionary;
 
     private void Awake()
     {
         // シングルトンを行うための宣言
-        //if(Instance == null)
-        //{
-            Instance = this;
-        //}
-        //else
-        //{
-        //    Destroy(gameObject); // 複製防止用Destroy
-        //}
-        DontDestroyOnLoad(gameObject);  // シーンをまたいでも保存されるようにする
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject); // 重複を避ける
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+        //InitializedPool();
+
     }
 
     void Start()
     {
+
+    }
+
+    private void InitializedPool()
+    {
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
 
-        foreach (Pool pool in pools)
+        foreach (var pool in poolData.pools)
         {
             Queue<GameObject> objectPool = new Queue<GameObject>();
-            
-            for(int i = 0; i < pool.size; i++)
+            for (int i = 0; i < pool.size; i++)
             {
                 GameObject obj = Instantiate(pool.prefab);
                 obj.SetActive(false);
                 objectPool.Enqueue(obj);
             }
-
             poolDictionary.Add(pool.tag, objectPool);
         }
 
     }
+
 
     /*＞SpawnFromPool関数
        引数：string : タグ名 , Vecto3 : 生成座標 , Quaternion : 生成時の回転角度
@@ -90,7 +97,7 @@ public class ObjectPoolManager : MonoBehaviour
     public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion rotation)
     {
         // 登録されているプールオブジェクトのタグが存在するかどうか
-        if(!poolDictionary.ContainsKey(tag))
+        if (!poolDictionary.ContainsKey(tag))
         {
             Debug.LogWarning(tag + "というタグは存在しません");
             return null;
@@ -123,7 +130,7 @@ public class ObjectPoolManager : MonoBehaviour
     public void ReturnToPool(string tag, GameObject gameObject)
     {
         // オブジェクトを戻すときに行う処理をオブジェクトごとに実行する
-        IPool poolable = GetComponent<IPool>();
+        IPool poolable = gameObject.GetComponent<IPool>();
         if (poolable != null)
         {
             poolable.OnReturn();  // オブジェクトがプールに戻るときに呼ばれる関数
@@ -132,5 +139,45 @@ public class ObjectPoolManager : MonoBehaviour
         gameObject.SetActive(false);                // 使用後のオブジェクトを非表示に
         poolDictionary[tag].Enqueue(gameObject);    // プールに戻す
     }
+
+    public void ReturnAllToPool()
+    {
+        Debug.Log(poolDictionary.Count);
+        foreach (var tag in poolDictionary.Keys)
+        {
+            GameObject[] allObjects = GameObject.FindObjectsByType<GameObject>(FindObjectsSortMode.None);
+            foreach (var obj in allObjects)
+            {
+                if (!obj.activeInHierarchy) continue;
+
+                // 名前にタグが含まれていれば（例："Enemy" タグ → "Enemy(Clone)"）
+                if (obj.name.Contains(tag))
+                {
+                    ReturnToPool(tag, obj);
+                }
+            }
+        }
+    }
+
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if(scene.name == "Stage1" || scene.name == "Stage2" || scene.name == "Stage3")
+        {
+            InitializedPool();
+        }
+
+    }
+
 
 }

@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
 
     public List<StageConfig> stages;
 
-    private int currentStageIndex = 0;
+    private int currentStageIndex = 1;
 
     public StageEnemyData CurrentStageData => stages[currentStageIndex].enemyData;
     public Terrain CurrentTerrain => stages[currentStageIndex].terrain;
@@ -105,7 +105,8 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("全ての敵を倒しました！");
         // リザルトや次のシーンへの遷移をここに
-        SceneManager.LoadScene("ResultScene");
+        ObjectPoolManager.Instance.ReturnAllToPool();
+        SceneManager.LoadScene("Result");
     }
 
     public void StartGame()
@@ -116,5 +117,27 @@ public class GameManager : MonoBehaviour
     public void StopGameTemporarily()
     {
         IsGameActive = false;
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "Stage1" || scene.name == "Stage2" || scene.name == "Stage3")
+        {
+            // Playerスクリプトを取得
+            playerScript = player.GetComponent<Player>();
+
+            isGameOver = false;
+            IsGameActive = false;
+        }
     }
 }
