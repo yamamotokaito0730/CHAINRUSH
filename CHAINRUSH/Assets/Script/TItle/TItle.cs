@@ -39,6 +39,7 @@ public class Title : MonoBehaviour
             SEManager.Instance.Play("chainsaw");
             ////////////////////////////////////////////
             isLoading = true;
+            ObjectPoolManager.Instance.ReturnAllToPool();
             StartCoroutine(LoadSceneWithDelay());
         }
     }

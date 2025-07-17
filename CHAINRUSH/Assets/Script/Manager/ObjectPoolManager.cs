@@ -27,10 +27,11 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.SceneManagement;
 
 public class ObjectPoolManager : MonoBehaviour
 {
-    [Tooltip("シングルトン用の呼び出し変数")]public static ObjectPoolManager Instance { get; private set; }
+    [Tooltip("シングルトン用の呼び出し変数")] public static ObjectPoolManager Instance { get; private set; }
 
     [System.Serializable]
     [Tooltip("プール1個単位のクラス")]
@@ -50,17 +51,17 @@ public class ObjectPoolManager : MonoBehaviour
     private void Awake()
     {
         // シングルトンを行うための宣言
-        if (Instance == null)
+        if (Instance != null && Instance != this)
         {
-            Debug.Log("初期化");
-            Instance = this;
-            DontDestroyOnLoad(gameObject);  // シーンをまたいでも保存されるようにする
-            InitializedPool();
+            Destroy(gameObject); // 重複を避ける
+            return;
         }
-        else
-        {
-            Destroy(gameObject); // 複製防止用Destroy
-        }
+
+        Debug.Log("生成されてるか？");
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+        InitializedPool();
+
     }
 
     void Start()
@@ -97,7 +98,7 @@ public class ObjectPoolManager : MonoBehaviour
     public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion rotation)
     {
         // 登録されているプールオブジェクトのタグが存在するかどうか
-        if(!poolDictionary.ContainsKey(tag))
+        if (!poolDictionary.ContainsKey(tag))
         {
             Debug.LogWarning(tag + "というタグは存在しません");
             return null;
@@ -130,7 +131,7 @@ public class ObjectPoolManager : MonoBehaviour
     public void ReturnToPool(string tag, GameObject gameObject)
     {
         // オブジェクトを戻すときに行う処理をオブジェクトごとに実行する
-        IPool poolable = GetComponent<IPool>();
+        IPool poolable = gameObject.GetComponent<IPool>();
         if (poolable != null)
         {
             poolable.OnReturn();  // オブジェクトがプールに戻るときに呼ばれる関数
@@ -139,5 +140,47 @@ public class ObjectPoolManager : MonoBehaviour
         gameObject.SetActive(false);                // 使用後のオブジェクトを非表示に
         poolDictionary[tag].Enqueue(gameObject);    // プールに戻す
     }
+
+    public void ReturnAllToPool()
+    {
+        Debug.Log(poolDictionary.Count);
+        foreach (var tag in poolDictionary.Keys)
+        {
+            GameObject[] allObjects = GameObject.FindObjectsByType<GameObject>(FindObjectsSortMode.None);
+            foreach (var obj in allObjects)
+            {
+                if (!obj.activeInHierarchy) continue;
+
+                // 名前にタグが含まれていれば（例："Enemy" タグ → "Enemy(Clone)"）
+                if (obj.name.Contains(tag))
+                {
+                    ReturnToPool(tag, obj);
+                }
+            }
+        }
+    }
+
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if(scene.name == "Stage1" || scene.name == "Stage2" || scene.name == "Stage3")
+        {
+            Debug.Log("入ってる～？");
+            ReturnAllToPool();
+            InitializedPool();
+        }
+
+    }
+
 
 }

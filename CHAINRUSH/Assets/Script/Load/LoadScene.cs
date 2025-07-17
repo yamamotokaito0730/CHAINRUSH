@@ -33,7 +33,7 @@ public class LoadScene : MonoBehaviour
     private IEnumerator LoadSceneAsync()
     {
         float timer = 0f;
-
+        ObjectPoolManager.Instance.ReturnAllToPool();
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneNameToLoad);
         asyncLoad.allowSceneActivation = false;
 
