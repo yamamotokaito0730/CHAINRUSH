@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Stage1Data
   m_EditorClassIdentifier: 
   enemySpawnLists:
-  - poolTag: spider_Nomove
-    enemyPrefab: {fileID: 7381330029987104643, guid: bc810944bf880894e9775bd2ed3c5b97, type: 3}
+  - poolTag: Spider_002_SetUp
+    enemyPrefab: {fileID: 6889749330399375372, guid: 22b6b6758c2a990429346dbea113ee78, type: 3}
     maxSpawnCount: 40
     spawnWeight: 1
   maxStageSpawn: 10

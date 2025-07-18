@@ -17,12 +17,15 @@ ___26:追跡処理の追加＆弾の速度を3→5に変更 tooyama
 ___30:攻撃エフェクトを追加 mori
 _M06
 ___20:後退処理の追加 tooyama
+_M07
+___18:敵アニメーションの追加:saito
 
 =====*/
 using NUnit.Framework.Constraints;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class EnemyPattern : MonoBehaviour
 {
@@ -64,6 +67,8 @@ public class EnemyPattern : MonoBehaviour
 
     private Player player;
 
+    private Animator Animator_Enemy;    // アニメーション
+
     // 敵の状態管理
     public enum E_EnemyState
     {
@@ -92,6 +97,7 @@ public class EnemyPattern : MonoBehaviour
         m_SearchCollider.radius = m_fSearchRange / 100.0f;
         // 初期状態を巡回にする
         ChangeState(E_EnemyState.E_EnemyState_Patrol);
+        Animator_Enemy = GetComponent<Animator>();// アニメーションを取得
 
     }
 
@@ -111,6 +117,8 @@ public class EnemyPattern : MonoBehaviour
         {
             m_targetPlayer = other.transform; // 侵入時の位置を記録
             player = other.GetComponent<Player>(); // プレイヤーの情報を取得(後々速度を取得するため)
+
+            
             m_bIsFinding = true; // 発見フラグをオンに
             // コルーチンの移行
             ChangeState(E_EnemyState.E_EnemyState_Chase);  // 追跡を開始する
@@ -150,7 +158,6 @@ public class EnemyPattern : MonoBehaviour
         float _fAttackInterval = m_fShotInterval; // 攻撃間隔(2秒)
         float _fLastAttackTime = -_fAttackInterval;
 
-
         while (m_targetPlayer != null)
         {
             if (m_bIsAttacking)
@@ -164,7 +171,6 @@ public class EnemyPattern : MonoBehaviour
             Vector3 toPlayer = m_targetPlayer.position - transform.position;
             float distance = toPlayer.magnitude; // プレイヤーとの距離
             Vector3 direction = toPlayer.normalized;
-
 
             // 向きをゆっくり変える
             if (direction != Vector3.zero)
@@ -213,6 +219,20 @@ public class EnemyPattern : MonoBehaviour
     {
         if (!effectPrefab) yield break;
 
+        var intenger = Animator_Enemy.GetCurrentAnimatorStateInfo(0);
+
+        // 攻撃アニメーションになっているか？
+        if (Animator_Enemy.GetBool("IsAtk") != true)
+        {
+            ChangeAnimation(true);  // 攻撃アニメーションを再生
+        }
+        // アニメーションの再生が終了しているか?
+        if (intenger.normalizedTime >= 1.0f)
+        {
+            // 攻撃アニメーションを最初から再生
+            Animator_Enemy.Play(intenger.shortNameHash, 0, 0.0f);
+        }
+
         // 発射方向を敵の forward にする（プレイヤー方向じゃない）
         Vector3 shootDir = transform.forward;
 
@@ -235,6 +255,17 @@ public class EnemyPattern : MonoBehaviour
 
         rb.AddForce(shootDir * finalShotSpeed, ForceMode.VelocityChange);
 
+        // プレイヤーの速度が4以下のときに停止時間を延長
+        if (player.PlayerSpeed <= 4.0f/* && m_fShotStopTime != 3.0f*/)
+        {
+            m_fShotStopTime = 2.8f;
+        }
+        // 停止時間を戻す
+        if (player.PlayerSpeed > 4.0f && m_fShotStopTime != 3.0f)
+        {
+            m_fShotStopTime = 2.0f;
+        }
+
         // 攻撃中は移動処理を行わない
         m_bIsAttacking = true;
         yield return new WaitForSeconds(m_fShotStopTime);
@@ -252,6 +283,11 @@ public class EnemyPattern : MonoBehaviour
     {
         while (true)
         {
+            // アニメーションが歩きになっているか
+            if (Animator_Enemy && Animator_Enemy.GetBool("IsAtk") != false)
+            {
+                ChangeAnimation(false);
+            }
 
             // 移動速度を非発見時の速度に変更
             m_fSpeed = m_fNormalSpeed; // 速度10→8
@@ -355,5 +391,17 @@ public class EnemyPattern : MonoBehaviour
     private void OnDestroy()
     {
         StopAllCoroutines();   // すべてのコルーチンを停止
+    }
+
+    /*＞ChangeAnimationn関数
+     引数：bool b_AtkAnim: アニメーション(攻撃)を実行するか
+     ｘ
+     戻値：なし
+     ｘ
+     概要:敵アニメーションを変更する
+     */
+    private void ChangeAnimation(bool b_AtkAnim)
+    {
+        Animator_Enemy.SetBool("IsAtk",b_AtkAnim);
     }
 }
