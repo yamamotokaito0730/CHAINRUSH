@@ -58,7 +58,7 @@ public class Player : MonoBehaviour
     private E_State PlayerState;
     private int[] thresholds = { 4, 17, 35, 44, 50 };
     private E_State preState = E_State.Normal;  // プレイヤーの状態退避
-
+    [SerializeField, Tooltip("ステージ")] private int m_Stage = 0;
     [Header("重力関係")]
     [SerializeField, Tooltip("ベースの重力")] private float m_fBaseGravity = 9.81f;
 
@@ -108,6 +108,10 @@ public class Player : MonoBehaviour
             particles.Add(ps);
         }
         particleSystems = particles.ToArray();
+        if (m_Stage == 2)
+        {
+            BGMManager.Instance.ChangeBGM("Stage2", 1.5f);
+        }
     }
 
     /*＞FixedUpdate関数

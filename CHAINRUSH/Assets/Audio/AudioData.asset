@@ -38,6 +38,11 @@ MonoBehaviour:
     volume: 0.2
     maxRange: 100
     minRange: 10
+  - name: Stage2
+    audioClip: {fileID: 8300000, guid: fd7ea21d58c40354286d933233e06f2b, type: 3}
+    volume: 0.8
+    maxRange: 100
+    minRange: 10
   ambClips: []
   seClips:
   - name: Rock
