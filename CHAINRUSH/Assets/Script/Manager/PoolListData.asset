@@ -40,3 +40,6 @@ MonoBehaviour:
   - tag: PS_RockBreak
     prefab: {fileID: 4217102013951305458, guid: 72b22529f0cfa7c42beaa087be5098ad, type: 3}
     size: 12
+  - tag: Spider_002_SetUp
+    prefab: {fileID: 6889749330399375372, guid: 22b6b6758c2a990429346dbea113ee78, type: 3}
+    size: 12
