@@ -5,12 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 0
-    path: Assets/Scenes/NatureRenderer.unity
-    guid: 50d98fcf40162b0499c395dc1b86dc03
   - enabled: 1
     path: Assets/Scenes/Title.unity
     guid: 747c9b7afa5cfe24b8258af25f0db88e
@@ -18,8 +12,17 @@ EditorBuildSettings:
     path: Assets/Scenes/LoadScene.unity
     guid: 726b632a404cc38419dac701dd22f6a0
   - enabled: 1
-    path: Assets/Scenes/AlphaMap_1.unity
+    path: Assets/Scenes/Select.unity
+    guid: a1c37cee50552194282f5a4ec146acb8
+  - enabled: 1
+    path: Assets/Scenes/Stage1.unity
     guid: d82041efb6144af4fb6bd6523b3238d3
+  - enabled: 1
+    path: Assets/Scenes/Stage2.unity
+    guid: 6c57575bd66966e4ab1e888233bfa423
+  - enabled: 1
+    path: Assets/Scenes/Stage3.unity
+    guid: 7ac2f23b03f849e4eb580197861abddf
   - enabled: 1
     path: Assets/Scenes/Result.unity
     guid: b04052ae67bbf82418733cb6dbcf91f9

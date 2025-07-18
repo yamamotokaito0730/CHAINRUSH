@@ -269,7 +269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4be4a0bd2c6320488b67990542d230c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneNameToLoad: AlphaMap_1
+  sceneNameToLoad: Select
   minLoadingTime: 2
 --- !u!1 &1188895529
 GameObject:
