@@ -25,6 +25,7 @@ using UnityEngine.SceneManagement;
 public class Title : MonoBehaviour
 {
     private bool isLoading = false;  // 2“x‰Ÿ‚µ–hŽ~—p
+    static public bool ToTitle = false;
 
     private void Awake()
     {
@@ -50,5 +51,6 @@ public class Title : MonoBehaviour
         yield return new WaitForSeconds(1.5f);  // 1.5•b‘Ò‚Â
         BGMManager.Instance.ChangeBGM("Stage1", 1.5f);
         SceneManager.LoadScene("LoadScene");
+        ToTitle = true;
     }
 }

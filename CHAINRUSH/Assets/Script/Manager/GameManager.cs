@@ -18,6 +18,9 @@ __D
 ___09:スクリプトの
 ___17:スクリプトのエネミー生成部分を変更:banno
 ___20:ゲームオーバー処理を追加
+_M07
+__D
+___18:currentStageIndexをstaticに変更:mori
 =====*/
 using NUnit.Framework;
 using UnityEngine;
@@ -42,7 +45,7 @@ public class GameManager : MonoBehaviour
 
     public List<StageConfig> stages;
 
-    private int currentStageIndex = 1;
+    public static int currentStageIndex = 1;
 
     public StageEnemyData CurrentStageData => stages[currentStageIndex].enemyData;
     public Terrain CurrentTerrain => stages[currentStageIndex].terrain;
@@ -80,10 +83,14 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        // プレイヤーオブジェクトのplayerスクリプトを取得
+        playerScript = GameObject.FindWithTag("Player")?.GetComponent<Player>();
+
         // Playerのスピード監視
         if (!isGameOver && playerScript != null)
         {
             float speed = playerScript.GetSpeed();
+            Debug.Log(playerScript.GetSpeed());
             if (speed <= 0f)
             {
                 Debug.Log("ゲームオーバー！");
@@ -98,7 +105,7 @@ public class GameManager : MonoBehaviour
     public void LoadStage(int index)
     {
         currentStageIndex = index;
-        SceneManager.LoadScene("Stage" + (index + 1));
+        SceneManager.LoadScene("Stage" + (index));
     }
 
     public void OnAllEnemiesDefeated()
