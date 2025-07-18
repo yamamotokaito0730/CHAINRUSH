@@ -56,6 +56,11 @@ public class GameManager : MonoBehaviour
 
     [SerializeField, Tooltip("プレイヤートランスフォーム")] public Transform player;
 
+    private float leftShiftTime = -1f;
+    private float rightShiftTime = -1f;
+    private float kKeyTime = -1f;
+    private const float maxInterval = 1.0f;
+
     void Awake()
     {
         if (Instance == null)
@@ -83,6 +88,39 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            leftShiftTime = Time.time;
+        }
+
+        if (Input.GetKeyDown(KeyCode.RightShift))
+        {
+            rightShiftTime = Time.time;
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            kKeyTime = Time.time;
+        }
+
+        // すべてのキーが押され、かつ1秒以内に収まっていれば成立
+        if (leftShiftTime > 0 && rightShiftTime > 0 && kKeyTime > 0)
+        {
+            float max = Mathf.Max(leftShiftTime, rightShiftTime, kKeyTime);
+            float min = Mathf.Min(leftShiftTime, rightShiftTime, kKeyTime);
+
+            if ((max - min) <= maxInterval)
+            {
+                // リザルトへ遷移
+                SceneManager.LoadScene("Result");
+
+                // タイムリセット（再発動防止）
+                leftShiftTime = -1f;
+                rightShiftTime = -1f;
+                kKeyTime = -1f;
+            }
+        }
+
         // プレイヤーオブジェクトのplayerスクリプトを取得
         playerScript = GameObject.FindWithTag("Player")?.GetComponent<Player>();
 
