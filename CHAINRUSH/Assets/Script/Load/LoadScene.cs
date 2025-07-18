@@ -27,7 +27,26 @@ public class LoadScene : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(LoadSceneAsync());
+        if(Title.ToTitle)
+        {
+            GameManager.currentStageIndex = 1;
+            sceneNameToLoad = "Stage1";
+        }
+        else
+        {
+            if (GameManager.isGameOver)
+            {
+                sceneNameToLoad = "Stage" + (GameManager.currentStageIndex);
+            }
+            else
+            {
+                GameManager.currentStageIndex++;
+                sceneNameToLoad = "Stage" + (GameManager.currentStageIndex);
+            }
+        }
+        //sceneNameToLoad = "Select";
+        //StartCoroutine(LoadSceneAsync());
+        GameManager.Instance.LoadStage(GameManager.currentStageIndex);
     }
 
     private IEnumerator LoadSceneAsync()
