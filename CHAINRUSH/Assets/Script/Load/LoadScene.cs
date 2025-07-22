@@ -29,7 +29,7 @@ public class LoadScene : MonoBehaviour
     {
         if(Title.ToTitle)
         {
-            GameManager.currentStageIndex = 1;
+            GameManager.currentStageIndex = 0;
             sceneNameToLoad = "Stage1";
         }
         else
