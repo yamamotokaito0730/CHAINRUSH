@@ -143,7 +143,7 @@ public class GameManager : MonoBehaviour
     public void LoadStage(int index)
     {
         currentStageIndex = index;
-        SceneManager.LoadScene("Stage" + (index));
+        SceneManager.LoadScene("Stage" + (index + 1));
     }
 
     public void OnAllEnemiesDefeated()

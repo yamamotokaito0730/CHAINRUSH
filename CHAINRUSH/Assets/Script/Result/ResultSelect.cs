@@ -57,7 +57,7 @@ public class ResultSelect : MonoBehaviour
         }
 
         // 特定の条件のとき、次のステージボタンを無効化
-        if (GameManager.currentStageIndex == 2 && !GameManager.isGameOver)
+        if (GameManager.currentStageIndex == 1 && !GameManager.isGameOver)
         {
             isAllClear = true;
         }
