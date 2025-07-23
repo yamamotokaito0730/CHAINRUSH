@@ -36,7 +36,7 @@ public class TitlePlayer : MonoBehaviour
         Animator animator;
         animator = GetComponent<Animator>();
         animator.Update(0f);           // Animatorの内部初期化
-        animator.Play("Run_1", 0, 0.0f); // 第2引数: Layer、第3引数: 時間（0秒から）
+        animator.Play("Run_2", 0, 0.0f); // 第2引数: Layer、第3引数: 時間（0秒から）
         animator.Update(0f);           // 再度更新して即座に反映させる
         posY = transform.position.y;
     }
