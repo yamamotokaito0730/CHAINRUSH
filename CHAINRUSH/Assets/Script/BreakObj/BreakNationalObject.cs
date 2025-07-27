@@ -18,6 +18,9 @@ ___3:木と岩をプールで管理できるように変更:banno
 ___5:パーティクルもプールに対応:banno
 ___7:プールに格納されない原因を解消:banno
 ___11:パーティクルの処理が複数実行されない問題を解消:banno
+_M07
+__D
+___27:プレイヤーとの当たり判定をOnCollisionEnterからOnTriggerEnterに変更:tooyama
 =====*/
 using System.Collections;
 using System.Collections.Generic;
@@ -51,9 +54,9 @@ public class BreakNationalObject : MonoBehaviour, IPool
        ｘ
        概要：プレイヤーがオブジェクトにぶつかった際の処理を行う
        */
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.name == "Player" && player.GetState() >= 3)    // プレイヤーの速度が3以上なら
+        if (other.gameObject.name == "PlayerAttackCollider" && player.GetState() >= 3)    // プレイヤーの速度が3以上なら
         {
             Break();
         }
