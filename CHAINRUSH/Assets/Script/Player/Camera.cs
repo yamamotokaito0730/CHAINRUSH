@@ -66,8 +66,8 @@ public class Camera : MonoBehaviour
             m_Target = GameObject.FindWithTag("Player").transform;
         }
 
-        m_Yaw = transform.eulerAngles.y; // 現在のY軸角度を取得
-        m_Pitch = transform.eulerAngles.x; // 現在のX軸角度を取得
+        m_Yaw = m_Target.eulerAngles.y; // 現在のY軸角度を取得
+        m_Pitch = m_Target.eulerAngles.x; // 現在のX軸角度を取得
 
         // 初期の相対オフセットと角度を保存
         m_InitialYaw = m_Yaw;
@@ -117,7 +117,8 @@ public class Camera : MonoBehaviour
         RaycastHit hit;
         Vector3 direction = targetPosition - m_Target.position;    // プレイヤーから理想位置への方向ベクトル
         float distance = direction.magnitude;                       // 方向ベクトルの長さ
-        Vector3 finalPosition = targetPosition;                    // 最終的な位置
+        //Vector3 finalPosition = targetPosition;                    // 最終的な位置
+        Vector3 finalPosition = transform.position;                    // 最終的な位置
         if (Physics.Raycast(m_Target.position, direction.normalized, out hit, distance))
         {
             // 遮蔽物があれば、ヒットポイントの少し手前にカメラを配置

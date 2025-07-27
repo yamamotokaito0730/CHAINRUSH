@@ -855,6 +855,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3672248673950372102, guid: 33cc074462fa70d4887243024b606e86, type: 3}
     - target: {fileID: 8721459258179069321, guid: 424988e4630570341ab0aaa6fec1ea6a, type: 3}
+      propertyPath: stages.Array.data[0].enemyData
+      value: 
+      objectReference: {fileID: 11400000, guid: 08c6e8df8d620d14ca0e0aa83bd87cf5, type: 2}
+    - target: {fileID: 8721459258179069321, guid: 424988e4630570341ab0aaa6fec1ea6a, type: 3}
+      propertyPath: stages.Array.data[0].sceneName
+      value: Stage1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8721459258179069321, guid: 424988e4630570341ab0aaa6fec1ea6a, type: 3}
       propertyPath: stages.Array.data[1].enemyData
       value: 
       objectReference: {fileID: 11400000, guid: 2ed20134464d51e45911dabec9d61c3e, type: 2}
