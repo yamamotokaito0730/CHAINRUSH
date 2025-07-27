@@ -33,11 +33,14 @@ ___07:パーティクルの位置の調整、ボーンに合わせたパーテ�
 ___09:パーティクルの位置の再調整:matsushima
 ___13:パーティクル関連を変更しいらない部分を削除:matsushima
 ___16:蒸気のパーティクルに関する処理を削除:matsushima
+___25:効果数値が上がる度にオブジェクトへの当たり判定を広くする処理の追加 tooyama
 =====*/
 
 using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static Unity.Collections.AllocatorManager;
 
 public class Player : MonoBehaviour
 {
@@ -77,6 +80,11 @@ public class Player : MonoBehaviour
     // 読み取り専用プロパティを追加(ShotWebクラスで発射する糸の速度に乗算させる為)
     public float PlayerSpeed => m_fSpeed;
 
+    // 当たり判定関係
+    private CapsuleCollider playerAttackCollider; // 破壊オブジェクトとのコライダー
+    private float m_fBaseRadius = 1.0f; // カプセルコライダー(playerAttackCollider)の基準半径
+    private float[] m_fColliderSizeTable = { 1.0f, 1.6f, 1.9f, 2.5f }; // 当たり判定サイズテーブル(速度が上がるにつれて半径を広げる Max2.5倍)
+
     /*＞Start関数
     引数：なし
     ｘ
@@ -112,6 +120,10 @@ public class Player : MonoBehaviour
         {
             BGMManager.Instance.ChangeBGM("Stage2", 1.5f);
         }
+
+        // playerAttackCollider（子オブジェクト）に入ってるカプセルコライダーを取得
+        playerAttackCollider = transform.Find("PlayerAttackCollider").GetComponent<CapsuleCollider>();
+        m_fBaseRadius = playerAttackCollider.radius; // 最初の半径を基準として保存
     }
 
     /*＞FixedUpdate関数
@@ -241,7 +253,10 @@ public class Player : MonoBehaviour
             {
                 particleSystems[3].Stop();
             }
-        }        
+        }
+
+        this.ColliderScaleUp(); // 状態に応じてコライダーのサイズを上げる
+
         preState = PlayerState; // 状態の退避
     }
 
@@ -292,14 +307,22 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    /*＞衝突検知破壊関数
+      引数：Collider 衝突した相手のコライダー
+      ｘ
+      戻値：なし
+      ｘ
+      概要:衝突したオブジェクトとの当たり判定を取り
+           衝突した相手が敵だったらその敵を破壊する
+      */
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy"))
         {
-            Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+            Enemy enemy = other.gameObject.GetComponent<Enemy>();
             if (enemy != null)
             {
-                enemy.Die(mainCamera,this); // エネミー分割処理
+                enemy.Die(mainCamera, this); // エネミー分割処理
                 AddBoost(m_fBoost);
                 m_fRecordedBaseSpeed += m_fBoost;
                 AddGravity();
@@ -528,4 +551,48 @@ public class Player : MonoBehaviour
         Debug.Log(m_fSpeed);
         return m_fSpeed;
     }
+
+    /*＞状態を送る関数
+    引数：なし
+    ｘ
+    戻値：現在の破壊可能半径(playerAttackCollider)を表す数値
+    ｘ
+    概要:プレイヤーの現在の破壊オブジェクトに対するカプセルコライダー(playerAttackCollider)の半径を送る
+    */
+    public float GetRadius()
+    {
+        return playerAttackCollider.radius;
+    }
+
+    /*＞当たり判定変更関数
+    引数：なし
+    ｘ
+    戻値：なし
+    ｘ
+    概要:プレイヤーの破壊オブジェクトに対するカプセルコライダー(playerAttackCollider)の半径を変更する
+    */
+    private void ColliderScaleUp()
+    {
+        int nColliderTableIndex = 0; // 半径テーブル用インデックス
+        switch (PlayerState)
+        {
+            case E_State.Danger:
+                nColliderTableIndex = 0; // 1.0倍
+                break;
+            case E_State.Normal:
+                nColliderTableIndex = 0; // 1.0倍
+                break;
+            case E_State.TreeDestroy:
+                nColliderTableIndex = 1; // 1.6倍
+                break;
+            case E_State.HomeDestroy:
+                nColliderTableIndex = 2; // 1.9倍
+                break;
+            case E_State.Strongest:
+                nColliderTableIndex = 3; // 2.5倍
+                break;
+        }
+        playerAttackCollider.radius = m_fBaseRadius * m_fColliderSizeTable[nColliderTableIndex]; // 半径を拡大率で変更
+    }
+
 }
