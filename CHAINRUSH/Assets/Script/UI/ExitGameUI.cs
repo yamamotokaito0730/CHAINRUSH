@@ -13,6 +13,9 @@ Y25
 _M05
 __D  
 ___29:プログラム作成:mori
+_M07
+__D
+___27:UI非表示関数呼び出し追加:yamamoto
 
 =====*/
 
@@ -24,6 +27,7 @@ public class ExitGameUI : MonoBehaviour
     public GameObject exitPanel;
     public Button yesButton;
     public Button noButton;
+    [SerializeField, Tooltip("UIMng")] private UIManager m_UIMng;
 
     void Start()
     {
@@ -45,8 +49,8 @@ public class ExitGameUI : MonoBehaviour
             // カーソルを表示＆ロック解除
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
-
-            Time.timeScale = 0f;
+            if(m_UIMng!=null) m_UIMng.HideUI();   //UI非表示
+            Time.timeScale = 0.0f;
         }
     }
 
@@ -65,6 +69,7 @@ public class ExitGameUI : MonoBehaviour
         // カーソルを再び非表示＆ロック
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        if (m_UIMng != null) m_UIMng.ShowUI();   //UI再表示
 
         Time.timeScale = 1.0f;
     }
