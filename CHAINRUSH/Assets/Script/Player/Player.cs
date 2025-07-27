@@ -83,7 +83,7 @@ public class Player : MonoBehaviour
     // 当たり判定関係
     private CapsuleCollider playerAttackCollider; // 破壊オブジェクトとのコライダー
     private float m_fBaseRadius = 1.0f; // カプセルコライダー(playerAttackCollider)の基準半径
-    private float[] m_fColliderSizeTable = { 1.0f, 1.2f, 1.3f, 1.5f }; // 当たり判定サイズテーブル(速度が上がるにつれて半径を広げる)
+    private float[] m_fColliderSizeTable = { 1.0f, 1.6f, 1.9f, 2.5f }; // 当たり判定サイズテーブル(速度が上がるにつれて半径を広げる Max2.5倍)
 
     /*＞Start関数
     引数：なし
@@ -583,13 +583,13 @@ public class Player : MonoBehaviour
                 nColliderTableIndex = 0; // 1.0倍
                 break;
             case E_State.TreeDestroy:
-                nColliderTableIndex = 1; // 1.2倍
+                nColliderTableIndex = 1; // 1.6倍
                 break;
             case E_State.HomeDestroy:
-                nColliderTableIndex = 2; // 1.3倍
+                nColliderTableIndex = 2; // 1.9倍
                 break;
             case E_State.Strongest:
-                nColliderTableIndex = 3; // 1.5倍
+                nColliderTableIndex = 3; // 2.5倍
                 break;
         }
         playerAttackCollider.radius = m_fBaseRadius * m_fColliderSizeTable[nColliderTableIndex]; // 半径を拡大率で変更
