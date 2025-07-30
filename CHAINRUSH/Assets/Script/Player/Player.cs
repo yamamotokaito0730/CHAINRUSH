@@ -104,7 +104,7 @@ public class Player : MonoBehaviour
         Player_Animator = GetComponent<Animator>();
 
         // オーラエフェクトのマテリアルを取得
-        GameObject childObject = transform.GetChild(2).gameObject; // マテリアルが入っている子オブジェクトを取得
+        GameObject childObject = transform.Find("PlayerCharacter_006/Body").gameObject; // マテリアルが入っている子オブジェクトを取得 // マテリアルが入っている子オブジェクトを取得
         renderer = childObject.GetComponent<Renderer>();
 
         // パーティクルを取得
@@ -548,7 +548,6 @@ public class Player : MonoBehaviour
     */
     public float GetSpeed()
     {
-        Debug.Log(m_fSpeed);
         return m_fSpeed;
     }
 
