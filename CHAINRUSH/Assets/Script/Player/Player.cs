@@ -34,10 +34,12 @@ ___09:パーティクルの位置の再調整:matsushima
 ___13:パーティクル関連を変更しいらない部分を削除:matsushima
 ___16:蒸気のパーティクルに関する処理を削除:matsushima
 ___25:効果数値が上がる度にオブジェクトへの当たり判定を広くする処理の追加 tooyama
+___31:瀕死時に糸が巻き付いているエフェクトを追加:matsushima
 =====*/
 
 using System.Collections.Generic;
 using System.Data;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static Unity.Collections.AllocatorManager;
@@ -74,6 +76,7 @@ public class Player : MonoBehaviour
     private int m_nPrevSlopeAngleKey = int.MinValue; // 前フレームで適用された傾斜角（10度単位）
     private float m_fRecordedBaseSpeed = 0.0f; // 傾斜に入った瞬間の速度記録用
     private ParticleSystem[] particleSystems;  // パーティクルの配列
+    private GameObject thread;                 // 糸のパーティクル(個別取得)
 
     [SerializeField] private Animator Player_Animator;
 
@@ -116,6 +119,9 @@ public class Player : MonoBehaviour
             particles.Add(ps);
         }
         particleSystems = particles.ToArray();
+        thread = transform.Find(
+            "PlayerCharacter_006/arm/hips/spine/chest/chest_001/restraintEffect001").gameObject;    // 糸(直接取得)
+
         if (m_Stage == 2)
         {
             BGMManager.Instance.ChangeBGM("Stage2", 1.5f);
@@ -243,7 +249,6 @@ public class Player : MonoBehaviour
                 particleSystems[1].Play();
             }
 
-
             // 火花のエフェクト(最大速度の時のみ再生)
             if (PlayerState == E_State.Strongest)
             {
@@ -253,7 +258,16 @@ public class Player : MonoBehaviour
             {
                 particleSystems[3].Stop();
             }
-        }
+            // 糸のエフェクト(瀕死時に再生)
+            if (PlayerState == E_State.Danger)
+            {
+                thread.SetActive(true);
+            }
+            else
+            {
+                thread.SetActive(false);
+            }
+        }      
 
         this.ColliderScaleUp(); // 状態に応じてコライダーのサイズを上げる
 
