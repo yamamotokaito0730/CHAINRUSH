@@ -82,11 +82,11 @@ public class Result : MonoBehaviour
 
         float elapsed = Timer.elapsedTime;
 
-        if (GameManager.isGameOver)
-        {
-            rankIndex = 4; // D
-        }
-        else if (elapsed <= 300f)
+        //if (GameManager.isGameOver)
+        //{
+        //    rankIndex = 4; // D
+        //}
+        if (elapsed <= 300f)
         {
             rankIndex = 0; // S
         }

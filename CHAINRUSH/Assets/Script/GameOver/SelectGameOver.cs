@@ -86,18 +86,18 @@ public class SelectGameOver : MonoBehaviour
         BlinkSelectedButton();
 
         // 決定処理
-        //if (Input.GetKeyDown(KeyCode.Return) || (gamepad != null && gamepad.aButton.wasPressedThisFrame))
-        //{
-        //    if (selectedIndex == 0)
-        //    {
-        //        SceneManager.LoadScene("LoadScene");
-        //        Title.ToTitle = false;
-        //    }
-        //    else
-        //    {
-        //        SceneManager.LoadScene("Title");
-        //    }
-        //}
+        if (Input.GetKeyDown(KeyCode.Return) || (gamepad != null && gamepad.aButton.wasPressedThisFrame))
+        {
+            if (selectedIndex == 0)
+            {
+                SceneManager.LoadScene("LoadScene");
+                Title.ToTitle = false;
+            }
+            else
+            {
+                SceneManager.LoadScene("Title");
+            }
+        }
         // 前フレームのスティック入力保存
         prevStickRight = (stick.x < stickThreshold);
         prevStickLeft = (stick.x > -stickThreshold);
