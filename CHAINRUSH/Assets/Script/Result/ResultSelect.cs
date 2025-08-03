@@ -58,17 +58,18 @@ public class ResultSelect : MonoBehaviour
         menuButton.button.gameObject.SetActive(false);
 
         // GameManagerの状態によってボタンのラベルを変更
-        if (GameManager.isGameOver)
-        {
-            menuButtons[0].label.text = "Retry";
-        }
-        else
-        {
-            menuButtons[0].label.text = "NextStage";
-        }
+        //if (GameManager.isGameOver)
+        //{
+        //    menuButtons[0].label.text = "Retry";
+        //}
+        //else
+        //{
+        //    menuButtons[0].label.text = "NextStage";
+        //}
+        menuButtons[0].label.text = "NextStage";
 
         // 特定の条件のとき、次のステージボタンを無効化
-        if (GameManager.currentStageIndex == 1 && !GameManager.isGameOver)
+        if (GameManager.currentStageIndex == 1 /*&& !GameManager.isGameOver*/)
         {
             isAllClear = true;
         }

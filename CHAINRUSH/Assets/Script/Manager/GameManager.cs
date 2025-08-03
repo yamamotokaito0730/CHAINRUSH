@@ -134,8 +134,8 @@ public class GameManager : MonoBehaviour
                 Debug.Log("ゲームオーバー！");
                 isGameOver = true;
 
-                // リザルトへ遷移
-                SceneManager.LoadScene("Result");
+                // ゲームオーバーシーンへ遷移
+                SceneManager.LoadScene("GameOver");
             }
         }
     }
