@@ -12,11 +12,15 @@ Y25
 _M07
 __D  
 ___05:プログラム作成:mori
+_M08
+__D
+___03:パッドに対応:tooyama
 =====*/
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using TMPro;
 
 public class ResultSelect : MonoBehaviour
@@ -35,9 +39,16 @@ public class ResultSelect : MonoBehaviour
     private bool isMenuActive = false;
     private float timer = 0f;
     private bool isAllClear = false;
+    private Gamepad gamepad; // ゲームパッドを使えるように宣言
+
+    // アナログ入力用
+    private float stickThreshold = 0.5f; // スティックの傾き具合の閾値
+    private bool prevStickUp = false; // 前フレームでスティック上方向に倒していたかどうか
+    private bool prevStickDown = false; // 前フレームでスティック下方向に倒していたかどうか
 
     void Start()
     {
+
         isMenuActive = false;
         // 最初は非表示
         foreach (var mb in menuButtons)
@@ -61,10 +72,17 @@ public class ResultSelect : MonoBehaviour
         {
             isAllClear = true;
         }
+        gamepad = Gamepad.current;
     }
 
     void Update()
     {
+        gamepad = Gamepad.current; // 毎フレーム更新する
+
+        // 左スティックの上下入力検知
+        Vector2 stick = (gamepad != null) ? gamepad.leftStick.ReadValue() : Vector2.zero;
+        bool stickUp = (stick.y > stickThreshold) && !prevStickUp;
+        bool stickDown = (stick.y < -stickThreshold) && !prevStickDown;
         if (isAllClear)
         {
             // 6.0秒の待機
@@ -80,7 +98,7 @@ public class ResultSelect : MonoBehaviour
                 return;
             }
             // 決定処理
-            if (Input.GetKeyDown(KeyCode.Return))
+            if (Input.GetKeyDown(KeyCode.Return) || (gamepad != null && gamepad.aButton.wasPressedThisFrame))
             {
                 SceneManager.LoadScene("Title");
             }
@@ -99,12 +117,12 @@ public class ResultSelect : MonoBehaviour
             }
 
             // 入力処理
-            if (Input.GetKeyDown(KeyCode.DownArrow))
+            if (Input.GetKeyDown(KeyCode.DownArrow) || (gamepad != null && gamepad.dpad.down.wasPressedThisFrame) || stickDown)
             {
                 selectedIndex = Mathf.Max(0, selectedIndex - 1);
                 UpdateSelection();
             }
-            else if (Input.GetKeyDown(KeyCode.UpArrow))
+            else if (Input.GetKeyDown(KeyCode.UpArrow) || (gamepad != null && gamepad.dpad.up.wasPressedThisFrame) || stickUp)
             {
                 selectedIndex = Mathf.Min(menuButtons.Length - 1, selectedIndex + 1);
                 UpdateSelection();
@@ -114,7 +132,7 @@ public class ResultSelect : MonoBehaviour
             BlinkSelectedButton();
 
             // 決定処理
-            if (Input.GetKeyDown(KeyCode.Return))
+            if (Input.GetKeyDown(KeyCode.Return) || (gamepad != null && gamepad.aButton.wasPressedThisFrame))
             {
                 if (selectedIndex == 0)
                 {
@@ -127,6 +145,9 @@ public class ResultSelect : MonoBehaviour
                 }
             }
         }
+        // 前フレームのスティック入力保存
+        prevStickUp = (stick.y > stickThreshold);
+        prevStickDown = (stick.y < -stickThreshold);
     }
 
     void ActivateMenu()

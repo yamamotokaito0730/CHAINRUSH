@@ -1,7 +1,8 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using TMPro;
 
 public class SelectGameOver : MonoBehaviour
 {
@@ -18,6 +19,13 @@ public class SelectGameOver : MonoBehaviour
     private float blinkTime = 0f;
     private bool isMenuActive = false;
     private float timer = 0f;
+    private Gamepad gamepad; // ゲームパッドを使えるように宣言
+
+    // アナログ入力用
+    private float stickThreshold = 0.5f; // スティックの傾き具合の閾値
+    private bool prevStickLeft = false; // 前フレームでスティック左方向に倒していたかどうか
+    private bool prevStickRight = false; // 前フレームでスティック右方向に倒していたかどうか
+
 
     void Start()
     {
@@ -38,10 +46,18 @@ public class SelectGameOver : MonoBehaviour
         {
             menuButtons[0].label.text = "NextStage";
         }
+        gamepad = Gamepad.current;
     }
 
     void Update()
     {
+        gamepad = Gamepad.current; // 毎フレーム更新
+
+        // 左スティックの上下入力検知
+        Vector2 stick = (gamepad != null) ? gamepad.leftStick.ReadValue() : Vector2.zero;
+        bool stickRight = (stick.x < stickThreshold) && !prevStickRight;
+        bool stickLeft = (stick.x > -stickThreshold) && !prevStickLeft;
+
         // 6.0秒の待機
         if (!isMenuActive)
         {
@@ -55,12 +71,12 @@ public class SelectGameOver : MonoBehaviour
         }
 
         // 入力処理
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.RightArrow) || (gamepad != null && gamepad.dpad.right.wasPressedThisFrame) || stickRight)
         {
             selectedIndex = Mathf.Max(0, selectedIndex - 1);
             UpdateSelection();
         }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        else if (Input.GetKeyDown(KeyCode.LeftArrow) || (gamepad != null && gamepad.dpad.left.wasPressedThisFrame) || stickLeft)
         {
             selectedIndex = Mathf.Min(menuButtons.Length - 1, selectedIndex + 1);
             UpdateSelection();
@@ -70,7 +86,7 @@ public class SelectGameOver : MonoBehaviour
         BlinkSelectedButton();
 
         // 決定処理
-        //if (Input.GetKeyDown(KeyCode.Return))
+        //if (Input.GetKeyDown(KeyCode.Return) || (gamepad != null && gamepad.aButton.wasPressedThisFrame))
         //{
         //    if (selectedIndex == 0)
         //    {
@@ -82,6 +98,9 @@ public class SelectGameOver : MonoBehaviour
         //        SceneManager.LoadScene("Title");
         //    }
         //}
+        // 前フレームのスティック入力保存
+        prevStickRight = (stick.x < stickThreshold);
+        prevStickLeft = (stick.x > -stickThreshold);
     }
 
     void ActivateMenu()

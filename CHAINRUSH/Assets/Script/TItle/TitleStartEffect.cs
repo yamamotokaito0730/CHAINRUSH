@@ -13,10 +13,14 @@ Y25
 _M06
 __D  
 ___13:プログラム作成:mori
+_M08
+__D
+___03:パッドに対応:tooyama
 
 =====*/
 
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class TitleStartEffect : MonoBehaviour
@@ -24,10 +28,13 @@ public class TitleStartEffect : MonoBehaviour
     public Image startUI;
     public float duration = 0.5f; // 拡大＆透明化の時間
     private bool hasStarted = false;// 一度だけ反応するようにするフラグ
+    private Gamepad gamepad; // ゲームパッドを使えるように宣言
+
 
     void Update()
     {
-        if (!hasStarted && Input.GetKeyDown(KeyCode.Return)) // Enterキー
+        gamepad = Gamepad.current; // 毎フレーム更新
+        if (!hasStarted && (Input.GetKeyDown(KeyCode.Return) || (gamepad != null && gamepad.aButton.wasPressedThisFrame))) // Enterキー
         {
             hasStarted = true;
             StartCoroutine(PlayStartEffect());
