@@ -525,7 +525,7 @@ public class Player : MonoBehaviour
     */
     public float GetSpeed()
     {
-        Debug.Log(m_fSpeed);
+        //Debug.Log(m_fSpeed);
         return m_fSpeed;
     }
 }

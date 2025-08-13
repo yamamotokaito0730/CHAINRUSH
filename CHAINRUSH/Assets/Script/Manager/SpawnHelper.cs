@@ -34,7 +34,7 @@ public static class SpawnHelper
 
         return new Vector3(
             x + terrain.transform.position.x,
-            y,
+            y + 0.1f,
             z + terrain.transform.position.z
         );
     }

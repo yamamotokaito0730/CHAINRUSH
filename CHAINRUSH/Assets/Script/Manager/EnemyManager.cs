@@ -62,8 +62,6 @@ public class EnemyManager : MonoBehaviour
         }
 
         StartCoroutine(SpawnAndWait());
-        
-        //StartCoroutine(EnemySpawnAndWait());
     }
 
 
@@ -190,8 +188,10 @@ public class EnemyManager : MonoBehaviour
 
     IEnumerator SpawnAndWait()
     {
+        // ObjectPoolmanagerのInstanceが先に生成されるように遅延
         yield return new WaitUntil(() => ObjectPoolManager.Instance != null);
 
+        // 現在選択しているステージデータを取得
         currentStageData = GameManager.Instance.CurrentStageData;
         spawnTerrain = GameManager.Instance.CurrentTerrain;
 
@@ -211,32 +211,4 @@ public class EnemyManager : MonoBehaviour
         SpawnInitialEnemies();
 
     }
-
-
-    // IEnumerator EnemySpawnAndWait()
-    // {
-    //     yield return GameStop();
-    //     yield return new WaitForSeconds(5f);
-    //     yield return SpawnEnemies();
-    // }
-
-    //IEnumerator GameStop()
-    // {
-    //     // ゲームを一時停止しておく処理
-    //     yield return null;
-    // }
-
-    // IEnumerator SpawnEnemies()
-    // {
-    //     // ここで一時停止のフラグを下げる
-    //     // その後に敵を生成
-
-
-
-    //     yield return null;
-    // }
-
-
-
-
 }

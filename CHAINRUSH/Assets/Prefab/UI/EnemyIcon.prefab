@@ -88,6 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c20110d9a85a9644db1c4f9629e22f82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gamemanager: {fileID: 8721459258179069321, guid: 424988e4630570341ab0aaa6fec1ea6a, type: 3}
   minimapPanel: {fileID: 0}
   target: {fileID: 0}
   player: {fileID: 0}

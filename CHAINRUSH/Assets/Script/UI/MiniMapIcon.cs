@@ -56,13 +56,15 @@ public class MiniMapIcon : MonoBehaviour
         // 対象（敵）がnullなら、アイコンを非表示にしてオブジェクトごと破棄
         if (target == null || !target.gameObject.activeInHierarchy)
         {
+            Debug.Log(target);
+            Debug.Log("消すyo~");
             iconImage.enabled = false;
             Destroy(iconImage.gameObject);
             return;
         }
 
-        // プレイヤーと敵の距離を2D（XZ平面）で計算
-        Vector3 offset = target.position - player.position;
+            // プレイヤーと敵の距離を2D（XZ平面）で計算
+            Vector3 offset = target.position - player.position;
         Vector2 offset2D = new Vector2(offset.x, offset.z);
         float distance = offset2D.magnitude;
 

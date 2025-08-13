@@ -128,7 +128,7 @@ public class GameManager : MonoBehaviour
         if (!isGameOver && playerScript != null)
         {
             float speed = playerScript.GetSpeed();
-            Debug.Log(playerScript.GetSpeed());
+            //Debug.Log(playerScript.GetSpeed());
             if (speed <= 0f)
             {
                 Debug.Log("ゲームオーバー！");
