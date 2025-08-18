@@ -10,6 +10,9 @@ Y25
 _M05    
 __D
 ___28:プログラム作成
+_M07
+__D
+___27:プレイヤーとの当たり判定をOnOnCollisionEnterからOnTriggerEnterに変更:tooyama
 
 =====*/
 using System.Collections;
@@ -35,9 +38,9 @@ public class BreakWall : MonoBehaviour
         player = playerObject.GetComponent<Player>();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.name == "Player" && player.GetState() >= 4)    // プレイヤーの速度が4以上なら
+        if (other.gameObject.name == "PlayerAttackCollider" && player.GetState() >= 4)    // プレイヤーの速度が4以上なら
         {
             // モデルの情報を取得
             Vector3 modelPosition = m_breakModel.transform.position;    // 座標

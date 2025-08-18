@@ -18,6 +18,9 @@ __D
 ___09:スクリプトの
 ___17:スクリプトのエネミー生成部分を変更:banno
 ___20:ゲームオーバー処理を追加
+_M07
+__D
+___18:currentStageIndexをstaticに変更:mori
 =====*/
 using NUnit.Framework;
 using UnityEngine;
@@ -29,170 +32,126 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [System.Serializable]
-    public class EnemyType
-    {
-        [SerializeField, Tooltip("敵のタイプ")]public GameObject prefab;
-        //[Range(0f, 1f)]
-        [SerializeField, Tooltip("敵の出現割合")] public float spawnRate;
-    }
-
-    [Header("敵の種類と出現割合")]
-    [SerializeField, Tooltip("敵の種類と出現率を含むクラスのリスト")]public List<EnemyType> enemyTypes = new List<EnemyType>();
-
-    [Header("参照オブジェクト")]
-    [SerializeField, Tooltip("使用するマップ")]public Terrain terrain;
-    [SerializeField, Tooltip("ミニマップのUIパネル")]public RectTransform minimapPanelPrefab;
-    [SerializeField, Tooltip("プレイヤートランスフォーム")]public Transform player;
-    [SerializeField, Tooltip("ミニマップの敵UI")]public Image enemyIconPrefab;
-
-    [Header("敵の生成、管理で扱う変数")]
-    [SerializeField, Tooltip("ステージクリアのための目標数")]public int totalkillGoal = 40;
-    [SerializeField, Tooltip("ステージの最初に湧く敵の数")] public int initialMaxEnemies = 5;
-    [SerializeField, Tooltip("ステージに敵が湧く最大数")] public int maxEnemiesLimit = 8;
-    private int currentMaxEnemies;  // 現在の最大湧き数
-    private int totalKilled = 0;    // 倒した敵の合計数
+    public static GameManager Instance { get; private set; }
     public static bool IsGameActive { get; private set; } = false;  //ゲームの状態管理用
 
-    private MiniMapIcon miniMapIcon;
+    [System.Serializable]
+    public class StageConfig
+    {
+        public string sceneName;
+        public StageEnemyData enemyData;
+        public Terrain terrain;
+    }
 
-    private List<GameObject> activeEnemies = new List<GameObject>();
-    private List<Image> activeEnemyIcones = new List<Image>();
+    public List<StageConfig> stages;
+
+    public static int currentStageIndex = 1;
+
+    public StageEnemyData CurrentStageData => stages[currentStageIndex].enemyData;
+    public Terrain CurrentTerrain => stages[currentStageIndex].terrain;
 
     private Player playerScript; // Playerスクリプト保持用
+
     public static bool isGameOver = false; // ゲームオーバーフラグ（Resultシーン用にstatic）
 
+    [SerializeField, Tooltip("プレイヤートランスフォーム")] public Transform player;
 
+    private float leftShiftTime = -1f;
+    private float rightShiftTime = -1f;
+    private float kKeyTime = -1f;
+    private const float maxInterval = 1.0f;
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+    }
 
     void Start()
     {
-        currentMaxEnemies = initialMaxEnemies;
-        InvokeRepeating(nameof(SpawnEnemies), 1f, 1f);  // 1秒ごとにスポーンチェック
-
-        // MiniMapIconスクリプトに target と player を設定
-        miniMapIcon = enemyIconPrefab.GetComponent<MiniMapIcon>();
-        miniMapIcon.minimapPanel = minimapPanelPrefab;
-        miniMapIcon.player = player;
-
         // Playerスクリプトを取得
         playerScript = player.GetComponent<Player>();
 
-        // ゲームオーバーフラグリセット
+
+        // フラグリセット
         isGameOver = false;
+        IsGameActive = false;
     }
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            leftShiftTime = Time.time;
+        }
+
+        if (Input.GetKeyDown(KeyCode.RightShift))
+        {
+            rightShiftTime = Time.time;
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            kKeyTime = Time.time;
+        }
+
+        // すべてのキーが押され、かつ1秒以内に収まっていれば成立
+        if (leftShiftTime > 0 && rightShiftTime > 0 && kKeyTime > 0)
+        {
+            float max = Mathf.Max(leftShiftTime, rightShiftTime, kKeyTime);
+            float min = Mathf.Min(leftShiftTime, rightShiftTime, kKeyTime);
+
+            if ((max - min) <= maxInterval)
+            {
+                // リザルトへ遷移
+                SceneManager.LoadScene("Result");
+
+                // タイムリセット（再発動防止）
+                leftShiftTime = -1f;
+                rightShiftTime = -1f;
+                kKeyTime = -1f;
+            }
+        }
+
+        // プレイヤーオブジェクトのplayerスクリプトを取得
+        playerScript = GameObject.FindWithTag("Player")?.GetComponent<Player>();
 
         // Playerのスピード監視
         if (!isGameOver && playerScript != null)
         {
             float speed = playerScript.GetSpeed();
+            Debug.Log(playerScript.GetSpeed());
             if (speed <= 0f)
             {
                 Debug.Log("ゲームオーバー！");
                 isGameOver = true;
 
-                // リザルトへ遷移
-                SceneManager.LoadScene("Result");
+                // ゲームオーバーシーンへ遷移
+                SceneManager.LoadScene("GameOver");
             }
         }
     }
 
-    void SpawnEnemies()
+    public void LoadStage(int index)
     {
-        if(totalKilled >= totalkillGoal)
-        {
-            Debug.Log("ステージクリア");
-            CancelInvoke(nameof(SpawnEnemies));
-
-            // クリア時は false
-            isGameOver = false;
-            // リザルトシーンへ遷移
-            SceneManager.LoadScene("Result");
-
-            return;
-        }
-
-        while(activeEnemies.Count < currentMaxEnemies)
-        {
-            Vector3 spawnPos = GetRandomPositionOnTerrain();
-            GameObject prefab = ChoseEnemyPrefab(); // 割合に応じた敵を生成する
-            GameObject enemy = ObjectPoolManager.Instance.SpawnFromPool(prefab.name, spawnPos, Quaternion.identity);
-            Image enemyIcon = Instantiate(enemyIconPrefab, spawnPos, Quaternion.identity);
-            activeEnemies.Add(enemy);
-            activeEnemyIcones.Add(enemyIcon);
-            enemyIcon.transform.SetParent(minimapPanelPrefab.transform, false);
-            miniMapIcon.target = enemy.transform;
-
-            // Enemyが倒されたときに通知するスクリプトをアタッチ
-            Enemy enemyScript = enemy.GetComponent<Enemy>();
-            if (enemyScript != null)
-                enemyScript.gamemanager = this;
-        }
-
-
+        currentStageIndex = index;
+        SceneManager.LoadScene("Stage" + (index + 1));
     }
 
-    public void OnEnemyKilled(GameObject enemy)
+    public void OnAllEnemiesDefeated()
     {
-        totalKilled++;
-        activeEnemies.Remove(enemy);
-
-        // 最大出現数を増やす
-        if(currentMaxEnemies < maxEnemiesLimit)
-        {
-            currentMaxEnemies++;
-        }
-
-        Debug.Log($"敵撃破: {totalKilled}/{totalkillGoal} (最大出現数: {currentMaxEnemies})");
-    }
-
-    public void DestroyEnemyIcon(Image enemyIcon)
-    {
-        activeEnemyIcones.Remove(enemyIcon);
-    }
-
-    Vector3 GetRandomPositionOnTerrain()
-    {
-        TerrainData data = terrain.terrainData;
-        Vector3 terrainPos = terrain.transform.position;
-
-        float x = Random.Range(0f, data.size.x);
-        float z = Random.Range(0f, data.size.z);
-        float y = terrain.SampleHeight(new Vector3(x, 0, z)) + terrainPos.y;
-
-
-        return new Vector3(x + terrainPos.x, y, z + terrainPos.z);
-    }
-
-    GameObject ChoseEnemyPrefab()
-    {
-        float total = 0f;
-        foreach (var e in enemyTypes)
-        {
-            total += e.spawnRate;
-        }
-
-        float rand = Random.Range(0f, 1f);
-        float accum = 0f;
-        foreach (var e in enemyTypes)
-        {
-            accum += e.spawnRate;
-            if (rand <= accum)
-            {
-                return e.prefab;
-            }
-        }
-
-        // 設定ミスまたは、上の処理に入らなかった場合に返す
-        return enemyTypes[0].prefab;
-    }
-
-    // 敵を倒した合計数を取得してくる
-    public int GetTotalKilled()
-    {
-        return totalKilled;
+        Debug.Log("全ての敵を倒しました！");
+        // リザルトや次のシーンへの遷移をここに
+        ObjectPoolManager.Instance.ReturnAllToPool();
+        SceneManager.LoadScene("Result");
     }
 
     public void StartGame()
@@ -203,5 +162,27 @@ public class GameManager : MonoBehaviour
     public void StopGameTemporarily()
     {
         IsGameActive = false;
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "Stage1" || scene.name == "Stage2" || scene.name == "Stage3")
+        {
+            // Playerスクリプトを取得
+            playerScript = player.GetComponent<Player>();
+
+            isGameOver = false;
+            IsGameActive = false;
+        }
     }
 }

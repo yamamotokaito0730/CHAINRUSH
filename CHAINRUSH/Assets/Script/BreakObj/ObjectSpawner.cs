@@ -39,6 +39,7 @@ public class ObjectSpawner : MonoBehaviour
     private TerrainData    m_terrainData;        // Terrainデータ格納
     private Vector3        m_terrainPos;         // Terrainの座標
     private TreeInstance[] m_originalTree;       // 実行終了後に実行前のTreesに戻す
+    private Player player;                  // プレイヤークラス
 
     void Start()
     {
@@ -46,12 +47,21 @@ public class ObjectSpawner : MonoBehaviour
         m_terrainPos = m_terrain.transform.position;     // Terrainの座標
         m_terrainData = m_terrain.terrainData;           // Terrainのデータ
         m_originalTree = m_terrainData.treeInstances;    // 初期の木のデータを保存
+
+        // プレイヤーに入っているスクリプトを参照
+        GameObject playerObject = GameObject.FindWithTag("Player");
+        player = playerObject.GetComponent<Player>();
     }
 
     void Update()
     {
         // プレイヤー座標更新
         m_playerPos = m_player.position;
+
+        // DestroyRangeの大きさに合わせてスポーン半径を変更
+        float destroyRangeRadius = player.GetRadius();
+        m_fSpawnRadius = destroyRangeRadius * 1.2f;
+
 
         // GameObject配置
         foreach (TreeInstance tree in m_terrainData.treeInstances)
@@ -60,7 +70,7 @@ public class ObjectSpawner : MonoBehaviour
             Vector3 worldPos = Vector3.Scale(tree.position, m_terrainData.size) + m_terrainPos;
 
             // 一定距離内に入ったらGameObjectとしてのプレハブを配置
-            if (Vector3.Distance(m_playerPos, worldPos) < m_fSpawnRadius && !IsAlreadySpawned(worldPos, 0.5f))
+            if (Vector3.Distance(m_playerPos, worldPos) < m_fSpawnRadius && !IsAlreadySpawned(worldPos, destroyRangeRadius * 1.2f))
             {
                 int index = tree.prototypeIndex;
                 if (index >= 0 && index < m_treePrefab.Length)

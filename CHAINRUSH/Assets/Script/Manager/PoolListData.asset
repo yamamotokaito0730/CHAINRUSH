@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a0c11b0922729f40884ba20dbda32df, type: 3}
+  m_Name: PoolListData
+  m_EditorClassIdentifier: 
+  pools:
+  - tag: spider_Nomove
+    prefab: {fileID: 7381330029987104643, guid: bc810944bf880894e9775bd2ed3c5b97, type: 3}
+    size: 20
+  - tag: Conifer
+    prefab: {fileID: 1620417488002718097, guid: cce4d8667f2436a479759f07084d8ff4, type: 3}
+    size: 15
+  - tag: Rock_C_01
+    prefab: {fileID: 1030678204986712962, guid: 398b156fac7c6f44db09e9ad046c24dd, type: 3}
+    size: 12
+  - tag: Tree_Upper
+    prefab: {fileID: 2957882097944700477, guid: 5b338e1a92b400843a3506bba63d61e3, type: 3}
+    size: 12
+  - tag: Tree_Stump
+    prefab: {fileID: 6507582229949200936, guid: 541e0331a4294a943ac27a10db793f16, type: 3}
+    size: 12
+  - tag: Rock_Disconnect
+    prefab: {fileID: 3637796947403494840, guid: bb0b92aba141ecd40ba494765675e6e6, type: 3}
+    size: 15
+  - tag: PS_TreeBreak_Leaf
+    prefab: {fileID: 1494436239441686450, guid: ce02af8c558b65c44b7e1f96f54d3b02, type: 3}
+    size: 12
+  - tag: PS_TreeBreak_Branch
+    prefab: {fileID: 2241668035170208254, guid: 9d3221f1a22aea24da46f7b229d3ee53, type: 3}
+    size: 12
+  - tag: PS_RockBreak
+    prefab: {fileID: 4217102013951305458, guid: 72b22529f0cfa7c42beaa087be5098ad, type: 3}
+    size: 12
+  - tag: Spider_002_SetUp
+    prefab: {fileID: 6889749330399375372, guid: 22b6b6758c2a990429346dbea113ee78, type: 3}
+    size: 12

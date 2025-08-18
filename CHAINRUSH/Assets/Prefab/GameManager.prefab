@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7174933689435441959
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6895437126918975204}
+  - component: {fileID: 8721459258179069321}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6895437126918975204
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7174933689435441959}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -273.39874, y: -548.5231, z: 530.533}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8721459258179069321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7174933689435441959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53699b3ff8a4b0549b378860bff89fb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stages:
+  - sceneName: Stage1
+    enemyData: {fileID: 11400000, guid: 08c6e8df8d620d14ca0e0aa83bd87cf5, type: 2}
+    terrain: {fileID: 7785133577102437096, guid: 64a2e180d68272b41aee0ad986606099, type: 3}
+  - sceneName: Stage2
+    enemyData: {fileID: 11400000, guid: 2ed20134464d51e45911dabec9d61c3e, type: 2}
+    terrain: {fileID: 8314495780674226459, guid: bffe292d703fd854e966f2d1b02c7457, type: 3}
+  - sceneName: Stage3
+    enemyData: {fileID: 11400000, guid: 2d66202f85f3b764dac689f0b32c4693, type: 2}
+    terrain: {fileID: 3672248673950372102, guid: 33cc074462fa70d4887243024b606e86, type: 3}
+  player: {fileID: 3714367657720686284, guid: 97b3977dec8d1a843bc0a4e319a87381, type: 3}

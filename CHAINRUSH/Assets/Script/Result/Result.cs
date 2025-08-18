@@ -28,7 +28,15 @@ public class Result : MonoBehaviour
 
     public TextMeshProUGUI timeText;     // タイム表示用テキスト
 
+    [Header("デバッグ用ランク")]
+    [Header("0=S, 1=A, 2=B, 3=C, 4=D")]
+    public int debugRank;
+    public bool debugMode;
+
+
     float timer = 0f;                    // 表示時間管理
+
+    private string[] resultBGM = { "S", "A,B,C", "A,B,C", "A,B,C", "D" };
 
     // スライドイン用
     Vector3 resultStartPos;
@@ -74,11 +82,11 @@ public class Result : MonoBehaviour
 
         float elapsed = Timer.elapsedTime;
 
-        if (GameManager.isGameOver)
-        {
-            rankIndex = 4; // D
-        }
-        else if (elapsed <= 300f)
+        //if (GameManager.isGameOver)
+        //{
+        //    rankIndex = 4; // D
+        //}
+        if (elapsed <= 300f)
         {
             rankIndex = 0; // S
         }
@@ -95,8 +103,16 @@ public class Result : MonoBehaviour
             rankIndex = 3; // C
         }
 
+        if(debugMode)
+        {
+            rankIndex = debugRank;
+        }
+
         // === 対象ランクだけ表示 ===
         rankGroups[rankIndex].alpha = 0.0f;
+
+        //BGM再生
+        BGMManager.Instance.Play(resultBGM[rankIndex]);
 
         // 開始スケール（大きく）
         rankTargetScale = rankGroups[rankIndex].transform.localScale;

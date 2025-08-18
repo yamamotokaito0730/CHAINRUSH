@@ -23,31 +23,44 @@ using UnityEngine.SceneManagement;
 public class LoadScene : MonoBehaviour
 {
     [SerializeField] private string sceneNameToLoad;  // 読み込むゲームシーン名
-    [SerializeField] private float minLoadingTime;  // 最低表示時間（秒）
+    private float timer = 0f;
+    private bool hasLoaded = false;
 
     void Start()
     {
-        StartCoroutine(LoadSceneAsync());
+        timer = 0f;
+        hasLoaded = false;
+
+        if(Title.ToTitle)
+        {
+            GameManager.currentStageIndex = 0;
+            sceneNameToLoad = "Stage1";
+        }
+        else
+        {
+            if (GameManager.isGameOver)
+            {
+                sceneNameToLoad = "Stage" + (GameManager.currentStageIndex);
+            }
+            else
+            {
+                GameManager.currentStageIndex++;
+                sceneNameToLoad = "Stage" + (GameManager.currentStageIndex);
+            }
+        }
     }
 
-    private IEnumerator LoadSceneAsync()
+    void Update()
     {
-        float timer = 0f;
-
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneNameToLoad);
-        asyncLoad.allowSceneActivation = false;
-
-        while (!asyncLoad.isDone)
+        if (!hasLoaded)
         {
             timer += Time.deltaTime;
 
-            // 進捗が90％以上で、かつ最低時間を経過したら切り替え可能にする
-            if (asyncLoad.progress >= 0.9f && timer >= minLoadingTime)
+            if (timer >= 2f)
             {
-                asyncLoad.allowSceneActivation = true;
+                GameManager.Instance.LoadStage(GameManager.currentStageIndex);
+                hasLoaded = true;
             }
-
-            yield return null;
         }
     }
 }

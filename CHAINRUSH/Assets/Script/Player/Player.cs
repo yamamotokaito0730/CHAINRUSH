@@ -29,11 +29,20 @@ ___06:坂をスムーズに昇り降り出来る処理の追加
 ___25:オーラエフェクトに関する処理を追加:matsushima
 _M07
 ___01:プレイヤーのパーティクルの再生、位置をずらす処理の追加:matsushima
+___07:パーティクルの位置の調整、ボーンに合わせたパーティクルの移動(実装中のためコメントアウト):matsushima
+___09:パーティクルの位置の再調整:matsushima
+___13:パーティクル関連を変更しいらない部分を削除:matsushima
+___16:蒸気のパーティクルに関する処理を削除:matsushima
+___25:効果数値が上がる度にオブジェクトへの当たり判定を広くする処理の追加 tooyama
+___31:瀕死時に糸が巻き付いているエフェクトを追加:matsushima
 =====*/
 
 using System.Collections.Generic;
 using System.Data;
+using System.Threading;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static Unity.Collections.AllocatorManager;
 
 public class Player : MonoBehaviour
 {
@@ -54,7 +63,7 @@ public class Player : MonoBehaviour
     private E_State PlayerState;
     private int[] thresholds = { 4, 17, 35, 44, 50 };
     private E_State preState = E_State.Normal;  // プレイヤーの状態退避
-
+    [SerializeField, Tooltip("ステージ")] private int m_Stage = 0;
     [Header("重力関係")]
     [SerializeField, Tooltip("ベースの重力")] private float m_fBaseGravity = 9.81f;
 
@@ -67,11 +76,17 @@ public class Player : MonoBehaviour
     private int m_nPrevSlopeAngleKey = int.MinValue; // 前フレームで適用された傾斜角（10度単位）
     private float m_fRecordedBaseSpeed = 0.0f; // 傾斜に入った瞬間の速度記録用
     private ParticleSystem[] particleSystems;  // パーティクルの配列
+    private GameObject thread;                 // 糸のパーティクル(個別取得)
 
     [SerializeField] private Animator Player_Animator;
 
     // 読み取り専用プロパティを追加(ShotWebクラスで発射する糸の速度に乗算させる為)
     public float PlayerSpeed => m_fSpeed;
+
+    // 当たり判定関係
+    private CapsuleCollider playerAttackCollider; // 破壊オブジェクトとのコライダー
+    private float m_fBaseRadius = 1.0f; // カプセルコライダー(playerAttackCollider)の基準半径
+    private float[] m_fColliderSizeTable = { 1.0f, 1.6f, 1.9f, 2.5f }; // 当たり判定サイズテーブル(速度が上がるにつれて半径を広げる Max2.5倍)
 
     /*＞Start関数
     引数：なし
@@ -92,7 +107,7 @@ public class Player : MonoBehaviour
         Player_Animator = GetComponent<Animator>();
 
         // オーラエフェクトのマテリアルを取得
-        GameObject childObject = transform.GetChild(2).gameObject; // マテリアルが入っている子オブジェクトを取得
+        GameObject childObject = transform.Find("PlayerCharacter_006/Body").gameObject; // マテリアルが入っている子オブジェクトを取得 // マテリアルが入っている子オブジェクトを取得
         renderer = childObject.GetComponent<Renderer>();
 
         // パーティクルを取得
@@ -104,13 +119,17 @@ public class Player : MonoBehaviour
             particles.Add(ps);
         }
         particleSystems = particles.ToArray();
+        thread = transform.Find(
+            "PlayerCharacter_006/arm/hips/spine/chest/chest_001/restraintEffect001").gameObject;    // 糸(直接取得)
 
-        //// パーティクルを特定のボーンに追従させる
-        //for (int i = 0; i < particleSystems.Length; i++)
-        //{
-        //    particleSystems[i].transform.localPosition = transform.Find("arm/hips").localPosition;
-        //}
-        //particleSystems[0].transform.localPosition -= new Vector3(0.0f, 0.3f, 0.5f);
+        if (m_Stage == 2)
+        {
+            BGMManager.Instance.ChangeBGM("Stage2", 1.5f);
+        }
+
+        // playerAttackCollider（子オブジェクト）に入ってるカプセルコライダーを取得
+        playerAttackCollider = transform.Find("PlayerAttackCollider").GetComponent<CapsuleCollider>();
+        m_fBaseRadius = playerAttackCollider.radius; // 最初の半径を基準として保存
     }
 
     /*＞FixedUpdate関数
@@ -224,62 +243,36 @@ public class Player : MonoBehaviour
         //---パーティクル関連
         if (preState != PlayerState)
         {
-            // 炎,ブースターのエフェクト(アニメーションによって位置を変える)
-            if (PlayerState >= E_State.HomeDestroy)
-            {
-                particleSystems[0].transform.localPosition = new Vector3(0.0f, 0.2f, 0.8f); // 炎
-                particleSystems[1].transform.localPosition = new Vector3(0.0f, 0.3f, 0.3f); // ブースター
-            }
-            else
-            {
-                particleSystems[0].transform.localPosition = new Vector3(0.0f, 0.3f, 0.2f);
-                particleSystems[1].transform.localPosition = new Vector3(0.0f, 0.3f, -0.15f);
-            }
-
             // 加速時のエフェクト(速度が次の状態まで上昇した時だけ再生する)
             if (preState < PlayerState)
             {
-                particleSystems[3].Play();
-            }
-
-            // 蒸気のエフェクト(アニメーションによって位置を変える)
-
-            switch (PlayerState)
-            {
-                case E_State.Normal:
-                    particleSystems[4].transform.localPosition = new Vector3(0.09f, 1.497f, -0.09f); break;
-                case E_State.TreeDestroy:
-                    particleSystems[4].transform.localPosition = new Vector3(-0.031f, 2.841f, -0.91f); break;
-                case E_State.HomeDestroy:
-                    particleSystems[4].transform.localPosition = new Vector3(0.075f, 1.99f, 0.605f); break;
-                case E_State.Strongest:
-                    particleSystems[4].transform.localPosition = new Vector3(0.117f, 1.043f, 0.48f); break;
+                particleSystems[1].Play();
             }
 
             // 火花のエフェクト(最大速度の時のみ再生)
             if (PlayerState == E_State.Strongest)
             {
-                particleSystems[5].Play();
+                particleSystems[3].Play();
             }
             else
             {
-                particleSystems[5].Stop();
+                particleSystems[3].Stop();
             }
-        }        
+            // 糸のエフェクト(瀕死時に再生)
+            if (PlayerState == E_State.Danger)
+            {
+                thread.SetActive(true);
+            }
+            else
+            {
+                thread.SetActive(false);
+            }
+        }      
+
+        this.ColliderScaleUp(); // 状態に応じてコライダーのサイズを上げる
+
         preState = PlayerState; // 状態の退避
     }
-
-    //void LateUpdate() // 一旦保留
-    //{
-    //    // パーティクルを特定のボーンに追従させる
-    //    for (int i = 0; i < particleSystems.Length; i++)
-    //    {
-    //        //Quaternion rotateOffset = Quaternion.Euler(0.0f, 90.0f, 101.276f);
-    //        particleSystems[i].transform.localPosition = transform.Find("arm/hips").localPosition - new Vector3(0.0f, 1.3f, -0.2f);
-    //        //particleSystems[i].transform.rotation = transform.Find("arm/hips").rotation * Quaternion.Inverse(rotateOffset);
-    //    }
-
-    //}
 
     /*＞Update関数
     引数：なし
@@ -328,14 +321,22 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    /*＞衝突検知破壊関数
+      引数：Collider 衝突した相手のコライダー
+      ｘ
+      戻値：なし
+      ｘ
+      概要:衝突したオブジェクトとの当たり判定を取り
+           衝突した相手が敵だったらその敵を破壊する
+      */
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy"))
         {
-            Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+            Enemy enemy = other.gameObject.GetComponent<Enemy>();
             if (enemy != null)
             {
-                enemy.Die(mainCamera,this); // エネミー分割処理
+                enemy.Die(mainCamera, this); // エネミー分割処理
                 AddBoost(m_fBoost);
                 m_fRecordedBaseSpeed += m_fBoost;
                 AddGravity();
@@ -563,4 +564,48 @@ public class Player : MonoBehaviour
     {
         return m_fSpeed;
     }
+
+    /*＞状態を送る関数
+    引数：なし
+    ｘ
+    戻値：現在の破壊可能半径(playerAttackCollider)を表す数値
+    ｘ
+    概要:プレイヤーの現在の破壊オブジェクトに対するカプセルコライダー(playerAttackCollider)の半径を送る
+    */
+    public float GetRadius()
+    {
+        return playerAttackCollider.radius;
+    }
+
+    /*＞当たり判定変更関数
+    引数：なし
+    ｘ
+    戻値：なし
+    ｘ
+    概要:プレイヤーの破壊オブジェクトに対するカプセルコライダー(playerAttackCollider)の半径を変更する
+    */
+    private void ColliderScaleUp()
+    {
+        int nColliderTableIndex = 0; // 半径テーブル用インデックス
+        switch (PlayerState)
+        {
+            case E_State.Danger:
+                nColliderTableIndex = 0; // 1.0倍
+                break;
+            case E_State.Normal:
+                nColliderTableIndex = 0; // 1.0倍
+                break;
+            case E_State.TreeDestroy:
+                nColliderTableIndex = 1; // 1.6倍
+                break;
+            case E_State.HomeDestroy:
+                nColliderTableIndex = 2; // 1.9倍
+                break;
+            case E_State.Strongest:
+                nColliderTableIndex = 3; // 2.5倍
+                break;
+        }
+        playerAttackCollider.radius = m_fBaseRadius * m_fColliderSizeTable[nColliderTableIndex]; // 半径を拡大率で変更
+    }
+
 }
