@@ -22,9 +22,13 @@ ___16:カメラ移動をマウス操作に変更、Rキーで初期位置にリセット:mori
 _M06
 __D
 ___15:カメラがTerrainやGameObjectの裏面を映さないように修正:matsushima
+_M08
+__D
+___16:pad操作に対応:tooyama
 
 =====*/
 using UnityEngine;
+using UnityEngine.InputSystem;
 using static UnityEngine.GraphicsBuffer;
 
 public class Camera : MonoBehaviour
@@ -50,6 +54,8 @@ public class Camera : MonoBehaviour
     private Vector3 m_ShakeOffset = Vector3.zero;
     private float m_ShakeDuration = 0f;
     private float m_ShakeMagnitude = 0.1f;
+
+    private Gamepad gamepad; // ゲームパッドを使えるように宣言
 
     /*＞Start関数
     引数：なし
@@ -86,9 +92,25 @@ public class Camera : MonoBehaviour
         //ゲーム開始前は停止
         if (!GameManager.IsGameActive) return;
 
-        // マウス入力によるカメラの回転
-        float mouseX = Input.GetAxis("Mouse X") * m_RotationSpeed * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * m_RotationSpeed * Time.deltaTime;
+        gamepad = Gamepad.current;  // 毎フレーム更新
+
+        float mouseX = 0f;
+        float mouseY = 0f;
+
+        // コントローラーが接続されている場合
+        if (gamepad != null)
+        {
+            Vector2 rightStick = gamepad.rightStick.ReadValue();
+            mouseX = rightStick.x * m_RotationSpeed * Time.deltaTime;
+            mouseY = rightStick.y * m_RotationSpeed * Time.deltaTime;
+        }
+        // コントローラー未接続時のみキーボード・マウス入力を有効化
+        else
+        {
+            // マウス入力によるカメラの回転
+            mouseX = Input.GetAxis("Mouse X") * m_RotationSpeed * Time.deltaTime;
+            mouseY = Input.GetAxis("Mouse Y") * m_RotationSpeed * Time.deltaTime;
+        }
 
         // マウス入力にスパイク制限をかける
         mouseX = Mathf.Clamp(mouseX, -5.0f, 5.0f);
@@ -101,7 +123,7 @@ public class Camera : MonoBehaviour
 
 
         // Rキーで初期のオフセットと角度にリセット（プレイヤーの向きに対応）
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) || (gamepad != null && gamepad.rightStickButton.wasPressedThisFrame))
         {
             ResetCamera();
         }
@@ -157,7 +179,7 @@ public class Camera : MonoBehaviour
         m_ShakeDuration = duration;
         m_ShakeMagnitude = magnitude;
     }
-    
+
     public void ResetCamera()
     {
         // カメラのYawもプレイヤーの向きに合わせてリセット

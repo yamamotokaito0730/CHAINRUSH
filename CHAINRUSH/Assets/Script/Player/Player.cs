@@ -35,12 +35,15 @@ ___13:パーティクル関連を変更しいらない部分を削除:matsushima
 ___16:蒸気のパーティクルに関する処理を削除:matsushima
 ___25:効果数値が上がる度にオブジェクトへの当たり判定を広くする処理の追加 tooyama
 ___31:瀕死時に糸が巻き付いているエフェクトを追加:matsushima
+_M08
+___16:pad操作に対応:tooyama
 =====*/
 
 using System.Collections.Generic;
 using System.Data;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using static Unity.Collections.AllocatorManager;
 
@@ -48,7 +51,7 @@ public class Player : MonoBehaviour
 {
     public enum E_State
     {
-        Danger=1,
+        Danger = 1,
         Normal,
         TreeDestroy,
         HomeDestroy,
@@ -88,6 +91,7 @@ public class Player : MonoBehaviour
     private float m_fBaseRadius = 1.0f; // カプセルコライダー(playerAttackCollider)の基準半径
     private float[] m_fColliderSizeTable = { 1.0f, 1.6f, 1.9f, 2.5f }; // 当たり判定サイズテーブル(速度が上がるにつれて半径を広げる Max2.5倍)
 
+    private Gamepad gamepad; // ゲームパッドを使えるように宣言
     /*＞Start関数
     引数：なし
     ｘ
@@ -99,10 +103,10 @@ public class Player : MonoBehaviour
     {
         mainCamera = UnityEngine.Camera.main;
         rb = GetComponent<Rigidbody>();  // Rigidbodyの取得
-                                         
+
         m_fRecordedBaseSpeed = m_fSpeed; // 傾斜に入った瞬間の速度記録と初期速度を同期させる
 
-        PlayerState=E_State.Normal;
+        PlayerState = E_State.Normal;
 
         Player_Animator = GetComponent<Animator>();
 
@@ -130,6 +134,8 @@ public class Player : MonoBehaviour
         // playerAttackCollider（子オブジェクト）に入ってるカプセルコライダーを取得
         playerAttackCollider = transform.Find("PlayerAttackCollider").GetComponent<CapsuleCollider>();
         m_fBaseRadius = playerAttackCollider.radius; // 最初の半径を基準として保存
+
+        gamepad = Gamepad.current;
     }
 
     /*＞FixedUpdate関数
@@ -145,7 +151,7 @@ public class Player : MonoBehaviour
         if (!GameManager.IsGameActive)
         {
             //todo
-           //アニメーション関係書くと思う
+            //アニメーション関係書くと思う
 
             return;
         }
@@ -267,7 +273,7 @@ public class Player : MonoBehaviour
             {
                 thread.SetActive(false);
             }
-        }      
+        }
 
         this.ColliderScaleUp(); // 状態に応じてコライダーのサイズを上げる
 
@@ -311,14 +317,23 @@ public class Player : MonoBehaviour
 
         float turn = 0.0f;
 
-        if (Input.GetKey(KeyCode.A)) turn = -1.0f; // 左回転
-        if (Input.GetKey(KeyCode.D)) turn = 1.0f;  // 右回転
+        if (gamepad != null)
+        {
+            Vector2 stick = gamepad.leftStick.ReadValue();
+            turn = stick.x; // スティックの左右だけ使う
+        }
+        else
+        {
+            if (Input.GetKey(KeyCode.A)) turn = -1.0f; // 左回転
+            if (Input.GetKey(KeyCode.D)) turn = 1.0f;  // 右回転
+        }
 
         if (turn != 0.0f)
         {
             // Y軸を中心に回転させる
             transform.Rotate(0.0f, turn * rotateSpeed * Time.deltaTime, 0.0f);
         }
+        gamepad = Gamepad.current; // ゲームパッドの入力を更新
     }
 
     /*＞衝突検知破壊関数
@@ -388,7 +403,7 @@ public class Player : MonoBehaviour
     */
     private void StateCheck()
     {
-        for (int i = 0; i<thresholds.Length; i++)
+        for (int i = 0; i < thresholds.Length; i++)
         {
             if (m_fSpeed <= thresholds[i])
             {
@@ -397,17 +412,17 @@ public class Player : MonoBehaviour
             }
         }
     }
-  /*＞重力増加関数
-  引数：なし
-  ｘ
-  戻値：なし
-  ｘ
-  概要:加速度増加に合わせて重力を増加させる
-  */
+    /*＞重力増加関数
+    引数：なし
+    ｘ
+    戻値：なし
+    ｘ
+    概要:加速度増加に合わせて重力を増加させる
+    */
     private void AddGravity()
     {
         m_fBaseGravity += m_fAddGravity; // 重力の増加
-    //    m_fBaseGravity = Mathf.Min(m_fBaseGravity, 40.0f); // 上限(40.0f)を超えないように設定
+                                         //    m_fBaseGravity = Mathf.Min(m_fBaseGravity, 40.0f); // 上限(40.0f)を超えないように設定
     }
 
     public void DebugMode(DebugMode _debug)
@@ -514,7 +529,7 @@ public class Player : MonoBehaviour
         }
 
         // --- アニメーション切り替え ---
-        if (m_fSpeed < thresholds[0] + 1) 
+        if (m_fSpeed < thresholds[0] + 1)
         {
             Player_Animator.SetInteger("AnimNo", 0);
             return;
@@ -535,7 +550,7 @@ public class Player : MonoBehaviour
                     }
                     return;
                 }
-                return ;
+                return;
             }
         }
         return;
