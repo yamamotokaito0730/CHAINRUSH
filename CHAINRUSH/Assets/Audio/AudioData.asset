@@ -20,7 +20,7 @@ MonoBehaviour:
     minRange: 10
   - name: Stage1
     audioClip: {fileID: 8300000, guid: 263f7d85a249af34e96a8ebe935dcdcd, type: 3}
-    volume: 0.5
+    volume: 0.6
     maxRange: 100
     minRange: 10
   - name: D
@@ -41,6 +41,11 @@ MonoBehaviour:
   - name: Stage2
     audioClip: {fileID: 8300000, guid: fd7ea21d58c40354286d933233e06f2b, type: 3}
     volume: 0.8
+    maxRange: 100
+    minRange: 10
+  - name: Stage3
+    audioClip: {fileID: 8300000, guid: 8738b206f076cc04ea97c8857fce7b61, type: 3}
+    volume: 0.5
     maxRange: 100
     minRange: 10
   ambClips: []

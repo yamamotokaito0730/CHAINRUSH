@@ -66,7 +66,6 @@ public class Player : MonoBehaviour
     private E_State PlayerState;
     private int[] thresholds = { 4, 17, 35, 44, 50 };
     private E_State preState = E_State.Normal;  // プレイヤーの状態退避
-    [SerializeField, Tooltip("ステージ")] private int m_Stage = 0;
     [Header("重力関係")]
     [SerializeField, Tooltip("ベースの重力")] private float m_fBaseGravity = 9.81f;
 
@@ -125,11 +124,6 @@ public class Player : MonoBehaviour
         particleSystems = particles.ToArray();
         thread = transform.Find(
             "PlayerCharacter_006/arm/hips/spine/chest/chest_001/restraintEffect001").gameObject;    // 糸(直接取得)
-
-        if (m_Stage == 2)
-        {
-            BGMManager.Instance.ChangeBGM("Stage2", 1.5f);
-        }
 
         // playerAttackCollider（子オブジェクト）に入ってるカプセルコライダーを取得
         playerAttackCollider = transform.Find("PlayerAttackCollider").GetComponent<CapsuleCollider>();

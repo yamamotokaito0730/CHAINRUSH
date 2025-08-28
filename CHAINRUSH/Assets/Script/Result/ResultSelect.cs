@@ -101,6 +101,7 @@ public class ResultSelect : MonoBehaviour
             // åàíËèàóù
             if (Input.GetKeyDown(KeyCode.Return) || (gamepad != null && gamepad.aButton.wasPressedThisFrame))
             {
+                BGMManager.Instance.StopBGMWithFade(1f);
                 SceneManager.LoadScene("Title");
             }
         }
@@ -137,11 +138,13 @@ public class ResultSelect : MonoBehaviour
             {
                 if (selectedIndex == 0)
                 {
+                    BGMManager.Instance.ChangeBGM("Stage2", 1.5f);
                     SceneManager.LoadScene("LoadScene");
                     Title.ToTitle = false;
                 }
                 else
                 {
+                    BGMManager.Instance.StopBGMWithFade(1f);
                     SceneManager.LoadScene("Title");
                 }
             }

@@ -135,6 +135,7 @@ public class GameManager : MonoBehaviour
                 isGameOver = true;
 
                 // ゲームオーバーシーンへ遷移
+                //BGMManager.Instance.ChangeBGM("", 1f);
                 SceneManager.LoadScene("GameOver");
             }
         }
@@ -158,7 +159,7 @@ public class GameManager : MonoBehaviour
     {
         IsGameActive = true;
     }
-
+    
     public void StopGameTemporarily()
     {
         IsGameActive = false;
