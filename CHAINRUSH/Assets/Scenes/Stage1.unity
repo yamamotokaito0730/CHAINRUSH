@@ -993,27 +993,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9173826300685353739, guid: bc3460b11ab737243b3b28c6637a180d, type: 3}
       propertyPath: m_RotationAtRest.x
-      value: 3.7067258
+      value: 3.7064905
       objectReference: {fileID: 0}
     - target: {fileID: 9173826300685353739, guid: bc3460b11ab737243b3b28c6637a180d, type: 3}
       propertyPath: m_RotationAtRest.y
-      value: 0.24967076
+      value: 0.24952042
       objectReference: {fileID: 0}
     - target: {fileID: 9173826300685353739, guid: bc3460b11ab737243b3b28c6637a180d, type: 3}
       propertyPath: m_TranslationAtRest.y
-      value: 1.984
+      value: 1.9840002
       objectReference: {fileID: 0}
     - target: {fileID: 9173826300685353739, guid: bc3460b11ab737243b3b28c6637a180d, type: 3}
       propertyPath: m_TranslationAtRest.z
-      value: 0.33900064
+      value: 0.33900207
       objectReference: {fileID: 0}
     - target: {fileID: 9173826300685353739, guid: bc3460b11ab737243b3b28c6637a180d, type: 3}
       propertyPath: m_RotationOffsets.Array.data[0].y
-      value: 96.990166
+      value: 96.98711
       objectReference: {fileID: 0}
     - target: {fileID: 9173826300685353739, guid: bc3460b11ab737243b3b28c6637a180d, type: 3}
       propertyPath: m_RotationOffsets.Array.data[0].z
-      value: 174.9609
+      value: 174.95778
       objectReference: {fileID: 0}
     - target: {fileID: 9173826300685353739, guid: bc3460b11ab737243b3b28c6637a180d, type: 3}
       propertyPath: m_TranslationOffsets.Array.data[0].x
@@ -3120,13 +3120,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 913068277}
-  easingDuration: 3
+  easingDuration: 1.5
   height: 10
   fixedLookHeight: 7
   gameManager: {fileID: 8721459258179069321, guid: 424988e4630570341ab0aaa6fec1ea6a, type: 3}
   UIManager: {fileID: 317090494}
   camera: {fileID: 966004943}
   CameraPos: {x: 0, y: 5, z: -7}
+  points:
+  - {x: 1.4, y: 0, z: 0}
+  - {x: -1, y: 1, z: 0}
+  - {x: 2.5, y: 0, z: 0}
+  c1: 1
+  c2: 1
+  c3: 1
 --- !u!4 &1767382724
 Transform:
   m_ObjectHideFlags: 0
